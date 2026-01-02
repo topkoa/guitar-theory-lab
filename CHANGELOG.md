@@ -5,6 +5,16 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.7] - 2026-01-02
+
+### Added
+- Adjustable fretboard length slider
+  - New slider control to adjust fret count from 12 to 24 frets
+  - Displays current fret count above the slider
+  - Fretboard dynamically updates in real-time across all modes (Learn, Practice, Jam)
+  - Added fret 24 marker position with double dots (2nd octave)
+  - Smooth styled slider with hover effects and visual feedback
+
 ## [0.0.6] - 2026-01-02
 
 ### Added

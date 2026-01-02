@@ -21,7 +21,9 @@ function Controls({
   tabView,
   setTabView,
   filteredIntervals,
-  setFilteredIntervals
+  setFilteredIntervals,
+  fretCount,
+  setFretCount
 }) {
   const tuningOptions = getTuningOptions();
   const scaleOptions = getScaleOptions();
@@ -120,6 +122,20 @@ function Controls({
           />
           Invert Strings
         </label>
+      </div>
+
+      <div className="control-group">
+        <label>
+          Fret Count: {fretCount}
+        </label>
+        <input
+          type="range"
+          min="12"
+          max="24"
+          value={fretCount}
+          onChange={(e) => setFretCount(parseInt(e.target.value))}
+          className="fret-slider"
+        />
       </div>
 
       <IntervalFilter

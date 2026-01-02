@@ -38,5 +38,5 @@ export function getNoteOnFret(openNote, fret) {
 export const FRET_COUNT = 22;
 
 // Fret marker positions (dots on fretboard)
-export const FRET_MARKERS = [3, 5, 7, 9, 12, 15, 17, 19, 21];
-export const DOUBLE_MARKERS = [12]; // Octave markers (double dots)
+export const FRET_MARKERS = [3, 5, 7, 9, 12, 15, 17, 19, 21, 24];
+export const DOUBLE_MARKERS = [12, 24]; // Octave markers (double dots)
