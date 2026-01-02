@@ -4,6 +4,7 @@ import Controls from './components/Controls/Controls';
 import Reference from './components/Reference/Reference';
 import Practice from './components/Practice/Practice';
 import Jam from './components/Jam/Jam';
+import Footer from './components/Footer/Footer';
 import { TUNINGS, DEFAULT_TUNING } from './data/tunings';
 import { getScaleNotes, getChordNotes } from './utils/musicTheory';
 import './App.css';
@@ -183,6 +184,8 @@ function App() {
           </>
         ) : null}
       </main>
+
+      <Footer />
     </div>
   );
 }

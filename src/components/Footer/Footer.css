@@ -1,0 +1,33 @@
+.app-footer {
+  margin-top: 40px;
+  padding: 20px;
+  border-top: 1px solid var(--bg-tertiary);
+  background: var(--bg-secondary);
+  text-align: center;
+}
+
+.footer-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.app-footer p {
+  margin: 5px 0;
+  color: var(--text-secondary);
+  font-size: 0.9em;
+}
+
+.footer-links {
+  margin-top: 8px;
+}
+
+.footer-links a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.footer-links a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
