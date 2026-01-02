@@ -2,6 +2,7 @@ import { NOTES } from '../../data/notes';
 import { TUNINGS, getTuningOptions } from '../../data/tunings';
 import { getScaleOptions } from '../../data/scales';
 import { getChordOptions } from '../../data/chords';
+import IntervalFilter from '../IntervalFilter/IntervalFilter';
 import './Controls.css';
 
 function Controls({
@@ -18,7 +19,9 @@ function Controls({
   showIntervals,
   setShowIntervals,
   tabView,
-  setTabView
+  setTabView,
+  filteredIntervals,
+  setFilteredIntervals
 }) {
   const tuningOptions = getTuningOptions();
   const scaleOptions = getScaleOptions();
@@ -118,6 +121,13 @@ function Controls({
           Invert Strings
         </label>
       </div>
+
+      <IntervalFilter
+        showIntervals={showIntervals}
+        filteredIntervals={filteredIntervals}
+        setFilteredIntervals={setFilteredIntervals}
+        rootNote={rootNote}
+      />
     </div>
   );
 }
