@@ -9,6 +9,7 @@ export function useMetronome(bpm, onBeat, isPlaying, metronomeEnabled, effective
   const timerIdRef = useRef(null);
   const beatCountRef = useRef(0);
   const beatInMeasureRef = useRef(0);
+  const schedulerRef = useRef(null);
 
   // Initialize audio context
   const getAudioContext = useCallback(() => {
@@ -65,8 +66,8 @@ export function useMetronome(bpm, onBeat, isPlaying, metronomeEnabled, effective
         playClick(tripletTime2, beatInMeasureRef.current, 0.2);
       }
 
-      // Notify Jam component of the beat
-      onBeat(beatCountRef.current, beatInMeasureRef.current);
+      // Notify Jam component of the beat (pass the scheduled time)
+      onBeat(beatCountRef.current, beatInMeasureRef.current, nextBeatTimeRef.current);
 
       // Advance to next beat
       nextBeatTimeRef.current += secondsPerBeat;
@@ -74,6 +75,9 @@ export function useMetronome(bpm, onBeat, isPlaying, metronomeEnabled, effective
       beatInMeasureRef.current = (beatInMeasureRef.current + 1) % timeSignature.numerator;
     }
   }, [bpm, onBeat, playClick, getAudioContext, effectiveSettings]);
+
+  // Keep schedulerRef updated with the latest scheduler
+  schedulerRef.current = scheduler;
 
   // Start/stop the metronome
   useEffect(() => {
@@ -90,7 +94,9 @@ export function useMetronome(bpm, onBeat, isPlaying, metronomeEnabled, effective
 
       // Use requestAnimationFrame for smoother scheduling
       const tick = () => {
-        scheduler();
+        if (schedulerRef.current) {
+          schedulerRef.current();
+        }
         timerIdRef.current = setTimeout(tick, 25); // Check every 25ms
       };
       tick();
@@ -106,7 +112,6 @@ export function useMetronome(bpm, onBeat, isPlaying, metronomeEnabled, effective
         clearTimeout(timerIdRef.current);
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isPlaying, getAudioContext]);
 
   // Reset beat count
@@ -115,5 +120,5 @@ export function useMetronome(bpm, onBeat, isPlaying, metronomeEnabled, effective
     beatInMeasureRef.current = 0;
   }, []);
 
-  return { reset };
+  return { reset, audioContext: audioContextRef };
 }

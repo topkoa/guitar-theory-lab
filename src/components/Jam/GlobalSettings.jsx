@@ -5,12 +5,23 @@ import './GlobalSettings.css';
 function GlobalSettings({ settings, onSettingsChange }) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const nonDefaultCount = countNonDefaultSettings(settings);
+  // Ensure chordAudio exists with defaults (for backward compatibility)
+  const safeSettings = {
+    ...settings,
+    chordAudio: settings.chordAudio || {
+      enabled: true,
+      volume: 0.25,
+      duration: 0.8,
+      waveform: 'sine'
+    }
+  };
+
+  const nonDefaultCount = countNonDefaultSettings(safeSettings);
 
   // Update a specific setting
   const updateSetting = (key, value) => {
     onSettingsChange({
-      ...settings,
+      ...safeSettings,
       [key]: value
     });
   };
@@ -23,14 +34,22 @@ function GlobalSettings({ settings, onSettingsChange }) {
   // Update metronome sound
   const updateMetronomeSound = (key, value) => {
     updateSetting('metronomeSound', {
-      ...settings.metronomeSound,
+      ...safeSettings.metronomeSound,
+      [key]: value
+    });
+  };
+
+  // Update chord audio
+  const updateChordAudio = (key, value) => {
+    updateSetting('chordAudio', {
+      ...safeSettings.chordAudio,
       [key]: value
     });
   };
 
   // Toggle a custom accent beat
   const toggleCustomAccent = (beatIndex) => {
-    const newAccents = [...settings.customAccents];
+    const newAccents = [...safeSettings.customAccents];
     newAccents[beatIndex] = !newAccents[beatIndex];
     updateSetting('customAccents', newAccents);
   };
@@ -42,8 +61,8 @@ function GlobalSettings({ settings, onSettingsChange }) {
     // Adjust customAccents array to match new numerator
     const newAccents = Array(numerator).fill(false);
     newAccents[0] = true; // Always accent the first beat
-    for (let i = 1; i < Math.min(numerator, settings.customAccents.length); i++) {
-      newAccents[i] = settings.customAccents[i];
+    for (let i = 1; i < Math.min(numerator, safeSettings.customAccents.length); i++) {
+      newAccents[i] = safeSettings.customAccents[i];
     }
     updateSetting('customAccents', newAccents);
   };
@@ -72,8 +91,8 @@ function GlobalSettings({ settings, onSettingsChange }) {
                   <button
                     key={label}
                     className={`preset-btn ${
-                      settings.timeSignature.numerator === numerator &&
-                      settings.timeSignature.denominator === denominator
+                      safeSettings.timeSignature.numerator === numerator &&
+                      safeSettings.timeSignature.denominator === denominator
                         ? 'active'
                         : ''
                     }`}
@@ -89,18 +108,18 @@ function GlobalSettings({ settings, onSettingsChange }) {
                   type="number"
                   min="1"
                   max="16"
-                  value={settings.timeSignature.numerator}
+                  value={safeSettings.timeSignature.numerator}
                   onChange={(e) => handleTimeSignatureChange(
                     parseInt(e.target.value) || 4,
-                    settings.timeSignature.denominator
+                    safeSettings.timeSignature.denominator
                   )}
                   className="time-sig-input"
                 />
                 <span>/</span>
                 <select
-                  value={settings.timeSignature.denominator}
+                  value={safeSettings.timeSignature.denominator}
                   onChange={(e) => handleTimeSignatureChange(
-                    settings.timeSignature.numerator,
+                    safeSettings.timeSignature.numerator,
                     parseInt(e.target.value)
                   )}
                   className="time-sig-select"
@@ -131,7 +150,7 @@ function GlobalSettings({ settings, onSettingsChange }) {
                       type="radio"
                       name="accentPattern"
                       value={value}
-                      checked={settings.accentPattern === value}
+                      checked={safeSettings.accentPattern === value}
                       onChange={(e) => updateSetting('accentPattern', e.target.value)}
                     />
                     <span>{label}</span>
@@ -139,11 +158,11 @@ function GlobalSettings({ settings, onSettingsChange }) {
                 ))}
               </div>
 
-              {settings.accentPattern === 'custom' && (
+              {safeSettings.accentPattern === 'custom' && (
                 <div className="custom-accents">
                   <label>Accented beats:</label>
                   <div className="accent-toggles">
-                    {settings.customAccents.map((isAccented, index) => (
+                    {safeSettings.customAccents.map((isAccented, index) => (
                       <button
                         key={index}
                         className={`accent-toggle-btn ${isAccented ? 'active' : ''}`}
@@ -156,15 +175,15 @@ function GlobalSettings({ settings, onSettingsChange }) {
                 </div>
               )}
 
-              {settings.accentPattern === 'swing' && (
+              {safeSettings.accentPattern === 'swing' && (
                 <div className="swing-controls">
-                  <label>Swing Ratio: {(settings.swingRatio * 100).toFixed(0)}%</label>
+                  <label>Swing Ratio: {(safeSettings.swingRatio * 100).toFixed(0)}%</label>
                   <input
                     type="range"
                     min="0.5"
                     max="0.75"
                     step="0.01"
-                    value={settings.swingRatio}
+                    value={safeSettings.swingRatio}
                     onChange={(e) => updateSetting('swingRatio', parseFloat(e.target.value))}
                     className="swing-slider"
                   />
@@ -184,7 +203,7 @@ function GlobalSettings({ settings, onSettingsChange }) {
               <div className="control-row">
                 <label>Sound Type:</label>
                 <select
-                  value={settings.metronomeSound.type}
+                  value={safeSettings.metronomeSound.type}
                   onChange={(e) => updateMetronomeSound('type', e.target.value)}
                   className="sound-select"
                 >
@@ -196,13 +215,71 @@ function GlobalSettings({ settings, onSettingsChange }) {
               <div className="control-row">
                 <label>Subdivision:</label>
                 <select
-                  value={settings.metronomeSound.subdivision}
+                  value={safeSettings.metronomeSound.subdivision}
                   onChange={(e) => updateMetronomeSound('subdivision', e.target.value)}
                   className="subdivision-select"
                 >
                   <option value="quarter">Quarter Notes</option>
                   <option value="eighth">Eighth Notes</option>
                   <option value="triplet">Triplets</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Chord Audio Section */}
+          <div className="settings-section">
+            <h4>Chord Audio</h4>
+            <div className="chord-audio-controls">
+              <div className="control-row">
+                <label className={`toggle-label ${safeSettings.chordAudio.enabled ? 'active' : ''}`}>
+                  <input
+                    type="checkbox"
+                    checked={safeSettings.chordAudio.enabled}
+                    onChange={(e) => updateChordAudio('enabled', e.target.checked)}
+                  />
+                  Enable Chord Playback
+                </label>
+              </div>
+
+              <div className="control-row">
+                <label>Volume: {(safeSettings.chordAudio.volume * 100).toFixed(0)}%</label>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.05"
+                  value={safeSettings.chordAudio.volume}
+                  onChange={(e) => updateChordAudio('volume', parseFloat(e.target.value))}
+                  className="volume-slider"
+                  disabled={!safeSettings.chordAudio.enabled}
+                />
+              </div>
+
+              <div className="control-row">
+                <label>Duration: {safeSettings.chordAudio.duration.toFixed(1)}s</label>
+                <input
+                  type="range"
+                  min="0.2"
+                  max="3.0"
+                  step="0.1"
+                  value={safeSettings.chordAudio.duration}
+                  onChange={(e) => updateChordAudio('duration', parseFloat(e.target.value))}
+                  className="duration-slider"
+                  disabled={!safeSettings.chordAudio.enabled}
+                />
+              </div>
+
+              <div className="control-row">
+                <label>Waveform:</label>
+                <select
+                  value={safeSettings.chordAudio.waveform}
+                  onChange={(e) => updateChordAudio('waveform', e.target.value)}
+                  className="waveform-select"
+                  disabled={!safeSettings.chordAudio.enabled}
+                >
+                  <option value="sine">Sine (Smooth)</option>
+                  <option value="triangle">Triangle (Bright)</option>
                 </select>
               </div>
             </div>
@@ -218,7 +295,8 @@ function GlobalSettings({ settings, onSettingsChange }) {
                   accentPattern: 'standard',
                   customAccents: [true, false, false, false],
                   swingRatio: 0.67,
-                  metronomeSound: { type: 'beep', subdivision: 'quarter' }
+                  metronomeSound: { type: 'beep', subdivision: 'quarter' },
+                  chordAudio: { enabled: true, volume: 0.25, duration: 0.8, waveform: 'sine' }
                 });
               }}
             >

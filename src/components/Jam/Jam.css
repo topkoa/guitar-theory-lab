@@ -469,3 +469,99 @@
   color: var(--text-primary);
   border-radius: 4px;
 }
+
+/* Play Chord Button */
+.play-chord-btn {
+  background: #4CAF50;
+  border: none;
+  color: white;
+  font-size: 0.8em;
+  padding: 4px 8px;
+  width: auto;
+  height: auto;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.play-chord-btn:hover {
+  background: #45a049;
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.play-chord-btn:active {
+  transform: scale(0.95);
+}
+
+/* Chord Audio Controls in Global Settings */
+.chord-audio-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chord-audio-controls .toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.chord-audio-controls .toggle-label.active {
+  color: var(--accent);
+}
+
+.chord-audio-controls .toggle-label input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.volume-slider,
+.duration-slider {
+  width: 100%;
+  margin-top: 4px;
+  cursor: pointer;
+}
+
+.volume-slider:disabled,
+.duration-slider:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.waveform-select {
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid var(--bg-tertiary);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.waveform-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Inline checkbox for step overrides */
+.inline-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.9em;
+}
+
+.inline-checkbox input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.inline-checkbox span {
+  cursor: pointer;
+}
