@@ -10,6 +10,12 @@ export const DEFAULT_GLOBAL_SETTINGS = {
   metronomeSound: {
     type: 'beep', // 'beep', 'click', 'woodblock'
     subdivision: 'quarter' // 'quarter', 'eighth', 'triplet'
+  },
+  chordAudio: {
+    enabled: true, // Enable/disable chord playback
+    volume: 0.25, // Volume level (0.0-1.0)
+    duration: 0.8, // Duration in seconds
+    waveform: 'sine' // Oscillator type ('sine' or 'triangle')
   }
 };
 
@@ -42,7 +48,13 @@ export function resolveStepSettings(step, globalSettings) {
     swingRatio: overrides.swingRatio !== null && overrides.swingRatio !== undefined
       ? overrides.swingRatio
       : globalSettings.swingRatio,
-    metronomeSound: overrides.metronomeSound || globalSettings.metronomeSound
+    metronomeSound: overrides.metronomeSound || globalSettings.metronomeSound,
+    chordAudio: overrides.chordAudio || globalSettings.chordAudio || {
+      enabled: true,
+      volume: 0.25,
+      duration: 0.8,
+      waveform: 'sine'
+    }
   };
 }
 
@@ -58,7 +70,8 @@ export function hasOverrides(step) {
          step.overrides.accentPattern !== null ||
          step.overrides.customAccents !== null ||
          (step.overrides.swingRatio !== null && step.overrides.swingRatio !== undefined) ||
-         step.overrides.metronomeSound !== null;
+         step.overrides.metronomeSound !== null ||
+         step.overrides.chordAudio !== null;
 }
 
 /**
@@ -73,6 +86,14 @@ export function countNonDefaultSettings(settings) {
   if (settings.accentPattern !== 'standard') count++;
   if (settings.swingRatio !== 0.67) count++;
   if (settings.metronomeSound.type !== 'beep' || settings.metronomeSound.subdivision !== 'quarter') count++;
+
+  // Check chordAudio only if it exists (backward compatibility)
+  if (settings.chordAudio) {
+    if (settings.chordAudio.enabled !== true ||
+        settings.chordAudio.volume !== 0.25 ||
+        settings.chordAudio.duration !== 0.8 ||
+        settings.chordAudio.waveform !== 'sine') count++;
+  }
 
   return count;
 }

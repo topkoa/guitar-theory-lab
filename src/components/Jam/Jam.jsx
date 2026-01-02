@@ -9,6 +9,7 @@ import { SCALES } from '../../data/scales';
 import { CHORDS } from '../../data/chords';
 import { DEFAULT_GLOBAL_SETTINGS, resolveStepSettings } from '../../utils/jamSettings';
 import { presetStorage } from '../../utils/presetStorage';
+import { createChordSound, playChordNow } from '../../utils/chordSounds';
 import './Jam.css';
 
 // Generate unique ID
@@ -27,7 +28,8 @@ const createDefaultStep = () => ({
     accentPattern: null,
     customAccents: null,
     swingRatio: null,
-    metronomeSound: null
+    metronomeSound: null,
+    chordAudio: null
   }
 });
 
@@ -57,6 +59,7 @@ function Jam({ tuning, tabView, onHighlightChange }) {
   const beatInStepRef = useRef(0);
   const stepIndexRef = useRef(0);
   const beatInMeasureRef = useRef(0);
+  const isInitialMount = useRef(true);
 
   // Get current step
   const currentStep = sequence[currentStepIndex] || null;
@@ -71,12 +74,12 @@ function Jam({ tuning, tabView, onHighlightChange }) {
   const beatsInCurrentStep = currentStep?.beats || 4;
 
   // Handle beat from metronome
-  const handleBeat = useCallback((beatNumber, beatInMeasure) => {
+  const handleBeat = useCallback((beatNumber, beatInMeasure, scheduledBeatTime) => {
     if (sequence.length === 0) return;
 
     const currentStep = sequence[stepIndexRef.current];
 
-    // Increment beat within current step
+    // Increment beat within current step FIRST
     beatInStepRef.current++;
     beatInMeasureRef.current = beatInMeasure;
 
@@ -104,12 +107,43 @@ function Jam({ tuning, tabView, onHighlightChange }) {
       beatInStepRef.current = 1;
     }
 
+    // Play chord AFTER handling transitions (synchronized with metronome)
+    // Only play on the first beat of a step if chord audio is enabled
+    const activeStep = sequence[stepIndexRef.current];
+    if (activeStep && beatInStepRef.current === 1 && audioContext.current) {
+      const stepSettings = resolveStepSettings(activeStep, globalSettings);
+      if (stepSettings.chordAudio.enabled) {
+        const notes = getChordNotes(activeStep.rootNote, activeStep.chordType);
+        if (notes.length > 0) {
+          const ctx = audioContext.current;
+          // Resume if suspended
+          if (ctx.state === 'suspended') {
+            ctx.resume();
+          }
+
+          // Calculate duration for entire step
+          const secondsPerBeat = 60.0 / bpm;
+          const stepDuration = secondsPerBeat * activeStep.beats;
+
+          // Use the same scheduled time as the metronome beat
+          createChordSound(
+            ctx,
+            scheduledBeatTime,
+            notes,
+            stepSettings.chordAudio.volume,
+            stepDuration, // Play for entire step duration
+            stepSettings.chordAudio.waveform
+          );
+        }
+      }
+    }
+
     // Update UI with current beat (1-indexed for display)
     setCurrentBeat(beatInStepRef.current);
-  }, [sequence, loop]);
+  }, [sequence, loop, globalSettings, bpm]);
 
   // Use metronome hook with effective settings
-  const { reset: resetMetronome } = useMetronome(
+  const { reset: resetMetronome, audioContext } = useMetronome(
     bpm,
     handleBeat,
     isPlaying,
@@ -136,6 +170,11 @@ function Jam({ tuning, tabView, onHighlightChange }) {
 
   // Notify parent of highlight changes
   useEffect(() => {
+    // Skip the initial mount to avoid setState during render error
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     onHighlightChange(highlightData);
   }, [highlightData, onHighlightChange]);
 
@@ -182,6 +221,25 @@ function Jam({ tuning, tabView, onHighlightChange }) {
       setCurrentStepIndex(newSequence.length - 1);
     }
   };
+
+  // Manual play chord handler
+  const handlePlayChord = useCallback((step) => {
+    if (!step) return;
+    if (!audioContext.current) return;
+
+    const stepSettings = resolveStepSettings(step, globalSettings);
+    const notes = getChordNotes(step.rootNote, step.chordType);
+
+    if (notes.length > 0) {
+      playChordNow(
+        audioContext.current,
+        notes,
+        stepSettings.chordAudio.volume,
+        stepSettings.chordAudio.duration,
+        stepSettings.chordAudio.waveform
+      );
+    }
+  }, [globalSettings]);
 
   // Preset handlers
   const handleSavePreset = (name, description) => {
@@ -265,6 +323,8 @@ function Jam({ tuning, tabView, onHighlightChange }) {
                 isActive={isPlaying && index === currentStepIndex}
                 onChange={handleUpdateStep}
                 onDelete={handleDeleteStep}
+                onPlayChord={handlePlayChord}
+                globalSettings={globalSettings}
               />
             ))
           )}
