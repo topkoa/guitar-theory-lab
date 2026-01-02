@@ -1,0 +1,153 @@
+.practice-panel {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 0 20px 20px;
+}
+
+.practice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.practice-header h2 {
+  font-size: 1.3em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.score {
+  display: flex;
+  gap: 15px;
+  font-size: 0.95em;
+}
+
+.score span {
+  color: var(--text-secondary);
+}
+
+.score .correct {
+  color: var(--note-scale);
+}
+
+.score .incorrect {
+  color: var(--note-root);
+}
+
+.quiz-content {
+  text-align: center;
+  padding: 20px;
+}
+
+.question {
+  font-size: 1.2em;
+  color: var(--text-primary);
+  margin-bottom: 25px;
+}
+
+.question .highlight {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.answer-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.answer-btn {
+  min-width: 60px;
+  padding: 12px 20px;
+  font-size: 1em;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.answer-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.answer-btn.correct {
+  background: var(--note-scale) !important;
+  color: #000 !important;
+  border-color: var(--note-scale) !important;
+}
+
+.answer-btn.incorrect {
+  background: var(--note-root) !important;
+  color: #fff !important;
+  border-color: var(--note-root) !important;
+}
+
+.answer-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.feedback {
+  font-size: 1.1em;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.feedback.correct {
+  color: var(--note-scale);
+  background: rgba(78, 204, 163, 0.1);
+}
+
+.feedback.incorrect {
+  color: var(--note-root);
+  background: rgba(233, 69, 96, 0.1);
+}
+
+.next-btn {
+  padding: 12px 30px;
+  font-size: 1em;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.next-btn:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.quiz-type-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.quiz-type-toggle button {
+  padding: 8px 16px;
+  font-size: 0.9em;
+}
+
+.quiz-type-toggle button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.string-names {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: var(--text-secondary);
+  font-size: 0.85em;
+}
+
+.string-names span {
+  width: 30px;
+  text-align: center;
+}

@@ -1,0 +1,55 @@
+.app {
+  min-height: 100vh;
+  padding-bottom: 40px;
+}
+
+.app-header {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid var(--bg-tertiary);
+  margin-bottom: 10px;
+}
+
+.app-header h1 {
+  font-size: 1.8em;
+  color: var(--text-primary);
+  margin: 0 0 5px;
+}
+
+.app-header h1 span {
+  color: var(--accent);
+}
+
+.app-header p {
+  color: var(--text-secondary);
+  font-size: 0.95em;
+  margin: 0;
+}
+
+.nav-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 20px;
+  background: var(--bg-secondary);
+  margin: 0 20px 20px;
+  border-radius: 8px;
+}
+
+.nav-tabs button {
+  padding: 10px 25px;
+  font-size: 1em;
+  background: transparent;
+  border: 1px solid var(--bg-tertiary);
+}
+
+.nav-tabs button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.main-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}

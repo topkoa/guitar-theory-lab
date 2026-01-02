@@ -1,0 +1,90 @@
+.reference-panel {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 0 20px 20px;
+}
+
+.reference-header {
+  display: flex;
+  align-items: baseline;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.reference-header h2 {
+  font-size: 1.4em;
+  color: var(--accent);
+  margin: 0;
+}
+
+.reference-header .formula {
+  font-size: 0.95em;
+  color: var(--text-secondary);
+  font-family: monospace;
+}
+
+.reference-description {
+  color: var(--text-secondary);
+  font-size: 0.9em;
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
+.reference-notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.note-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+.note-badge.root {
+  background: var(--note-root);
+  color: #fff;
+}
+
+.note-badge.scale {
+  background: var(--note-scale);
+  color: #000;
+}
+
+.note-badge.chord {
+  background: var(--note-chord);
+  color: #000;
+}
+
+.interval-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.interval-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+.interval-badge .note {
+  color: var(--text-primary);
+  font-weight: bold;
+}
+
+.interval-badge .interval {
+  color: var(--text-secondary);
+}
