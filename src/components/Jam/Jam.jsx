@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useRef } from 'react';
 import SequenceStep from './SequenceStep';
 import TransportControls from './TransportControls';
 import { useMetronome } from './useMetronome';
@@ -36,6 +36,10 @@ function Jam({ tuning, tabView, onHighlightChange }) {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [currentBeat, setCurrentBeat] = useState(0);
 
+  // Use refs to track beat position without re-renders affecting timing
+  const beatInStepRef = useRef(0);
+  const stepIndexRef = useRef(0);
+
   // Get current step
   const currentStep = sequence[currentStepIndex] || null;
 
@@ -46,31 +50,36 @@ function Jam({ tuning, tabView, onHighlightChange }) {
   const handleBeat = useCallback((beatNumber) => {
     if (sequence.length === 0) return;
 
-    const currentStep = sequence[currentStepIndex];
-    const beatInStep = beatNumber % currentStep.beats;
+    const currentStep = sequence[stepIndexRef.current];
 
-    setCurrentBeat(beatInStep + 1);
+    // Increment beat within current step
+    beatInStepRef.current++;
 
-    // Check if we need to advance to next step
-    if (beatInStep === currentStep.beats - 1) {
-      // This is the last beat of the current step
-      setTimeout(() => {
-        setCurrentStepIndex(prevIndex => {
-          const nextIndex = prevIndex + 1;
-          if (nextIndex >= sequence.length) {
-            if (loop) {
-              return 0;
-            } else {
-              setIsPlaying(false);
-              return prevIndex;
-            }
-          }
-          return nextIndex;
-        });
-        setCurrentBeat(0);
-      }, (60 / bpm) * 1000 - 50); // Slight offset to prepare for next step
+    // Check if we've completed all beats in the current step
+    if (beatInStepRef.current > currentStep.beats) {
+      // Move to next step
+      const nextIndex = stepIndexRef.current + 1;
+      if (nextIndex >= sequence.length) {
+        if (loop) {
+          stepIndexRef.current = 0; // Loop back to first step
+          setCurrentStepIndex(0);
+        } else {
+          setIsPlaying(false);
+          // Don't advance step index, stay on last step
+          return;
+        }
+      } else {
+        stepIndexRef.current = nextIndex;
+        setCurrentStepIndex(nextIndex);
+      }
+
+      // Reset beat counter for new step and set to beat 1
+      beatInStepRef.current = 1;
     }
-  }, [sequence, currentStepIndex, loop, bpm]);
+
+    // Update UI with current beat (1-indexed for display)
+    setCurrentBeat(beatInStepRef.current);
+  }, [sequence, loop]);
 
   // Use metronome hook
   const { reset: resetMetronome } = useMetronome(bpm, handleBeat, isPlaying, metronomeEnabled);
@@ -117,7 +126,9 @@ function Jam({ tuning, tabView, onHighlightChange }) {
   const handleStop = () => {
     setIsPlaying(false);
     setCurrentStepIndex(0);
-    setCurrentBeat(0);
+    setCurrentBeat(1);
+    beatInStepRef.current = 0;
+    stepIndexRef.current = 0;
     resetMetronome();
   };
 
