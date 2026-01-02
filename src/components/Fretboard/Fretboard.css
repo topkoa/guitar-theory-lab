@@ -33,12 +33,14 @@
   z-index: 1;
 }
 
-.string-row:nth-child(1)::before { height: 1px; }
-.string-row:nth-child(2)::before { height: 1.5px; }
-.string-row:nth-child(3)::before { height: 2px; }
-.string-row:nth-child(4)::before { height: 2.5px; }
-.string-row:nth-child(5)::before { height: 3px; }
-.string-row:nth-child(6)::before { height: 3.5px; }
+/* String thickness - thinnest at top, thickest at bottom */
+/* Works for 4, 5, or 6 string instruments */
+.string-row:nth-last-child(2)::before { height: 3.5px; } /* Thickest (lowest) */
+.string-row:nth-last-child(3)::before { height: 3px; }
+.string-row:nth-last-child(4)::before { height: 2.5px; }
+.string-row:nth-last-child(5)::before { height: 2px; }
+.string-row:nth-last-child(6)::before { height: 1.5px; }
+.string-row:nth-last-child(7)::before { height: 1px; } /* Thinnest (highest) */
 
 .string-label {
   width: 50px;

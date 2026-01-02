@@ -9,10 +9,15 @@ function Practice({ tuning }) {
   const [isCorrect, setIsCorrect] = useState(null);
   const [score, setScore] = useState({ correct: 0, incorrect: 0 });
 
-  const stringNames = ['1st (E)', '2nd (B)', '3rd (G)', '4th (D)', '5th (A)', '6th (E)'];
+  // Generate string names dynamically based on tuning
+  const getStringName = (idx) => {
+    const ordinals = ['1st', '2nd', '3rd', '4th', '5th', '6th'];
+    const note = tuning[idx];
+    return `${ordinals[idx]} (${note})`;
+  };
 
   const generateNoteQuestion = useCallback(() => {
-    const stringIdx = Math.floor(Math.random() * 6);
+    const stringIdx = Math.floor(Math.random() * tuning.length);
     const fret = Math.floor(Math.random() * 13); // 0-12 for reasonable range
     const correctNote = getNoteOnFret(tuning[stringIdx], fret);
 
@@ -26,7 +31,7 @@ function Practice({ tuning }) {
   }, [tuning]);
 
   const generateFretQuestion = useCallback(() => {
-    const stringIdx = Math.floor(Math.random() * 6);
+    const stringIdx = Math.floor(Math.random() * tuning.length);
     const targetNote = NOTES[Math.floor(Math.random() * 12)];
 
     // Find all frets where this note appears on this string (0-12)
@@ -131,7 +136,7 @@ function Practice({ tuning }) {
         {question.type === 'note' ? (
           <>
             <p className="question">
-              What note is on the <span className="highlight">{stringNames[question.stringIdx]}</span> string,
+              What note is on the <span className="highlight">{getStringName(question.stringIdx)}</span> string,
               fret <span className="highlight">{question.fret}</span>?
             </p>
             <div className="answer-options">
@@ -151,7 +156,7 @@ function Practice({ tuning }) {
           <>
             <p className="question">
               Where is <span className="highlight">{question.targetNote}</span> on the
-              <span className="highlight"> {stringNames[question.stringIdx]}</span> string?
+              <span className="highlight"> {getStringName(question.stringIdx)}</span> string?
             </p>
             <div className="answer-options">
               {question.options.map(fret => (
