@@ -15,11 +15,58 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
+  gap: 15px;
 }
 
 .sequence-header h3 {
   margin: 0;
   color: var(--text-primary);
+  flex: 1;
+}
+
+.sequence-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.preset-action-btn {
+  padding: 8px 14px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid;
+}
+
+.load-preset-btn {
+  background: var(--bg-tertiary);
+  border-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.load-preset-btn:hover {
+  background: var(--note-scale);
+  border-color: var(--note-scale);
+  color: #fff;
+}
+
+.save-preset-btn {
+  background: var(--bg-tertiary);
+  border-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.save-preset-btn:hover:not(:disabled) {
+  background: var(--note-chord);
+  border-color: var(--note-chord);
+  color: #fff;
+}
+
+.save-preset-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .add-step-btn {
@@ -62,6 +109,15 @@
   box-shadow: 0 0 15px rgba(233, 69, 96, 0.3);
 }
 
+.sequence-step.has-overrides {
+  border-color: var(--note-chord);
+}
+
+.sequence-step.has-overrides .step-number {
+  background: var(--note-chord);
+  color: #fff;
+}
+
 .step-header {
   display: flex;
   justify-content: space-between;
@@ -85,6 +141,31 @@
 .sequence-step.active .step-number {
   background: var(--accent);
   color: #fff;
+}
+
+.step-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.settings-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1em;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.2s ease;
+}
+
+.settings-btn:hover {
+  opacity: 1;
+  color: var(--note-chord);
+  transform: rotate(90deg);
 }
 
 .delete-btn {
@@ -232,6 +313,16 @@
   accent-color: var(--accent);
 }
 
+.time-signature-badge {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.9em;
+  border: 1px solid var(--bg-tertiary);
+}
+
 .beat-indicator {
   display: flex;
   gap: 8px;
@@ -246,6 +337,13 @@
   border-radius: 50%;
   background: var(--bg-tertiary);
   transition: all 0.1s ease;
+  position: relative;
+}
+
+.beat-dot.accented {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--text-secondary);
 }
 
 .beat-dot.past {
@@ -257,6 +355,10 @@
   background: var(--accent);
   box-shadow: 0 0 10px var(--accent);
   opacity: 1;
+}
+
+.beat-dot.accented.current {
+  box-shadow: 0 0 12px var(--accent);
 }
 
 .transport-toggles {
@@ -303,4 +405,67 @@
 .current-step-display p {
   margin: 5px 0 0;
   color: var(--text-secondary);
+}
+
+/* Step Advanced Settings */
+.step-advanced {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--bg-tertiary);
+  animation: slideDown 0.2s ease;
+}
+
+.step-advanced h5 {
+  margin: 0 0 6px 0;
+  color: var(--text-primary);
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.override-hint {
+  margin: 0 0 12px 0;
+  color: var(--text-secondary);
+  font-size: 0.75em;
+  font-style: italic;
+}
+
+.override-section {
+  margin-bottom: 12px;
+}
+
+.override-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.85em;
+  margin-bottom: 6px;
+}
+
+.override-checkbox input[type="checkbox"] {
+  accent-color: var(--note-chord);
+  cursor: pointer;
+}
+
+.override-checkbox input[type="checkbox"]:checked + span {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.override-controls {
+  margin-left: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.override-controls select {
+  width: 100%;
+  padding: 4px 6px;
+  font-size: 0.8em;
+  background: var(--bg-secondary);
+  border: 1px solid var(--bg-tertiary);
+  color: var(--text-primary);
+  border-radius: 4px;
 }

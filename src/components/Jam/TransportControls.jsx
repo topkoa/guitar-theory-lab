@@ -9,8 +9,28 @@ function TransportControls({
   loop,
   onLoopToggle,
   currentBeat,
-  beatsInCurrentStep
+  beatsInCurrentStep,
+  timeSignature,
+  accentPattern,
+  customAccents
 }) {
+  // Calculate accent strength for beat indicator visualization
+  const getAccentClass = (beatIndex) => {
+    if (!accentPattern || accentPattern === 'standard') {
+      return beatIndex === 0 ? 'accented' : '';
+    }
+    if (accentPattern === 'waltz') {
+      return beatIndex === 0 ? 'accented' : '';
+    }
+    if (accentPattern === 'custom' && customAccents) {
+      return customAccents[beatIndex] ? 'accented' : '';
+    }
+    if (accentPattern === 'allEqual') {
+      return '';
+    }
+    return beatIndex === 0 ? 'accented' : '';
+  };
+
   return (
     <div className="transport-controls">
       <div className="transport-buttons">
@@ -42,13 +62,18 @@ function TransportControls({
           onChange={(e) => onBpmChange(parseInt(e.target.value))}
           className="bpm-slider"
         />
+        {timeSignature && (
+          <span className="time-signature-badge">
+            {timeSignature.numerator}/{timeSignature.denominator}
+          </span>
+        )}
       </div>
 
       <div className="beat-indicator">
         {Array.from({ length: beatsInCurrentStep }, (_, i) => (
           <span
             key={i}
-            className={`beat-dot ${i < currentBeat ? 'past' : ''} ${i === currentBeat - 1 ? 'current' : ''}`}
+            className={`beat-dot ${i < currentBeat ? 'past' : ''} ${i === currentBeat - 1 ? 'current' : ''} ${getAccentClass(i % (timeSignature?.numerator || 4))}`}
           />
         ))}
       </div>
