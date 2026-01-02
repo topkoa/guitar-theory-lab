@@ -1,10 +1,14 @@
-import { useState, useCallback, useMemo, useRef } from 'react';
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import SequenceStep from './SequenceStep';
 import TransportControls from './TransportControls';
+import GlobalSettings from './GlobalSettings';
+import PresetManager from './PresetManager';
 import { useMetronome } from './useMetronome';
 import { getScaleNotes, getChordNotes } from '../../utils/musicTheory';
 import { SCALES } from '../../data/scales';
 import { CHORDS } from '../../data/chords';
+import { DEFAULT_GLOBAL_SETTINGS, resolveStepSettings } from '../../utils/jamSettings';
+import { presetStorage } from '../../utils/presetStorage';
 import './Jam.css';
 
 // Generate unique ID
@@ -17,15 +21,25 @@ const createDefaultStep = () => ({
   type: 'scale',
   chordType: 'minor',
   scaleType: 'pentatonicMinor',
-  beats: 4
+  beats: 4,
+  overrides: {
+    timeSignature: null,
+    accentPattern: null,
+    customAccents: null,
+    swingRatio: null,
+    metronomeSound: null
+  }
 });
 
 function Jam({ tuning, tabView, onHighlightChange }) {
-  // Sequence state
+  // Global settings state
+  const [globalSettings, setGlobalSettings] = useState(DEFAULT_GLOBAL_SETTINGS);
+
+  // Sequence state - update existing steps to include overrides
   const [sequence, setSequence] = useState([
-    { id: generateId(), rootNote: 'A', type: 'scale', chordType: 'minor', scaleType: 'pentatonicMinor', beats: 4 },
-    { id: generateId(), rootNote: 'D', type: 'scale', chordType: 'minor', scaleType: 'pentatonicMinor', beats: 4 },
-    { id: generateId(), rootNote: 'E', type: 'chord', chordType: 'dom7', scaleType: 'mixolydian', beats: 4 },
+    { ...createDefaultStep(), rootNote: 'A', type: 'scale', chordType: 'minor', scaleType: 'pentatonicMinor', beats: 4 },
+    { ...createDefaultStep(), rootNote: 'D', type: 'scale', chordType: 'minor', scaleType: 'pentatonicMinor', beats: 4 },
+    { ...createDefaultStep(), rootNote: 'E', type: 'chord', chordType: 'dom7', scaleType: 'mixolydian', beats: 4 },
   ]);
 
   // Playback state
@@ -34,26 +48,37 @@ function Jam({ tuning, tabView, onHighlightChange }) {
   const [metronomeEnabled, setMetronomeEnabled] = useState(true);
   const [loop, setLoop] = useState(true);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
-  const [currentBeat, setCurrentBeat] = useState(0);
+  const [currentBeat, setCurrentBeat] = useState(1);
+
+  // Preset modal state
+  const [presetModalMode, setPresetModalMode] = useState(null); // null, 'save', or 'load'
 
   // Use refs to track beat position without re-renders affecting timing
   const beatInStepRef = useRef(0);
   const stepIndexRef = useRef(0);
+  const beatInMeasureRef = useRef(0);
 
   // Get current step
   const currentStep = sequence[currentStepIndex] || null;
+
+  // Get effective settings for current step
+  const effectiveSettings = useMemo(() => {
+    if (!currentStep) return globalSettings;
+    return resolveStepSettings(currentStep, globalSettings);
+  }, [currentStep, globalSettings]);
 
   // Calculate total beats for current step
   const beatsInCurrentStep = currentStep?.beats || 4;
 
   // Handle beat from metronome
-  const handleBeat = useCallback((beatNumber) => {
+  const handleBeat = useCallback((beatNumber, beatInMeasure) => {
     if (sequence.length === 0) return;
 
     const currentStep = sequence[stepIndexRef.current];
 
     // Increment beat within current step
     beatInStepRef.current++;
+    beatInMeasureRef.current = beatInMeasure;
 
     // Check if we've completed all beats in the current step
     if (beatInStepRef.current > currentStep.beats) {
@@ -65,6 +90,8 @@ function Jam({ tuning, tabView, onHighlightChange }) {
           setCurrentStepIndex(0);
         } else {
           setIsPlaying(false);
+          beatInStepRef.current = currentStep.beats; // Stay on last beat
+          setCurrentBeat(beatInStepRef.current);
           // Don't advance step index, stay on last step
           return;
         }
@@ -73,7 +100,7 @@ function Jam({ tuning, tabView, onHighlightChange }) {
         setCurrentStepIndex(nextIndex);
       }
 
-      // Reset beat counter for new step and set to beat 1
+      // Reset beat counter for new step
       beatInStepRef.current = 1;
     }
 
@@ -81,8 +108,14 @@ function Jam({ tuning, tabView, onHighlightChange }) {
     setCurrentBeat(beatInStepRef.current);
   }, [sequence, loop]);
 
-  // Use metronome hook
-  const { reset: resetMetronome } = useMetronome(bpm, handleBeat, isPlaying, metronomeEnabled);
+  // Use metronome hook with effective settings
+  const { reset: resetMetronome } = useMetronome(
+    bpm,
+    handleBeat,
+    isPlaying,
+    metronomeEnabled,
+    effectiveSettings
+  );
 
   // Computed highlighted notes based on current step
   const highlightData = useMemo(() => {
@@ -102,7 +135,7 @@ function Jam({ tuning, tabView, onHighlightChange }) {
   }, [currentStep]);
 
   // Notify parent of highlight changes
-  useMemo(() => {
+  useEffect(() => {
     onHighlightChange(highlightData);
   }, [highlightData, onHighlightChange]);
 
@@ -150,15 +183,75 @@ function Jam({ tuning, tabView, onHighlightChange }) {
     }
   };
 
+  // Preset handlers
+  const handleSavePreset = (name, description) => {
+    const preset = {
+      name,
+      description,
+      globalSettings,
+      sequence,
+      playbackSettings: { bpm, metronomeEnabled, loop }
+    };
+    presetStorage.save(preset);
+  };
+
+  const handleLoadPreset = (preset) => {
+    // Stop playback before loading
+    setIsPlaying(false);
+
+    // Load all settings from preset
+    setGlobalSettings(preset.globalSettings);
+    setSequence(preset.sequence);
+    setBpm(preset.playbackSettings.bpm);
+    setMetronomeEnabled(preset.playbackSettings.metronomeEnabled);
+    setLoop(preset.playbackSettings.loop);
+
+    // Reset playback state
+    setCurrentStepIndex(0);
+    setCurrentBeat(1);
+    beatInStepRef.current = 0;
+    stepIndexRef.current = 0;
+    beatInMeasureRef.current = 0;
+    resetMetronome();
+  };
+
   return (
     <div className="jam-container">
+      {/* Preset Modal */}
+      {presetModalMode && (
+        <PresetManager
+          mode={presetModalMode}
+          onClose={() => setPresetModalMode(null)}
+          onSave={handleSavePreset}
+          onLoad={handleLoadPreset}
+        />
+      )}
+
+      {/* Global Settings */}
+      <GlobalSettings
+        settings={globalSettings}
+        onSettingsChange={setGlobalSettings}
+      />
+
       {/* Sequence Builder */}
       <div className="sequence-builder">
         <div className="sequence-header">
           <h3>Chord/Scale Sequence</h3>
-          <button className="add-step-btn" onClick={handleAddStep}>
-            + Add Step
-          </button>
+          <div className="sequence-actions">
+            <button className="preset-action-btn load-preset-btn" onClick={() => setPresetModalMode('load')}>
+              📂 Load
+            </button>
+            <button
+              className="preset-action-btn save-preset-btn"
+              onClick={() => setPresetModalMode('save')}
+              disabled={sequence.length === 0}
+            >
+              💾 Save
+            </button>
+            <button className="add-step-btn" onClick={handleAddStep}>
+              + Add Step
+            </button>
+          </div>
         </div>
         <div className="sequence-steps">
           {sequence.length === 0 ? (
@@ -191,6 +284,9 @@ function Jam({ tuning, tabView, onHighlightChange }) {
         onLoopToggle={setLoop}
         currentBeat={currentBeat}
         beatsInCurrentStep={beatsInCurrentStep}
+        timeSignature={effectiveSettings.timeSignature}
+        accentPattern={effectiveSettings.accentPattern}
+        customAccents={effectiveSettings.customAccents}
       />
 
       {/* Current Step Display */}
