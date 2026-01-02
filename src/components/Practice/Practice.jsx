@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { NOTES, getNoteOnFret, FRET_COUNT } from '../../data/notes';
 import './Practice.css';
 
-function Practice({ tuning }) {
+function Practice({ tuning, onReset }) {
   const [quizType, setQuizType] = useState('note'); // 'note' or 'fret'
   const [question, setQuestion] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -62,12 +62,17 @@ function Practice({ tuning }) {
     setSelectedAnswer(null);
     setIsCorrect(null);
 
+    // Reset revealed frets when generating new question
+    if (onReset) {
+      onReset();
+    }
+
     if (quizType === 'note') {
       setQuestion(generateNoteQuestion());
     } else {
       setQuestion(generateFretQuestion());
     }
-  }, [quizType, generateNoteQuestion, generateFretQuestion]);
+  }, [quizType, generateNoteQuestion, generateFretQuestion, onReset]);
 
   useEffect(() => {
     generateQuestion();
@@ -116,6 +121,8 @@ function Practice({ tuning }) {
           <span className="incorrect">Wrong: {score.incorrect}</span>
         </div>
       </div>
+
+      <p className="hint-text">💡 Click any fret on the fretboard below to reveal its note as a hint</p>
 
       <div className="quiz-type-toggle">
         <button

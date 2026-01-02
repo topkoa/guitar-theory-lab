@@ -128,6 +128,33 @@
   box-shadow: 0 0 10px var(--note-chord);
 }
 
+/* Practice mode styles */
+.note-dot.hidden {
+  background: transparent;
+  color: transparent;
+  opacity: 1;
+  box-shadow: none;
+}
+
+.note-dot.hidden.clickable {
+  cursor: pointer;
+}
+
+.note-dot.hidden.clickable:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.note-dot.revealed {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 10px var(--accent);
+}
+
+.note-dot.clickable {
+  cursor: pointer;
+}
+
 .fret-markers {
   display: flex;
   padding-left: 50px;

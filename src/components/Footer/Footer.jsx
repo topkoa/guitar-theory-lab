@@ -1,7 +1,7 @@
 import './Footer.css';
 
 // Import version from package.json
-const VERSION = '0.0.1';
+const VERSION = '0.0.2';
 
 function Footer() {
   return (

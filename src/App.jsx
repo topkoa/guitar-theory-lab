@@ -31,6 +31,19 @@ function App() {
     setJamHighlight(data);
   }, []);
 
+  // Practice mode state
+  const [revealedFrets, setRevealedFrets] = useState([]);
+  const handleFretClick = useCallback((stringIdx, fret, note) => {
+    const fretKey = `${stringIdx}-${fret}`;
+    if (!revealedFrets.includes(fretKey)) {
+      setRevealedFrets(prev => [...prev, fretKey]);
+    }
+  }, [revealedFrets]);
+
+  const handlePracticeReset = useCallback(() => {
+    setRevealedFrets([]);
+  }, []);
+
   // Computed highlighted notes
   const highlightedNotes = useMemo(() => {
     if (mode === 'scale') {
@@ -130,7 +143,7 @@ function App() {
               </div>
             </div>
 
-            <Practice tuning={tuning} />
+            <Practice tuning={tuning} onReset={handlePracticeReset} />
 
             <Fretboard
               tuning={tuning}
@@ -139,6 +152,9 @@ function App() {
               showIntervals={false}
               mode={mode}
               tabView={tabView}
+              practiceMode={true}
+              onFretClick={handleFretClick}
+              revealedFrets={revealedFrets}
             />
           </>
         ) : activeTab === 'jam' ? (

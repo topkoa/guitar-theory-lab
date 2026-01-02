@@ -18,6 +18,14 @@
   margin: 0;
 }
 
+.hint-text {
+  color: var(--text-secondary);
+  font-size: 0.9em;
+  text-align: center;
+  margin: 0 0 15px 0;
+  font-style: italic;
+}
+
 .score {
   display: flex;
   gap: 15px;

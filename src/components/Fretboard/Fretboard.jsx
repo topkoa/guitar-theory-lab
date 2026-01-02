@@ -3,7 +3,17 @@ import { FRET_COUNT, FRET_MARKERS, DOUBLE_MARKERS, getNoteOnFret } from '../../d
 import { getIntervalFromRoot } from '../../utils/musicTheory';
 import './Fretboard.css';
 
-function Fretboard({ tuning, highlightedNotes, rootNote, showIntervals, mode, tabView }) {
+function Fretboard({
+  tuning,
+  highlightedNotes,
+  rootNote,
+  showIntervals,
+  mode,
+  tabView,
+  practiceMode = false,
+  onFretClick = null,
+  revealedFrets = []
+}) {
   const fretboardData = useMemo(() => {
     const data = tuning.map((openNote, stringIndex) => {
       const frets = [];
@@ -21,7 +31,17 @@ function Fretboard({ tuning, highlightedNotes, rootNote, showIntervals, mode, ta
     return tabView ? [...data].reverse() : data;
   }, [tuning, tabView]);
 
-  const getNoteClass = (note) => {
+  const getNoteClass = (note, stringIdx, fret) => {
+    if (practiceMode) {
+      // In practice mode, only show notes if they've been revealed
+      const fretKey = `${stringIdx}-${fret}`;
+      if (!revealedFrets.includes(fretKey)) {
+        return 'hidden';
+      }
+      // Show revealed notes
+      return 'revealed';
+    }
+
     if (!highlightedNotes.length) return 'inactive';
     if (note === rootNote) return 'root';
     if (highlightedNotes.includes(note)) {
@@ -30,7 +50,16 @@ function Fretboard({ tuning, highlightedNotes, rootNote, showIntervals, mode, ta
     return 'inactive';
   };
 
-  const getDisplayText = (note) => {
+  const getDisplayText = (note, stringIdx, fret) => {
+    if (practiceMode) {
+      // In practice mode, only show note name if revealed
+      const fretKey = `${stringIdx}-${fret}`;
+      if (!revealedFrets.includes(fretKey)) {
+        return '';
+      }
+      return note;
+    }
+
     if (!showIntervals || !highlightedNotes.includes(note)) {
       return note;
     }
@@ -42,6 +71,12 @@ function Fretboard({ tuning, highlightedNotes, rootNote, showIntervals, mode, ta
     return intervalNames[interval] || note;
   };
 
+  const handleFretClick = (stringIdx, fret, note) => {
+    if (practiceMode && onFretClick) {
+      onFretClick(stringIdx, fret, note);
+    }
+  };
+
   return (
     <div className="fretboard-container">
       <div className="fretboard">
@@ -51,8 +86,11 @@ function Fretboard({ tuning, highlightedNotes, rootNote, showIntervals, mode, ta
             <div className="frets-container">
               {string.frets.map((fretData) => (
                 <div key={fretData.fret} className="fret">
-                  <div className={`note-dot ${getNoteClass(fretData.note)}`}>
-                    {getDisplayText(fretData.note)}
+                  <div
+                    className={`note-dot ${getNoteClass(fretData.note, stringIdx, fretData.fret)} ${practiceMode ? 'clickable' : ''}`}
+                    onClick={() => handleFretClick(stringIdx, fretData.fret, fretData.note)}
+                  >
+                    {getDisplayText(fretData.note, stringIdx, fretData.fret)}
                   </div>
                 </div>
               ))}
