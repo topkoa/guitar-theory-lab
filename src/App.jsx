@@ -24,6 +24,7 @@ function App() {
   const [chordType, setChordType] = useState('major');
   const [showIntervals, setShowIntervals] = useState(false);
   const [tabView, setTabView] = useState(false);
+  const [fretCount, setFretCount] = useState(22);
 
   // Filter state for intervals/notes
   const [filteredIntervals, setFilteredIntervals] = useState({
@@ -117,6 +118,8 @@ function App() {
               setTabView={setTabView}
               filteredIntervals={filteredIntervals}
               setFilteredIntervals={setFilteredIntervals}
+              fretCount={fretCount}
+              setFretCount={setFretCount}
             />
 
             <Reference
@@ -134,6 +137,7 @@ function App() {
               mode={mode}
               tabView={tabView}
               filteredIntervals={filteredIntervals}
+              fretCount={fretCount}
             />
           </>
         ) : activeTab === 'practice' ? (
@@ -174,6 +178,7 @@ function App() {
               practiceMode={true}
               onFretClick={handleFretClick}
               revealedFrets={revealedFrets}
+              fretCount={fretCount}
             />
           </>
         ) : activeTab === 'jam' ? (
@@ -215,6 +220,7 @@ function App() {
               showIntervals={false}
               mode={jamHighlight.mode}
               tabView={tabView}
+              fretCount={fretCount}
             />
           </>
         ) : null}

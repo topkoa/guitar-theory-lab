@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { FRET_COUNT, FRET_MARKERS, DOUBLE_MARKERS, getNoteOnFret } from '../../data/notes';
+import { FRET_MARKERS, DOUBLE_MARKERS, getNoteOnFret } from '../../data/notes';
 import { getIntervalFromRoot } from '../../utils/musicTheory';
 import './Fretboard.css';
 
@@ -13,12 +13,13 @@ function Fretboard({
   practiceMode = false,
   onFretClick = null,
   revealedFrets = [],
-  filteredIntervals = null
+  filteredIntervals = null,
+  fretCount = 22
 }) {
   const fretboardData = useMemo(() => {
     const data = tuning.map((openNote, stringIndex) => {
       const frets = [];
-      for (let fret = 0; fret <= FRET_COUNT; fret++) {
+      for (let fret = 0; fret <= fretCount; fret++) {
         const note = getNoteOnFret(openNote, fret);
         frets.push({
           fret,
@@ -30,7 +31,7 @@ function Fretboard({
     });
     // Reverse for tab view (high E on top)
     return tabView ? [...data].reverse() : data;
-  }, [tuning, tabView]);
+  }, [tuning, tabView, fretCount]);
 
   const getNoteClass = (note, stringIdx, fret) => {
     if (practiceMode) {
@@ -108,7 +109,7 @@ function Fretboard({
           </div>
         ))}
         <div className="fret-markers">
-          {Array.from({ length: FRET_COUNT + 1 }, (_, fret) => (
+          {Array.from({ length: fretCount + 1 }, (_, fret) => (
             <div key={fret} className="fret-marker">
               {fret === 0 ? (
                 <span className="fret-number">0</span>
