@@ -1,14 +1,12 @@
 import './Footer.css';
-
-// Import version from package.json
-const VERSION = '0.0.3';
+import { version } from '../../../package.json';
 
 function Footer() {
   return (
     <footer className="app-footer">
       <div className="footer-content">
         <p>
-          Guitar Theory Lab v{VERSION}
+          Guitar Theory Lab v{version}
         </p>
         <p className="footer-links">
           <a
