@@ -12,7 +12,8 @@ function Fretboard({
   tabView,
   practiceMode = false,
   onFretClick = null,
-  revealedFrets = []
+  revealedFrets = [],
+  filteredIntervals = null
 }) {
   const fretboardData = useMemo(() => {
     const data = tuning.map((openNote, stringIndex) => {
@@ -43,6 +44,15 @@ function Fretboard({
     }
 
     if (!highlightedNotes.length) return 'inactive';
+
+    // Check if this note should be filtered out
+    if (filteredIntervals && highlightedNotes.includes(note)) {
+      const interval = getIntervalFromRoot(note, rootNote);
+      if (!filteredIntervals[interval]) {
+        return 'inactive';
+      }
+    }
+
     if (note === rootNote) return 'root';
     if (highlightedNotes.includes(note)) {
       return mode === 'chord' ? 'chord' : 'highlighted';

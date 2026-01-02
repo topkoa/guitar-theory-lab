@@ -5,6 +5,17 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.6] - 2026-01-02
+
+### Added
+- Interval/Note filtering functionality in Learn mode
+  - New IntervalFilter component with checkboxes for each interval (R, b2, 2, b3, 3, 4, b5, 5, b6, 6, b7, 7)
+  - Filter toggles dynamically switch between interval names and actual note names based on root
+  - "All" and "None" buttons for quick filter selection
+  - Unchecked intervals/notes are hidden from the fretboard display
+  - Works seamlessly with both "Show Intervals" mode and note display mode
+  - Allows selective study of specific intervals or notes (e.g., hide all 4ths, show only root and 5th, etc.)
+
 ## [0.0.5] - 2026-01-02
 
 ### Changed

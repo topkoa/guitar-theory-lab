@@ -25,6 +25,22 @@ function App() {
   const [showIntervals, setShowIntervals] = useState(false);
   const [tabView, setTabView] = useState(false);
 
+  // Filter state for intervals/notes
+  const [filteredIntervals, setFilteredIntervals] = useState({
+    0: true,   // R (Root)
+    1: true,   // b2
+    2: true,   // 2
+    3: true,   // b3
+    4: true,   // 3
+    5: true,   // 4
+    6: true,   // b5
+    7: true,   // 5
+    8: true,   // b6
+    9: true,   // 6
+    10: true,  // b7
+    11: true   // 7
+  });
+
   // Jam mode state
   const [jamHighlight, setJamHighlight] = useState({ notes: [], rootNote: 'A', mode: 'scale' });
   const handleJamHighlightChange = useCallback((data) => {
@@ -99,6 +115,8 @@ function App() {
               setShowIntervals={setShowIntervals}
               tabView={tabView}
               setTabView={setTabView}
+              filteredIntervals={filteredIntervals}
+              setFilteredIntervals={setFilteredIntervals}
             />
 
             <Reference
@@ -115,6 +133,7 @@ function App() {
               showIntervals={showIntervals}
               mode={mode}
               tabView={tabView}
+              filteredIntervals={filteredIntervals}
             />
           </>
         ) : activeTab === 'practice' ? (
