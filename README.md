@@ -2,6 +2,8 @@
 
 A web application for learning guitar theory with an interactive fretboard, scale/chord reference, practice quizzes, and a jam mode for playing along with chord progressions.
 
+**[Live Demo](https://topkoa.github.io/guitar-theory-lab/)**
+
 ## Features
 
 ### Learn Mode
