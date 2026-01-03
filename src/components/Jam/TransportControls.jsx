@@ -108,7 +108,7 @@ function TransportControls({
         </label>
       </div>
 
-      {isPlaying && currentStep && (
+      {currentStep && (
         <div className="current-step-info">
           <span className="step-label">Current:</span>
           <span className="step-name">{getStepName()}</span>

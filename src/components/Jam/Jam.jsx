@@ -329,7 +329,7 @@ function Jam({ tuning, tabView, onHighlightChange }) {
                 key={step.id}
                 step={step}
                 index={index}
-                isActive={isPlaying && index === currentStepIndex}
+                isActive={index === currentStepIndex}
                 onChange={handleUpdateStep}
                 onDelete={handleDeleteStep}
                 onPlayChord={handlePlayChord}
