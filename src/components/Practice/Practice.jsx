@@ -1,13 +1,17 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { NOTES, getNoteOnFret, FRET_COUNT } from '../../data/notes';
+import { CHORDS } from '../../data/chords';
+import { getChordNotes } from '../../utils/musicTheory';
 import './Practice.css';
 
-function Practice({ tuning, onReset }) {
+function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIntervals }) {
   const [quizType, setQuizType] = useState('note'); // 'note' or 'fret'
   const [question, setQuestion] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isCorrect, setIsCorrect] = useState(null);
   const [score, setScore] = useState({ correct: 0, incorrect: 0 });
+  const [showRootHint, setShowRootHint] = useState(false);
+  const [showStrategyHint, setShowStrategyHint] = useState(false);
 
   // Generate string names dynamically based on tuning
   const getStringName = (idx) => {
@@ -58,6 +62,77 @@ function Practice({ tuning, onReset }) {
     };
   }, [tuning]);
 
+  const generateChordQuestion = useCallback(() => {
+    // Get all available chord types
+    const chordTypes = Object.keys(CHORDS);
+
+    // Pick random root note and chord type
+    const rootNote = NOTES[Math.floor(Math.random() * NOTES.length)];
+    const correctChordType = chordTypes[Math.floor(Math.random() * chordTypes.length)];
+
+    // Get the notes for this chord
+    const chordNotes = getChordNotes(rootNote, correctChordType);
+
+    // Generate wrong answer options (5 total wrong answers)
+    const wrongAnswers = [];
+    while (wrongAnswers.length < 5) {
+      const wrongRoot = NOTES[Math.floor(Math.random() * NOTES.length)];
+      const wrongType = chordTypes[Math.floor(Math.random() * chordTypes.length)];
+      const answerKey = `${wrongRoot}-${wrongType}`;
+
+      // Don't include the correct answer
+      if (wrongRoot === rootNote && wrongType === correctChordType) continue;
+
+      // Avoid duplicates
+      if (wrongAnswers.some(a => a.key === answerKey)) continue;
+
+      wrongAnswers.push({
+        key: answerKey,
+        label: `${wrongRoot} ${CHORDS[wrongType].name}`,
+        root: wrongRoot,
+        type: wrongType
+      });
+    }
+
+    // Add correct answer and shuffle
+    const allOptions = [
+      {
+        key: `${rootNote}-${correctChordType}`,
+        label: `${rootNote} ${CHORDS[correctChordType].name}`,
+        root: rootNote,
+        type: correctChordType
+      },
+      ...wrongAnswers
+    ].sort(() => Math.random() - 0.5);
+
+    return {
+      type: 'chord',
+      rootNote,
+      chordType: correctChordType,
+      chordNotes,
+      correctAnswer: `${rootNote}-${correctChordType}`,
+      options: allOptions
+    };
+  }, []);
+
+  const getChordStrategyHint = (chordType) => {
+    const hints = {
+      'major': 'Look for a bright, happy sound. Count 4 half-steps from root to the 3rd, then 3 more to the 5th.',
+      'minor': 'Listen for a sad, dark quality. Count 3 half-steps from root to the minor 3rd, then 4 more to the 5th.',
+      'diminished': 'This chord sounds tense and unresolved. It has a minor 3rd (3 half-steps) and a diminished 5th (6 half-steps from root).',
+      'augmented': 'This chord sounds suspenseful. It has a major 3rd (4 half-steps) and an augmented 5th (8 half-steps from root).',
+      'major7': 'A jazzy, sophisticated sound. It\'s a major triad with a major 7th added (11 half-steps from root).',
+      'minor7': 'Common in jazz and blues. Minor triad with a minor 7th added (10 half-steps from root).',
+      'dominant7': 'The classic "blues" chord. Major triad with a minor 7th (10 half-steps from root).',
+      'diminished7': 'Very tense, symmetrical chord. Minor 3rd intervals stacked: 3, 6, and 9 half-steps from root.',
+      'sus2': 'Suspended sound - replaces the 3rd with the 2nd (2 half-steps from root). Neither major nor minor.',
+      'sus4': 'Suspended sound - replaces the 3rd with the 4th (5 half-steps from root). Creates tension.',
+      'major6': 'Sweet, nostalgic sound. Major triad with a major 6th added (9 half-steps from root).',
+      'minor6': 'Melancholic but colorful. Minor triad with a major 6th (9 half-steps from root).',
+    };
+    return hints[chordType] || 'Look at the intervals between the notes to identify the chord quality.';
+  };
+
   const generateQuestion = useCallback(() => {
     setSelectedAnswer(null);
     setIsCorrect(null);
@@ -69,14 +144,27 @@ function Practice({ tuning, onReset }) {
 
     if (quizType === 'note') {
       setQuestion(generateNoteQuestion());
-    } else {
+    } else if (quizType === 'fret') {
       setQuestion(generateFretQuestion());
+    } else if (quizType === 'chord') {
+      setQuestion(generateChordQuestion());
     }
-  }, [quizType, generateNoteQuestion, generateFretQuestion, onReset]);
+  }, [quizType, generateNoteQuestion, generateFretQuestion, generateChordQuestion, onReset]);
 
   useEffect(() => {
     generateQuestion();
   }, [quizType, tuning]);
+
+  // Update highlighted notes for chord mode
+  useEffect(() => {
+    if (onHighlightChange) {
+      if (quizType === 'chord' && question?.chordNotes && question?.rootNote) {
+        onHighlightChange(question.chordNotes, question.rootNote, true, showRootHint);
+      } else {
+        onHighlightChange([], 'C', false, false);
+      }
+    }
+  }, [quizType, question, onHighlightChange, showRootHint]);
 
   const handleAnswer = (answer) => {
     if (selectedAnswer !== null) return;
@@ -86,8 +174,10 @@ function Practice({ tuning, onReset }) {
     let correct;
     if (question.type === 'note') {
       correct = answer === question.correctAnswer;
-    } else {
+    } else if (question.type === 'fret') {
       correct = question.correctAnswers.includes(answer);
+    } else if (question.type === 'chord') {
+      correct = answer === question.correctAnswer;
     }
 
     setIsCorrect(correct);
@@ -100,10 +190,10 @@ function Practice({ tuning, onReset }) {
   const getButtonClass = (option) => {
     if (selectedAnswer === null) return '';
 
-    if (question.type === 'note') {
+    if (question.type === 'note' || question.type === 'chord') {
       if (option === question.correctAnswer) return 'correct';
       if (option === selectedAnswer && option !== question.correctAnswer) return 'incorrect';
-    } else {
+    } else if (question.type === 'fret') {
       if (question.correctAnswers.includes(option)) return 'correct';
       if (option === selectedAnswer && !question.correctAnswers.includes(option)) return 'incorrect';
     }
@@ -122,7 +212,41 @@ function Practice({ tuning, onReset }) {
         </div>
       </div>
 
-      <p className="hint-text">💡 Click any fret on the fretboard below to reveal its note as a hint</p>
+      <p className="hint-text">
+        {quizType === 'chord'
+          ? '🎸 Identify the chord displayed on the fretboard'
+          : '💡 Click any fret on the fretboard below to reveal its note as a hint'
+        }
+      </p>
+
+      {quizType === 'chord' && (
+        <div className="hint-toggle-container">
+          <label className="hint-toggle">
+            <input
+              type="checkbox"
+              checked={showRootHint}
+              onChange={(e) => setShowRootHint(e.target.checked)}
+            />
+            Show root note hint
+          </label>
+          <label className="hint-toggle">
+            <input
+              type="checkbox"
+              checked={showStrategyHint}
+              onChange={(e) => setShowStrategyHint(e.target.checked)}
+            />
+            Show strategy hint
+          </label>
+          <label className="hint-toggle">
+            <input
+              type="checkbox"
+              checked={showIntervals}
+              onChange={(e) => setShowIntervals(e.target.checked)}
+            />
+            Show intervals
+          </label>
+        </div>
+      )}
 
       <div className="quiz-type-toggle">
         <button
@@ -136,6 +260,12 @@ function Practice({ tuning, onReset }) {
           onClick={() => setQuizType('fret')}
         >
           Find the Fret
+        </button>
+        <button
+          className={quizType === 'chord' ? 'active' : ''}
+          onClick={() => setQuizType('chord')}
+        >
+          Name That Chord
         </button>
       </div>
 
@@ -159,7 +289,7 @@ function Practice({ tuning, onReset }) {
               ))}
             </div>
           </>
-        ) : (
+        ) : question.type === 'fret' ? (
           <>
             <p className="question">
               Where is <span className="highlight">{question.targetNote}</span> on the
@@ -178,6 +308,29 @@ function Practice({ tuning, onReset }) {
               ))}
             </div>
           </>
+        ) : (
+          <>
+            <p className="question">
+              What chord is displayed on the fretboard?
+            </p>
+            {showStrategyHint && question.chordType && (
+              <div className="strategy-hint">
+                💡 {getChordStrategyHint(question.chordType)}
+              </div>
+            )}
+            <div className="answer-options">
+              {question.options.map(option => (
+                <button
+                  key={option.key}
+                  className={`answer-btn ${getButtonClass(option.key)}`}
+                  onClick={() => handleAnswer(option.key)}
+                  disabled={selectedAnswer !== null}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </>
         )}
 
         {selectedAnswer !== null && (
@@ -185,7 +338,9 @@ function Practice({ tuning, onReset }) {
             <div className={`feedback ${isCorrect ? 'correct' : 'incorrect'}`}>
               {isCorrect ? 'Correct!' : question.type === 'note'
                 ? `Incorrect. The answer is ${question.correctAnswer}`
-                : `Incorrect. ${question.targetNote} is on fret${question.correctAnswers.length > 1 ? 's' : ''} ${question.correctAnswers.join(', ')}`
+                : question.type === 'fret'
+                ? `Incorrect. ${question.targetNote} is on fret${question.correctAnswers.length > 1 ? 's' : ''} ${question.correctAnswers.join(', ')}`
+                : `Incorrect. The answer is ${question.options.find(o => o.key === question.correctAnswer)?.label}`
               }
             </div>
             <button className="next-btn" onClick={generateQuestion}>

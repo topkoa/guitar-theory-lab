@@ -50,6 +50,12 @@ function App() {
 
   // Practice mode state
   const [revealedFrets, setRevealedFrets] = useState([]);
+  const [practiceHighlightedNotes, setPracticeHighlightedNotes] = useState([]);
+  const [practiceRootNote, setPracticeRootNote] = useState('C');
+  const [practiceShowHighlights, setPracticeShowHighlights] = useState(false);
+  const [practiceShowRootHint, setPracticeShowRootHint] = useState(false);
+  const [practiceShowIntervals, setPracticeShowIntervals] = useState(false);
+
   const handleFretClick = useCallback((stringIdx, fret, note) => {
     const fretKey = `${stringIdx}-${fret}`;
     if (!revealedFrets.includes(fretKey)) {
@@ -59,6 +65,13 @@ function App() {
 
   const handlePracticeReset = useCallback(() => {
     setRevealedFrets([]);
+  }, []);
+
+  const handlePracticeHighlightChange = useCallback((notes, rootNote = 'C', showHighlights = false, showRootHint = false) => {
+    setPracticeHighlightedNotes(notes);
+    setPracticeRootNote(rootNote);
+    setPracticeShowHighlights(showHighlights);
+    setPracticeShowRootHint(showRootHint);
   }, []);
 
   // Computed highlighted notes
@@ -166,16 +179,24 @@ function App() {
               </div>
             </div>
 
-            <Practice tuning={tuning} onReset={handlePracticeReset} />
+            <Practice
+              tuning={tuning}
+              onReset={handlePracticeReset}
+              onHighlightChange={handlePracticeHighlightChange}
+              showIntervals={practiceShowIntervals}
+              setShowIntervals={setPracticeShowIntervals}
+            />
 
             <Fretboard
               tuning={tuning}
-              highlightedNotes={[]}
-              rootNote={rootNote}
-              showIntervals={false}
+              highlightedNotes={practiceHighlightedNotes}
+              rootNote={practiceRootNote}
+              showIntervals={practiceShowIntervals}
               mode={mode}
               tabView={tabView}
               practiceMode={true}
+              practiceShowHighlights={practiceShowHighlights}
+              practiceShowRootHint={practiceShowRootHint}
               onFretClick={handleFretClick}
               revealedFrets={revealedFrets}
               fretCount={fretCount}
