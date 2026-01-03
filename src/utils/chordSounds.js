@@ -55,10 +55,11 @@ export function getChordVoicing(notes) {
  * @param {string} waveform - Oscillator type ('sine' or 'triangle', default: 'sine')
  */
 export function createChordSound(ctx, time, notes, volume = 0.25, duration = 0.8, waveform = 'sine') {
-  if (!ctx || !notes || notes.length === 0) return;
+  if (!ctx || !notes || notes.length === 0) return [];
 
   // Get voicing octaves for each note
   const octaves = getChordVoicing(notes);
+  const activeNodes = []; // Track created nodes
 
   // Create an oscillator and gain node for each note
   notes.forEach((note, index) => {
@@ -90,9 +91,39 @@ export function createChordSound(ctx, time, notes, volume = 0.25, duration = 0.8
     // Fade out at the end
     gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
 
+    // Store reference before starting
+    activeNodes.push({
+      osc,
+      gain,
+      stopTime: time + duration
+    });
+
     // Start and stop oscillator
     osc.start(time);
     osc.stop(time + duration);
+  });
+
+  return activeNodes; // Return references for stopping
+}
+
+/**
+ * Stop active oscillators immediately by setting gain to 0
+ * @param {Array} activeNodes - Array of {osc, gain, stopTime} objects
+ * @param {AudioContext} ctx - Web Audio context
+ */
+export function stopActiveOscillators(activeNodes, ctx) {
+  if (!activeNodes || !ctx) return;
+
+  const now = ctx.currentTime;
+  activeNodes.forEach(({ gain, stopTime }) => {
+    // Only silence if still playing
+    if (now < stopTime) {
+      try {
+        gain.gain.setValueAtTime(0, now);
+      } catch (e) {
+        // Node may already be stopped, ignore errors
+      }
+    }
   });
 }
 
@@ -103,16 +134,18 @@ export function createChordSound(ctx, time, notes, volume = 0.25, duration = 0.8
  * @param {number} volume - Volume level (default: 0.25)
  * @param {number} duration - Duration in seconds (default: 0.8)
  * @param {string} waveform - Oscillator type (default: 'sine')
+ * @returns {Array} Array of active node references
  */
 export function playChordNow(ctx, notes, volume = 0.25, duration = 0.8, waveform = 'sine') {
-  if (!ctx) return;
+  if (!ctx) return [];
 
   // Resume audio context if suspended (browser autoplay policy)
   if (ctx.state === 'suspended') {
     ctx.resume().then(() => {
-      createChordSound(ctx, ctx.currentTime, notes, volume, duration, waveform);
+      return createChordSound(ctx, ctx.currentTime, notes, volume, duration, waveform);
     });
+    return []; // Can't return nodes from async resume
   } else {
-    createChordSound(ctx, ctx.currentTime, notes, volume, duration, waveform);
+    return createChordSound(ctx, ctx.currentTime, notes, volume, duration, waveform);
   }
 }

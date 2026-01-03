@@ -5,6 +5,19 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.13] - 2026-01-03
+
+### Fixed
+- Jam mode: Pause and stop now immediately silence chord audio (Issue #11)
+  - Modified src/utils/chordSounds.js to return oscillator/gain node references from createChordSound()
+  - Added stopActiveOscillators() utility function to immediately silence playing audio
+  - Updated src/components/Jam/Jam.jsx to track active oscillators in activeOscillatorsRef
+  - handleStop() now silences all active oscillators before stopping playback
+  - handlePlay() now silences oscillators when pausing (toggling from play to pause)
+  - Automatic cleanup of expired oscillators prevents memory leaks
+  - Audio stops immediately when pause or stop is pressed, even mid-chord
+  - Uses Web Audio API gain nodes set to 0 for instant silence without audio pops
+
 ## [0.0.12] - 2026-01-03
 
 ### Fixed
