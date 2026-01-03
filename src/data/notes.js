@@ -10,6 +10,16 @@ export const ENHARMONIC = {
   'A#': 'Bb'
 };
 
+// Get display name for dropdown (shows enharmonic equivalents)
+export function getNoteDisplayName(note) {
+  if (ENHARMONIC[note]) {
+    // Replace # with ♯ and add flat equivalent with ♭
+    return note.replace('#', '♯') + '/' + ENHARMONIC[note].replace('b', '♭');
+  }
+  // Natural notes remain unchanged
+  return note;
+}
+
 // Get note index (0-11)
 export function getNoteIndex(note) {
   const normalized = note.replace('b', '#');

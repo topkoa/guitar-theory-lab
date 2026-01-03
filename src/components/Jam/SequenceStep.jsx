@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NOTES } from '../../data/notes';
+import { NOTES, getNoteDisplayName } from '../../data/notes';
 import { getScaleOptions } from '../../data/scales';
 import { getChordOptions } from '../../data/chords';
 import { TIME_SIGNATURES, hasOverrides, resolveStepSettings } from '../../utils/jamSettings';
@@ -76,7 +76,7 @@ function SequenceStep({ step, onChange, onDelete, isActive, index, onPlayChord, 
           className="root-select"
         >
           {NOTES.map(note => (
-            <option key={note} value={note}>{note}</option>
+            <option key={note} value={note}>{getNoteDisplayName(note)}</option>
           ))}
         </select>
 
