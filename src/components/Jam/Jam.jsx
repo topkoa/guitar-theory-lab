@@ -9,7 +9,7 @@ import { SCALES } from '../../data/scales';
 import { CHORDS } from '../../data/chords';
 import { DEFAULT_GLOBAL_SETTINGS, resolveStepSettings } from '../../utils/jamSettings';
 import { presetStorage } from '../../utils/presetStorage';
-import { createChordSound, playChordNow } from '../../utils/chordSounds';
+import { createChordSound, playChordNow, stopActiveOscillators } from '../../utils/chordSounds';
 import './Jam.css';
 
 // Generate unique ID
@@ -60,6 +60,7 @@ function Jam({ tuning, tabView, onHighlightChange }) {
   const stepIndexRef = useRef(0);
   const beatInMeasureRef = useRef(0);
   const isInitialMount = useRef(true);
+  const activeOscillatorsRef = useRef([]); // Track active oscillators for stopping
 
   // Get current step
   const currentStep = sequence[currentStepIndex] || null;
@@ -126,7 +127,7 @@ function Jam({ tuning, tabView, onHighlightChange }) {
           const stepDuration = secondsPerBeat * activeStep.beats;
 
           // Use the same scheduled time as the metronome beat
-          createChordSound(
+          const nodes = createChordSound(
             ctx,
             scheduledBeatTime,
             notes,
@@ -134,6 +135,17 @@ function Jam({ tuning, tabView, onHighlightChange }) {
             stepDuration, // Play for entire step duration
             stepSettings.chordAudio.waveform
           );
+
+          // Track active oscillators for stopping
+          if (nodes && nodes.length > 0) {
+            activeOscillatorsRef.current.push(...nodes);
+
+            // Clean up expired oscillators to prevent memory leaks
+            const now = ctx.currentTime;
+            activeOscillatorsRef.current = activeOscillatorsRef.current.filter(
+              node => now < node.stopTime
+            );
+          }
         }
       }
     }
@@ -192,10 +204,23 @@ function Jam({ tuning, tabView, onHighlightChange }) {
   // Handlers
   const handlePlay = () => {
     if (sequence.length === 0) return;
+
+    // If pausing (currently playing), stop active audio
+    if (isPlaying && audioContext.current) {
+      stopActiveOscillators(activeOscillatorsRef.current, audioContext.current);
+      activeOscillatorsRef.current = [];
+    }
+
     setIsPlaying(!isPlaying);
   };
 
   const handleStop = () => {
+    // Stop all active oscillators immediately
+    if (audioContext.current) {
+      stopActiveOscillators(activeOscillatorsRef.current, audioContext.current);
+    }
+    activeOscillatorsRef.current = [];
+
     setIsPlaying(false);
     setCurrentStepIndex(0);
     setCurrentBeat(1);
