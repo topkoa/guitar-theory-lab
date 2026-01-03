@@ -5,6 +5,48 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.16] - 2026-01-03
+
+### Added
+- Practice mode: New "Name That Chord" practice mode
+  - Added third quiz type alongside "Name the Note" and "Find the Fret"
+  - Displays random chord on fretboard with highlighted notes
+  - Multiple choice format with 6 options combining root note and chord type (e.g., "C Major", "D♯ Minor 7th")
+  - Includes all chord types from chord database for comprehensive learning
+  - Chord notes automatically highlighted on fretboard during quiz
+  - Added generateChordQuestion() function in src/components/Practice/Practice.jsx
+  - Extended mode selector UI to show three buttons
+  - Updated answer validation logic to support chord mode
+  - Added feedback messages for incorrect chord answers
+- Practice mode: Chord identification hint system
+  - "Show root note hint" toggle - highlights root note with distinct color to help identify chord center
+  - "Show strategy hint" toggle - displays educational guidance on chord identification with interval patterns
+  - "Show intervals" toggle - displays interval labels (R, 3, 5, 7, etc.) instead of note names
+  - Strategy hints include characteristic sound descriptions and half-step counting for each chord type
+  - Covers all chord types: major, minor, diminished, augmented, 7th chords, suspended, and 6th chords
+  - Added getChordStrategyHint() function with music theory education content
+  - Hint system integrated with fretboard visualization for interactive learning
+
+### Changed
+- Practice mode: Expanded quiz type toggle to three buttons
+  - Updated src/components/Practice/Practice.jsx with three-option toggle UI
+  - Modified src/components/Practice/Practice.css for responsive three-button layout
+  - Added flex-wrap and mobile responsive styles (two buttons per row on small screens)
+  - Each button has min-width: 120px for consistent sizing
+- Practice mode: Enhanced fretboard integration
+  - Added practiceHighlightedNotes, practiceRootNote, practiceShowHighlights, practiceShowRootHint, and practiceShowIntervals state to src/App.jsx
+  - Added handlePracticeHighlightChange callback to pass chord notes and root from Practice to Fretboard
+  - Practice component now controls fretboard highlighting and display modes for chord mode
+  - Highlighted notes cleared when switching to note/fret modes
+  - Updated src/components/Fretboard/Fretboard.jsx to support practice mode interval display
+  - Root note highlighting can be toggled on/off independently in chord mode
+- Practice mode: Improved answer rendering logic
+  - Updated quiz content rendering to handle three question types
+  - Chord mode displays option.label for readable chord names
+  - Updated getButtonClass() to treat chord mode like note mode for validation
+  - Enhanced feedback messages with proper chord answer display
+  - Added styled strategy hint box with green accent for educational tips
+
 ## [0.0.15] - 2026-01-03
 
 ### Fixed

@@ -11,6 +11,8 @@ function Fretboard({
   mode,
   tabView,
   practiceMode = false,
+  practiceShowHighlights = false,
+  practiceShowRootHint = false,
   onFretClick = null,
   revealedFrets = [],
   filteredIntervals = null,
@@ -35,7 +37,18 @@ function Fretboard({
 
   const getNoteClass = (note, stringIdx, fret) => {
     if (practiceMode) {
-      // In practice mode, only show notes if they've been revealed
+      // If practiceShowHighlights is true, show highlighted notes (chord mode)
+      if (practiceShowHighlights) {
+        if (!highlightedNotes.length) return 'inactive';
+        // Only show root color if practiceShowRootHint is true
+        if (note === rootNote && practiceShowRootHint) return 'root';
+        if (highlightedNotes.includes(note)) {
+          return mode === 'chord' ? 'chord' : 'highlighted';
+        }
+        return 'inactive';
+      }
+
+      // Otherwise, only show notes if they've been revealed (note/fret mode)
       const fretKey = `${stringIdx}-${fret}`;
       if (!revealedFrets.includes(fretKey)) {
         return 'hidden';
@@ -63,7 +76,24 @@ function Fretboard({
 
   const getDisplayText = (note, stringIdx, fret) => {
     if (practiceMode) {
-      // In practice mode, only show note name if revealed
+      // If showing highlights (chord mode), show note names or intervals for highlighted notes
+      if (practiceShowHighlights) {
+        if (highlightedNotes.includes(note) || note === rootNote) {
+          // Check if intervals should be shown
+          if (showIntervals) {
+            const interval = getIntervalFromRoot(note, rootNote);
+            const intervalNames = {
+              0: 'R', 1: 'b2', 2: '2', 3: 'b3', 4: '3', 5: '4',
+              6: 'b5', 7: '5', 8: 'b6', 9: '6', 10: 'b7', 11: '7'
+            };
+            return intervalNames[interval] || note;
+          }
+          return note;
+        }
+        return '';
+      }
+
+      // Otherwise, only show note name if revealed (note/fret mode)
       const fretKey = `${stringIdx}-${fret}`;
       if (!revealedFrets.includes(fretKey)) {
         return '';
