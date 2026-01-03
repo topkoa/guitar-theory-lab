@@ -5,6 +5,18 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.12] - 2026-01-03
+
+### Fixed
+- Jam mode: Step highlighting now persists when paused (Issue #12)
+  - Updated src/components/Jam/Jam.jsx line 332 to remove isPlaying condition from isActive prop
+  - Current step remains visually highlighted when playback is paused
+  - Step highlighting now solely depends on currentStepIndex, not playback state
+- Jam mode: Current step info now displays when paused
+  - Updated src/components/Jam/TransportControls.jsx line 111 to remove isPlaying condition
+  - "Current Step Info" section now shows which step is current even when paused
+  - Provides better user feedback about playback position during pause
+
 ## [0.0.11] - 2026-01-03
 
 ### Added
