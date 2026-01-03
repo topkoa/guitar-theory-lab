@@ -100,13 +100,16 @@ function GlobalSettings({ settings, onSettingsChange }) {
   const handleTimeSignatureChange = (numerator, denominator) => {
     updateTimeSignature(numerator, denominator);
 
-    // Adjust customAccents array to match new numerator
-    const newAccents = Array(numerator).fill(false);
-    newAccents[0] = true; // Always accent the first beat
-    for (let i = 1; i < Math.min(numerator, safeSettings.customAccents.length); i++) {
-      newAccents[i] = safeSettings.customAccents[i];
+    // Only adjust customAccents if using custom pattern
+    // This prevents unintended modifications when using standard patterns
+    if (safeSettings.accentPattern === 'custom') {
+      const newAccents = Array(numerator).fill(false);
+      newAccents[0] = true; // Always accent the first beat
+      for (let i = 1; i < Math.min(numerator, safeSettings.customAccents.length); i++) {
+        newAccents[i] = safeSettings.customAccents[i];
+      }
+      updateSetting('customAccents', newAccents);
     }
-    updateSetting('customAccents', newAccents);
   };
 
   return (
