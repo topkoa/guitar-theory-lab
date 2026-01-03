@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { NOTES } from '../../data/notes';
+import { NOTES, getNoteDisplayName } from '../../data/notes';
 import { TUNINGS, getTuningOptions } from '../../data/tunings';
 import { getScaleOptions } from '../../data/scales';
 import { getChordOptions } from '../../data/chords';
@@ -120,7 +120,7 @@ function Controls({
             onChange={(e) => setRootNote(e.target.value)}
           >
             {NOTES.map(note => (
-              <option key={note} value={note}>{note}</option>
+              <option key={note} value={note}>{getNoteDisplayName(note)}</option>
             ))}
           </select>
         </div>
