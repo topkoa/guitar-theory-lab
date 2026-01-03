@@ -1,52 +1,98 @@
 .reference-panel {
   background: var(--bg-secondary);
   border-radius: 8px;
-  padding: 20px;
-  margin: 0 20px 20px;
+  padding: 0;
+  margin: 0 20px 15px;
+  transition: all 0.2s ease;
+  overflow: hidden;
 }
 
-.reference-header {
+.reference-panel.collapsed {
+  padding: 0;
+}
+
+.reference-panel.expanded {
+  padding: 0;
+}
+
+.reference-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 15px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+}
+
+.reference-header-bar:hover {
+  background: var(--bg-tertiary);
+}
+
+.reference-title {
   display: flex;
   align-items: baseline;
-  gap: 15px;
-  margin-bottom: 15px;
+  gap: 10px;
+  flex: 1;
 }
 
-.reference-header h2 {
-  font-size: 1.4em;
+.collapse-icon {
+  font-size: 0.8em;
+  color: var(--text-secondary);
+  transition: transform 0.2s;
+}
+
+.reference-title h2 {
+  font-size: 1.2em;
   color: var(--accent);
   margin: 0;
 }
 
-.reference-header .formula {
-  font-size: 0.95em;
+.reference-title .formula {
+  font-size: 0.85em;
   color: var(--text-secondary);
   font-family: monospace;
 }
 
+.reference-content {
+  padding: 0 15px 15px;
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .reference-description {
   color: var(--text-secondary);
-  font-size: 0.9em;
-  margin-bottom: 15px;
+  font-size: 0.85em;
+  margin: 0 0 12px 0;
   font-style: italic;
 }
 
 .reference-notes {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 .note-badge {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   font-weight: bold;
-  font-size: 0.9em;
+  font-size: 0.85em;
 }
 
 .note-badge.root {
@@ -67,17 +113,17 @@
 .interval-info {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
 }
 
 .interval-badge {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
+  gap: 4px;
+  padding: 3px 8px;
   background: var(--bg-tertiary);
   border-radius: 4px;
-  font-size: 0.85em;
+  font-size: 0.8em;
 }
 
 .interval-badge .note {
@@ -87,4 +133,21 @@
 
 .interval-badge .interval {
   color: var(--text-secondary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .reference-title h2 {
+    font-size: 1em;
+  }
+
+  .reference-title .formula {
+    font-size: 0.75em;
+  }
+
+  .note-badge {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8em;
+  }
 }

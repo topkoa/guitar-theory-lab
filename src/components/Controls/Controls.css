@@ -1,27 +1,46 @@
 .controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  padding: 20px;
+  gap: 8px;
+  padding: 10px;
   background: var(--bg-secondary);
   border-radius: 8px;
-  margin: 20px;
+  margin: 10px 20px;
+  align-items: center;
+}
+
+.controls-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+}
+
+.controls-section:not(:last-child) {
+  border-right: 1px solid var(--bg-tertiary);
+  padding-right: 12px;
 }
 
 .control-group {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  align-items: center;
+  gap: 4px;
 }
 
 .control-group label {
-  font-size: 0.85em;
+  font-size: 0.8em;
   color: var(--text-secondary);
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .control-group select {
-  min-width: 150px;
+  min-width: 100px;
+  font-size: 0.9em;
+}
+
+.primary-controls .control-group:first-child {
+  margin-right: 8px;
 }
 
 .mode-toggle {
@@ -35,9 +54,10 @@
 .mode-toggle button {
   border-radius: 0;
   border: none;
-  padding: 0.5em 1.2em;
+  padding: 0.4em 1em;
   background: var(--bg-primary);
   color: var(--text-secondary);
+  font-size: 0.9em;
 }
 
 .mode-toggle button.active {
@@ -56,29 +76,34 @@
 .toggle-group {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .toggle-group label {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 0.8em;
   color: var(--text-secondary);
 }
 
 .toggle-group input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   accent-color: var(--accent);
   cursor: pointer;
 }
 
+.fret-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .fret-slider {
-  width: 100%;
-  min-width: 150px;
-  height: 6px;
+  width: 120px;
+  height: 5px;
   border-radius: 3px;
   background: var(--bg-tertiary);
   outline: none;
@@ -90,8 +115,8 @@
 .fret-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: var(--accent);
   cursor: pointer;
@@ -99,13 +124,13 @@
 }
 
 .fret-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
-  box-shadow: 0 0 8px var(--accent);
+  transform: scale(1.15);
+  box-shadow: 0 0 6px var(--accent);
 }
 
 .fret-slider::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: var(--accent);
   cursor: pointer;
@@ -114,6 +139,158 @@
 }
 
 .fret-slider::-moz-range-thumb:hover {
-  transform: scale(1.2);
-  box-shadow: 0 0 8px var(--accent);
+  transform: scale(1.15);
+  box-shadow: 0 0 6px var(--accent);
+}
+
+/* Interval Filter Dropdown */
+.interval-filter-dropdown {
+  position: relative;
+}
+
+.filter-dropdown-button {
+  padding: 0.4em 1em;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--bg-tertiary);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85em;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.filter-dropdown-button:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--accent);
+}
+
+.filter-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--bg-tertiary);
+  border-radius: 6px;
+  padding: 8px;
+  min-width: 250px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.filter-dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--bg-tertiary);
+}
+
+.filter-dropdown-header span {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.filter-actions button {
+  padding: 2px 8px;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: none;
+  border-radius: 4px;
+  font-size: 0.75em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-actions button:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.filter-dropdown-items {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.filter-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+  font-size: 0.85em;
+}
+
+.filter-item:hover {
+  background: var(--bg-tertiary);
+}
+
+.filter-item input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.filter-item span {
+  color: var(--text-primary);
+  font-size: 0.9em;
+}
+
+.filter-item .root-label {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .controls {
+    gap: 6px;
+  }
+
+  .controls-section {
+    gap: 6px;
+  }
+
+  .controls-section:not(:last-child) {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  .fret-slider {
+    width: 100px;
+  }
+}
+
+@media (max-width: 600px) {
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .controls-section {
+    flex-wrap: wrap;
+    padding: 0;
+    border-right: none;
+  }
+
+  .control-group select {
+    min-width: 80px;
+  }
+
+  .filter-dropdown-menu {
+    right: auto;
+    left: 0;
+  }
 }
