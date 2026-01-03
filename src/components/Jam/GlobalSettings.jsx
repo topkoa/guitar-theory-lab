@@ -43,9 +43,13 @@ function GlobalSettings({ settings, onSettingsChange }) {
     localStorage.setItem('globalSettings_chord_collapsed', !chordAudioExpanded);
   }, [chordAudioExpanded]);
 
-  // Ensure chordAudio exists with defaults (for backward compatibility)
+  // Ensure chordAudio and metronomeSound.volume exist with defaults (for backward compatibility)
   const safeSettings = {
     ...settings,
+    metronomeSound: {
+      ...settings.metronomeSound,
+      volume: settings.metronomeSound?.volume ?? 0.5
+    },
     chordAudio: settings.chordAudio || {
       enabled: true,
       volume: 0.25,
@@ -285,6 +289,18 @@ function GlobalSettings({ settings, onSettingsChange }) {
                   <option value="triplet">Triplets</option>
                 </select>
               </div>
+              <div className="control-row">
+                <label>Volume: {(safeSettings.metronomeSound.volume * 100).toFixed(0)}%</label>
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.05"
+                  value={safeSettings.metronomeSound.volume}
+                  onChange={(e) => updateMetronomeSound('volume', parseFloat(e.target.value))}
+                  className="volume-slider"
+                />
+              </div>
             </div>
             )}
           </div>
@@ -365,7 +381,7 @@ function GlobalSettings({ settings, onSettingsChange }) {
                   accentPattern: 'standard',
                   customAccents: [true, false, false, false],
                   swingRatio: 0.67,
-                  metronomeSound: { type: 'beep', subdivision: 'quarter' },
+                  metronomeSound: { type: 'beep', subdivision: 'quarter', volume: 0.5 },
                   chordAudio: { enabled: true, volume: 0.25, duration: 0.8, waveform: 'sine' }
                 });
               }}

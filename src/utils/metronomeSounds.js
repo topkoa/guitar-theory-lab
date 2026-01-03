@@ -9,8 +9,9 @@
  * @param {number} time - Scheduled play time
  * @param {number} accent - Accent strength 0.0-1.0
  * @param {boolean} isDownbeat - Whether this is the downbeat
+ * @param {number} volumeMultiplier - Volume multiplier 0.0-1.0
  */
-export function generateBeep(ctx, time, accent, isDownbeat) {
+export function generateBeep(ctx, time, accent, isDownbeat, volumeMultiplier = 1.0) {
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
 
@@ -22,8 +23,8 @@ export function generateBeep(ctx, time, accent, isDownbeat) {
   osc.frequency.value = baseFreq * (1 + accent * 0.2);
   osc.type = 'sine';
 
-  // Adjust volume based on accent strength
-  const volume = 0.1 + (accent * 0.25);
+  // Adjust volume based on accent strength and volume multiplier
+  const volume = (0.1 + (accent * 0.25)) * volumeMultiplier;
   gain.gain.setValueAtTime(volume, time);
   gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
 
@@ -37,8 +38,9 @@ export function generateBeep(ctx, time, accent, isDownbeat) {
  * @param {number} time - Scheduled play time
  * @param {number} accent - Accent strength 0.0-1.0
  * @param {boolean} isDownbeat - Whether this is the downbeat
+ * @param {number} volumeMultiplier - Volume multiplier 0.0-1.0
  */
-export function generateClick(ctx, time, accent, isDownbeat) {
+export function generateClick(ctx, time, accent, isDownbeat, volumeMultiplier = 1.0) {
   // Create a short noise buffer
   const bufferSize = ctx.sampleRate * 0.02; // 20ms
   const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
@@ -62,8 +64,8 @@ export function generateClick(ctx, time, accent, isDownbeat) {
   filter.connect(gain);
   gain.connect(ctx.destination);
 
-  // Adjust volume based on accent
-  const volume = 0.15 + (accent * 0.3);
+  // Adjust volume based on accent and volume multiplier
+  const volume = (0.15 + (accent * 0.3)) * volumeMultiplier;
   gain.gain.setValueAtTime(volume, time);
   gain.gain.exponentialRampToValueAtTime(0.001, time + 0.02);
 
@@ -77,8 +79,9 @@ export function generateClick(ctx, time, accent, isDownbeat) {
  * @param {number} time - Scheduled play time
  * @param {number} accent - Accent strength 0.0-1.0
  * @param {boolean} isDownbeat - Whether this is the downbeat
+ * @param {number} volumeMultiplier - Volume multiplier 0.0-1.0
  */
-export function generateWoodblock(ctx, time, accent, isDownbeat) {
+export function generateWoodblock(ctx, time, accent, isDownbeat, volumeMultiplier = 1.0) {
   // Create multiple oscillators for a more complex tone
   const frequencies = isDownbeat ? [480, 720, 1100] : [600, 900, 1350];
 
@@ -92,8 +95,8 @@ export function generateWoodblock(ctx, time, accent, isDownbeat) {
     osc.frequency.value = freq;
     osc.type = 'square';
 
-    // Volume decreases for higher partials
-    const partialVolume = (0.2 / (index + 1)) * (0.5 + accent * 0.5);
+    // Volume decreases for higher partials, scaled by volume multiplier
+    const partialVolume = ((0.2 / (index + 1)) * (0.5 + accent * 0.5)) * volumeMultiplier;
     gain.gain.setValueAtTime(partialVolume, time);
     gain.gain.exponentialRampToValueAtTime(0.001, time + 0.03);
 
@@ -118,15 +121,16 @@ export const SOUND_GENERATORS = {
  * @param {number} time - Scheduled play time
  * @param {number} accent - Accent strength 0.0-1.0
  * @param {boolean} isDownbeat - Whether this is the downbeat
+ * @param {number} volume - Volume level 0.0-1.0
  */
-export function playMetronomeSound(ctx, soundType, time, accent, isDownbeat) {
+export function playMetronomeSound(ctx, soundType, time, accent, isDownbeat, volume = 1.0) {
   const generator = SOUND_GENERATORS[soundType];
 
   if (!generator) {
     console.warn(`Unknown sound type: ${soundType}, using beep`);
-    generateBeep(ctx, time, accent, isDownbeat);
+    generateBeep(ctx, time, accent, isDownbeat, volume);
     return;
   }
 
-  generator(ctx, time, accent, isDownbeat);
+  generator(ctx, time, accent, isDownbeat, volume);
 }
