@@ -296,18 +296,27 @@ function Jam({ tuning, tabView, onHighlightChange }) {
         <div className="sequence-header">
           <h3>Chord/Scale Sequence</h3>
           <div className="sequence-actions">
-            <button className="preset-action-btn load-preset-btn" onClick={() => setPresetModalMode('load')}>
-              📂 Load
+            <button
+              className="preset-action-btn load-preset-btn icon-btn"
+              onClick={() => setPresetModalMode('load')}
+              title="Load Preset"
+            >
+              📂
             </button>
             <button
-              className="preset-action-btn save-preset-btn"
+              className="preset-action-btn save-preset-btn icon-btn"
               onClick={() => setPresetModalMode('save')}
               disabled={sequence.length === 0}
+              title="Save Preset"
             >
-              💾 Save
+              💾
             </button>
-            <button className="add-step-btn" onClick={handleAddStep}>
-              + Add Step
+            <button
+              className="add-step-btn icon-btn"
+              onClick={handleAddStep}
+              title="Add Step"
+            >
+              ➕
             </button>
           </div>
         </div>
@@ -347,16 +356,9 @@ function Jam({ tuning, tabView, onHighlightChange }) {
         timeSignature={effectiveSettings.timeSignature}
         accentPattern={effectiveSettings.accentPattern}
         customAccents={effectiveSettings.customAccents}
+        currentStep={currentStep}
+        currentStepIndex={currentStepIndex}
       />
-
-      {/* Current Step Display */}
-      <div className="current-step-display">
-        <h2>{getCurrentStepName()}</h2>
-        <p>
-          Step {currentStepIndex + 1} of {sequence.length}
-          {isPlaying && ` • Beat ${currentBeat} of ${beatsInCurrentStep}`}
-        </p>
-      </div>
     </div>
   );
 }

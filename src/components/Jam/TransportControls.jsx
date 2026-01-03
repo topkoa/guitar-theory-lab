@@ -12,7 +12,9 @@ function TransportControls({
   beatsInCurrentStep,
   timeSignature,
   accentPattern,
-  customAccents
+  customAccents,
+  currentStep,
+  currentStepIndex
 }) {
   // Calculate accent strength for beat indicator visualization
   const getAccentClass = (beatIndex) => {
@@ -29,6 +31,14 @@ function TransportControls({
       return '';
     }
     return beatIndex === 0 ? 'accented' : '';
+  };
+
+  // Get current step name for display
+  const getStepName = () => {
+    if (!currentStep) return '';
+    const { rootNote, type, scaleType, chordType } = currentStep;
+    const typeName = type === 'scale' ? scaleType : chordType;
+    return `${rootNote} ${typeName}`;
   };
 
   return (
@@ -53,6 +63,7 @@ function TransportControls({
           max="240"
           value={bpm}
           onChange={(e) => onBpmChange(Math.min(240, Math.max(40, parseInt(e.target.value) || 120)))}
+          className="bpm-input"
         />
         <input
           type="range"
@@ -85,7 +96,7 @@ function TransportControls({
             checked={metronomeEnabled}
             onChange={(e) => onMetronomeToggle(e.target.checked)}
           />
-          Metronome
+          Metro
         </label>
         <label className={`toggle-label ${loop ? 'active' : ''}`}>
           <input
@@ -96,6 +107,14 @@ function TransportControls({
           Loop
         </label>
       </div>
+
+      {isPlaying && currentStep && (
+        <div className="current-step-info">
+          <span className="step-label">Current:</span>
+          <span className="step-name">{getStepName()}</span>
+          <span className="step-beat">({currentBeat}/{beatsInCurrentStep})</span>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,9 +1,47 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TIME_SIGNATURES, countNonDefaultSettings } from '../../utils/jamSettings';
 import './GlobalSettings.css';
 
 function GlobalSettings({ settings, onSettingsChange }) {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  // Individual section collapse states
+  const [timeSignatureExpanded, setTimeSignatureExpanded] = useState(() => {
+    const saved = localStorage.getItem('globalSettings_timeSig_collapsed');
+    return saved !== 'true'; // Default to expanded
+  });
+
+  const [accentPatternExpanded, setAccentPatternExpanded] = useState(() => {
+    const saved = localStorage.getItem('globalSettings_accent_collapsed');
+    return saved !== 'true';
+  });
+
+  const [metronomeSoundExpanded, setMetronomeSoundExpanded] = useState(() => {
+    const saved = localStorage.getItem('globalSettings_metronome_collapsed');
+    return saved !== 'true';
+  });
+
+  const [chordAudioExpanded, setChordAudioExpanded] = useState(() => {
+    const saved = localStorage.getItem('globalSettings_chord_collapsed');
+    return saved !== 'true';
+  });
+
+  // Persist section collapse states
+  useEffect(() => {
+    localStorage.setItem('globalSettings_timeSig_collapsed', !timeSignatureExpanded);
+  }, [timeSignatureExpanded]);
+
+  useEffect(() => {
+    localStorage.setItem('globalSettings_accent_collapsed', !accentPatternExpanded);
+  }, [accentPatternExpanded]);
+
+  useEffect(() => {
+    localStorage.setItem('globalSettings_metronome_collapsed', !metronomeSoundExpanded);
+  }, [metronomeSoundExpanded]);
+
+  useEffect(() => {
+    localStorage.setItem('globalSettings_chord_collapsed', !chordAudioExpanded);
+  }, [chordAudioExpanded]);
 
   // Ensure chordAudio exists with defaults (for backward compatibility)
   const safeSettings = {
@@ -84,7 +122,14 @@ function GlobalSettings({ settings, onSettingsChange }) {
         <div className="global-settings-content">
           {/* Time Signature Section */}
           <div className="settings-section">
-            <h4>Time Signature</h4>
+            <div
+              className="section-header"
+              onClick={() => setTimeSignatureExpanded(!timeSignatureExpanded)}
+            >
+              <span className="section-chevron">{timeSignatureExpanded ? '▼' : '▶'}</span>
+              <h4>Time Signature</h4>
+            </div>
+            {timeSignatureExpanded && (
             <div className="time-sig-controls">
               <div className="preset-buttons">
                 {Object.entries(TIME_SIGNATURES).map(([label, { numerator, denominator }]) => (
@@ -131,11 +176,19 @@ function GlobalSettings({ settings, onSettingsChange }) {
                 </select>
               </div>
             </div>
+            )}
           </div>
 
           {/* Accent Pattern Section */}
           <div className="settings-section">
-            <h4>Accent Pattern</h4>
+            <div
+              className="section-header"
+              onClick={() => setAccentPatternExpanded(!accentPatternExpanded)}
+            >
+              <span className="section-chevron">{accentPatternExpanded ? '▼' : '▶'}</span>
+              <h4>Accent Pattern</h4>
+            </div>
+            {accentPatternExpanded && (
             <div className="accent-controls">
               <div className="radio-group">
                 {[
@@ -194,11 +247,19 @@ function GlobalSettings({ settings, onSettingsChange }) {
                 </div>
               )}
             </div>
+            )}
           </div>
 
           {/* Metronome Sound Section */}
           <div className="settings-section">
-            <h4>Metronome Sound</h4>
+            <div
+              className="section-header"
+              onClick={() => setMetronomeSoundExpanded(!metronomeSoundExpanded)}
+            >
+              <span className="section-chevron">{metronomeSoundExpanded ? '▼' : '▶'}</span>
+              <h4>Metronome Sound</h4>
+            </div>
+            {metronomeSoundExpanded && (
             <div className="metronome-controls">
               <div className="control-row">
                 <label>Sound Type:</label>
@@ -225,11 +286,19 @@ function GlobalSettings({ settings, onSettingsChange }) {
                 </select>
               </div>
             </div>
+            )}
           </div>
 
           {/* Chord Audio Section */}
           <div className="settings-section">
-            <h4>Chord Audio</h4>
+            <div
+              className="section-header"
+              onClick={() => setChordAudioExpanded(!chordAudioExpanded)}
+            >
+              <span className="section-chevron">{chordAudioExpanded ? '▼' : '▶'}</span>
+              <h4>Chord Audio</h4>
+            </div>
+            {chordAudioExpanded && (
             <div className="chord-audio-controls">
               <div className="control-row">
                 <label className={`toggle-label ${safeSettings.chordAudio.enabled ? 'active' : ''}`}>
@@ -283,6 +352,7 @@ function GlobalSettings({ settings, onSettingsChange }) {
                 </select>
               </div>
             </div>
+            )}
           </div>
 
           {/* Reset Button */}
