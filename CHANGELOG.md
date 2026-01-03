@@ -5,6 +5,22 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.11] - 2026-01-03
+
+### Added
+- Metronome volume control in Jam mode Global Settings
+  - New volume slider (0-100%) in Metronome Sound section
+  - Default volume set to 50% for balanced sound levels
+  - Volume control works with all sound types (beep, click, woodblock)
+  - Volume control works with all subdivisions (quarter, eighth, triplet)
+  - Maintains accent pattern behavior while scaling overall volume
+  - Updated src/utils/jamSettings.js to include volume property in DEFAULT_GLOBAL_SETTINGS
+  - Updated src/utils/metronomeSounds.js to accept and apply volume parameter to all sound generators
+  - Updated src/components/Jam/useMetronome.js to pass volume from settings to sound generator
+  - Updated src/components/Jam/GlobalSettings.jsx to add volume slider UI control
+  - Backward compatible with saved presets (defaults to 50% if volume property missing)
+  - Reset to Defaults button includes metronome volume
+
 ## [0.0.7] - 2026-01-02
 
 ### Added

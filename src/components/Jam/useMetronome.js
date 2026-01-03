@@ -26,8 +26,9 @@ export function useMetronome(bpm, onBeat, isPlaying, metronomeEnabled, effective
     const ctx = getAudioContext();
     const isDownbeat = beatInMeasure === 0;
     const soundType = effectiveSettings.metronomeSound.type;
+    const volume = effectiveSettings.metronomeSound.volume || 0.5;
 
-    playMetronomeSound(ctx, soundType, time, accentStrength, isDownbeat);
+    playMetronomeSound(ctx, soundType, time, accentStrength, isDownbeat, volume);
   }, [getAudioContext, metronomeEnabled, effectiveSettings]);
 
   // Schedule beats ahead of time for accuracy

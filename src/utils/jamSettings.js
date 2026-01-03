@@ -9,7 +9,8 @@ export const DEFAULT_GLOBAL_SETTINGS = {
   swingRatio: 0.67, // 0.5 = straight eighths, 0.67 = swing/triplet feel
   metronomeSound: {
     type: 'beep', // 'beep', 'click', 'woodblock'
-    subdivision: 'quarter' // 'quarter', 'eighth', 'triplet'
+    subdivision: 'quarter', // 'quarter', 'eighth', 'triplet'
+    volume: 0.5 // Volume level (0.0-1.0)
   },
   chordAudio: {
     enabled: true, // Enable/disable chord playback
@@ -85,7 +86,9 @@ export function countNonDefaultSettings(settings) {
   if (settings.timeSignature.numerator !== 4 || settings.timeSignature.denominator !== 4) count++;
   if (settings.accentPattern !== 'standard') count++;
   if (settings.swingRatio !== 0.67) count++;
-  if (settings.metronomeSound.type !== 'beep' || settings.metronomeSound.subdivision !== 'quarter') count++;
+  if (settings.metronomeSound.type !== 'beep' ||
+      settings.metronomeSound.subdivision !== 'quarter' ||
+      settings.metronomeSound.volume !== 0.5) count++;
 
   // Check chordAudio only if it exists (backward compatibility)
   if (settings.chordAudio) {
