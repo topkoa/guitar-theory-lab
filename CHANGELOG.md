@@ -5,6 +5,18 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.15] - 2026-01-03
+
+### Fixed
+- Jam mode: Step preview play buttons now work correctly
+  - Fixed handlePlayChord in src/components/Jam/Jam.jsx to check step.type
+  - Now correctly plays either chord notes or scale notes based on step type
+  - Added audio context initialization on first button click (no longer requires main playback first)
+  - Removed isChordAudioEnabled conditional from play button in src/components/Jam/SequenceStep.jsx
+  - Play button now always visible for both chord and scale steps
+  - Button tooltip dynamically shows "Play Chord" or "Play Scale" based on step type
+  - Fixed three interconnected bugs that prevented preview functionality
+
 ## [0.0.14] - 2026-01-03
 
 ### Fixed

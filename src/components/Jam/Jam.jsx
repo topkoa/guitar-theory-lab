@@ -247,13 +247,21 @@ function Jam({ tuning, tabView, onHighlightChange }) {
     }
   };
 
-  // Manual play chord handler
+  // Manual play chord/scale handler
   const handlePlayChord = useCallback((step) => {
     if (!step) return;
-    if (!audioContext.current) return;
+
+    // Initialize audio context if needed (for first play before main playback)
+    if (!audioContext.current) {
+      audioContext.current = new (window.AudioContext || window.webkitAudioContext)();
+    }
 
     const stepSettings = resolveStepSettings(step, globalSettings);
-    const notes = getChordNotes(step.rootNote, step.chordType);
+
+    // Get notes based on step type (chord or scale)
+    const notes = step.type === 'chord'
+      ? getChordNotes(step.rootNote, step.chordType)
+      : getScaleNotes(step.rootNote, step.scaleType);
 
     if (notes.length > 0) {
       playChordNow(

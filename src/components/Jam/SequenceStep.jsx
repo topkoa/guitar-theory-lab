@@ -54,15 +54,13 @@ function SequenceStep({ step, onChange, onDelete, isActive, index, onPlayChord, 
           >
             ⚙
           </button>
-          {isChordAudioEnabled && (
-            <button
-              className="play-chord-btn"
-              onClick={() => onPlayChord(step)}
-              title="Play Chord"
-            >
-              ▶
-            </button>
-          )}
+          <button
+            className="play-chord-btn"
+            onClick={() => onPlayChord(step)}
+            title={step.type === 'chord' ? 'Play Chord' : 'Play Scale'}
+          >
+            ▶
+          </button>
           <button className="delete-btn" onClick={() => onDelete(step.id)} title="Remove">
             ×
           </button>
