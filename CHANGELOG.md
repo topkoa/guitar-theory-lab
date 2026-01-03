@@ -5,6 +5,17 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.14] - 2026-01-03
+
+### Fixed
+- Jam mode: Time signature settings no longer incorrectly modify custom accents (Issue #10)
+  - Updated src/components/Jam/GlobalSettings.jsx handleTimeSignatureChange function
+  - Custom accents array now only modified when accent pattern is set to "custom"
+  - Prevents unintended side effects when changing time signature with standard patterns
+  - Time signature controls metronome accent pattern cycle
+  - Step beats control step duration independently of time signature
+  - Per-step time signature overrides work correctly via resolveStepSettings()
+
 ## [0.0.13] - 2026-01-03
 
 ### Fixed
