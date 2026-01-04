@@ -12,6 +12,7 @@ function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIn
   const [score, setScore] = useState({ correct: 0, incorrect: 0 });
   const [showRootHint, setShowRootHint] = useState(false);
   const [showStrategyHint, setShowStrategyHint] = useState(false);
+  const [showLearnMore, setShowLearnMore] = useState(false);
 
   // Generate string names dynamically based on tuning
   const getStringName = (idx) => {
@@ -245,6 +246,14 @@ function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIn
             />
             Show intervals
           </label>
+          <label className="hint-toggle">
+            <input
+              type="checkbox"
+              checked={showLearnMore}
+              onChange={(e) => setShowLearnMore(e.target.checked)}
+            />
+            Learn more
+          </label>
         </div>
       )}
 
@@ -316,6 +325,31 @@ function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIn
             {showStrategyHint && question.chordType && (
               <div className="strategy-hint">
                 💡 {getChordStrategyHint(question.chordType)}
+              </div>
+            )}
+            {showLearnMore && question.chordType && CHORDS[question.chordType]?.theoryContext && (
+              <div className="learn-more-panel">
+                <h4>About {CHORDS[question.chordType].name} Chords</h4>
+                <div className="theory-section">
+                  <strong>Common Uses:</strong>
+                  <p>{CHORDS[question.chordType].theoryContext.commonUses}</p>
+                </div>
+                <div className="theory-section">
+                  <strong>Tension & Resolution:</strong>
+                  <p>{CHORDS[question.chordType].theoryContext.tensionResolution}</p>
+                </div>
+                <div className="theory-section">
+                  <strong>Related Chords:</strong>
+                  <p>{CHORDS[question.chordType].theoryContext.relatedChords.map(c => CHORDS[c]?.name || c).join(', ')}</p>
+                </div>
+                <div className="theory-section">
+                  <strong>Typical Progressions:</strong>
+                  <ul>
+                    {CHORDS[question.chordType].theoryContext.typicalProgressions.map((prog, idx) => (
+                      <li key={idx}>{prog}</li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             )}
             <div className="answer-options">
