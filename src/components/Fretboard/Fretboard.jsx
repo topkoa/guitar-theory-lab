@@ -16,7 +16,9 @@ function Fretboard({
   onFretClick = null,
   revealedFrets = [],
   filteredIntervals = null,
-  fretCount = 22
+  fretCount = 22,
+  pathModeEnabled = false,
+  traversalPath = []
 }) {
   const fretboardData = useMemo(() => {
     const data = tuning.map((openNote, stringIndex) => {
@@ -65,6 +67,26 @@ function Fretboard({
       if (!filteredIntervals[interval]) {
         return 'inactive';
       }
+    }
+
+    // Path mode logic
+    if (pathModeEnabled && traversalPath.length > 0) {
+      // Get the actual stringIndex from tuning (accounting for tabView)
+      const actualStringIndex = tabView ? (tuning.length - 1 - stringIdx) : stringIdx;
+
+      const isInPath = traversalPath.some(
+        p => p.stringIndex === actualStringIndex && p.fret === fret && p.note === note
+      );
+
+      if (!isInPath && highlightedNotes.includes(note)) {
+        // Note is in scale/chord but NOT in path - dim it
+        return 'dimmed';
+      }
+      if (!isInPath) {
+        // Note is not in scale/chord at all
+        return 'inactive';
+      }
+      // Note IS in path - apply normal coloring below
     }
 
     if (note === rootNote) return 'root';

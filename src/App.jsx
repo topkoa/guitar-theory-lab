@@ -6,7 +6,7 @@ import Practice from './components/Practice/Practice';
 import Jam from './components/Jam/Jam';
 import Footer from './components/Footer/Footer';
 import { TUNINGS, DEFAULT_TUNING } from './data/tunings';
-import { getScaleNotes, getChordNotes } from './utils/musicTheory';
+import { getScaleNotes, getChordNotes, calculateNeckTraversalPath } from './utils/musicTheory';
 import './App.css';
 
 function App() {
@@ -25,6 +25,11 @@ function App() {
   const [showIntervals, setShowIntervals] = useState(false);
   const [tabView, setTabView] = useState(false);
   const [fretCount, setFretCount] = useState(22);
+
+  // Neck traversal path state
+  const [pathModeEnabled, setPathModeEnabled] = useState(false);
+  const [fretRangeWidth, setFretRangeWidth] = useState(4);
+  const [pathDirection, setPathDirection] = useState('ascending'); // 'ascending' or 'descending'
 
   // Filter state for intervals/notes
   const [filteredIntervals, setFilteredIntervals] = useState({
@@ -83,6 +88,21 @@ function App() {
     }
   }, [rootNote, mode, scaleType, chordType]);
 
+  // Compute traversal path when enabled
+  const traversalPath = useMemo(() => {
+    if (!pathModeEnabled || !highlightedNotes.length) return [];
+
+    return calculateNeckTraversalPath(
+      tuning,
+      highlightedNotes,
+      rootNote,
+      fretCount,
+      fretRangeWidth,
+      tabView,
+      pathDirection
+    );
+  }, [pathModeEnabled, tuning, highlightedNotes, rootNote, fretCount, fretRangeWidth, tabView, pathDirection]);
+
   return (
     <div className="app">
       <header className="app-header">
@@ -133,6 +153,12 @@ function App() {
               setFilteredIntervals={setFilteredIntervals}
               fretCount={fretCount}
               setFretCount={setFretCount}
+              pathModeEnabled={pathModeEnabled}
+              setPathModeEnabled={setPathModeEnabled}
+              fretRangeWidth={fretRangeWidth}
+              setFretRangeWidth={setFretRangeWidth}
+              pathDirection={pathDirection}
+              setPathDirection={setPathDirection}
             />
 
             <Reference
@@ -151,6 +177,8 @@ function App() {
               tabView={tabView}
               filteredIntervals={filteredIntervals}
               fretCount={fretCount}
+              pathModeEnabled={pathModeEnabled}
+              traversalPath={traversalPath}
             />
           </>
         ) : activeTab === 'practice' ? (

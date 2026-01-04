@@ -77,3 +77,123 @@ export function getSelectionInfo(type, typeKey) {
   }
   return null;
 }
+
+// Calculate neck traversal path for scales/chords
+export function calculateNeckTraversalPath(
+  tuning,
+  highlightedNotes,
+  rootNote,
+  fretCount = 22,
+  fretRangeWidth = 4,
+  tabView = false,
+  direction = 'ascending'
+) {
+  if (!highlightedNotes.length) return [];
+
+  // 1. Build list of all valid fret positions for each string
+  const stringPositions = tuning.map((openNote, stringIndex) => {
+    const positions = [];
+    for (let fret = 0; fret <= fretCount; fret++) {
+      const note = getNoteOnFret(openNote, fret);
+      if (highlightedNotes.includes(note)) {
+        positions.push({ stringIndex, fret, note });
+      }
+    }
+    return positions;
+  });
+
+  // 2. Handle inverted view (tab view reverses strings)
+  const orderedStrings = tabView ? [...stringPositions].reverse() : stringPositions;
+
+  // 3. Build diagonal path based on direction
+  const path = [];
+  let currentFret = null;
+
+  for (let i = 0; i < orderedStrings.length; i++) {
+    const stringCandidates = orderedStrings[i];
+    if (stringCandidates.length === 0) continue;
+
+    let selectedPosition;
+
+    if (currentFret === null) {
+      // First string: choose starting position based on direction
+      const rootPositions = stringCandidates.filter(p => p.note === rootNote);
+
+      if (direction === 'ascending') {
+        // Start at lowest fret (prefer root if available)
+        selectedPosition = rootPositions.length > 0
+          ? rootPositions.reduce((lowest, pos) => pos.fret < lowest.fret ? pos : lowest)
+          : stringCandidates[0];
+      } else {
+        // Start at highest fret (prefer root if available)
+        selectedPosition = rootPositions.length > 0
+          ? rootPositions.reduce((highest, pos) => pos.fret > highest.fret ? pos : highest)
+          : stringCandidates[stringCandidates.length - 1];
+      }
+    } else {
+      // Subsequent strings: choose position that moves in the desired direction
+      if (direction === 'ascending') {
+        // Prefer positions at higher frets than current
+        const higherPositions = stringCandidates.filter(p => p.fret >= currentFret);
+        if (higherPositions.length > 0) {
+          // Choose the one closest to current + ideal step size
+          const idealNextFret = currentFret + 2; // Step up by ~2 frets per string for diagonal
+          selectedPosition = higherPositions.reduce((closest, pos) => {
+            const currentDistance = Math.abs(pos.fret - idealNextFret);
+            const closestDistance = Math.abs(closest.fret - idealNextFret);
+            return currentDistance < closestDistance ? pos : closest;
+          });
+        } else {
+          // No higher positions available, take the highest available
+          selectedPosition = stringCandidates[stringCandidates.length - 1];
+        }
+      } else {
+        // Prefer positions at lower frets than current
+        const lowerPositions = stringCandidates.filter(p => p.fret <= currentFret);
+        if (lowerPositions.length > 0) {
+          // Choose the one closest to current - ideal step size
+          const idealNextFret = currentFret - 2; // Step down by ~2 frets per string for diagonal
+          selectedPosition = lowerPositions.reduce((closest, pos) => {
+            const currentDistance = Math.abs(pos.fret - idealNextFret);
+            const closestDistance = Math.abs(closest.fret - idealNextFret);
+            return currentDistance < closestDistance ? pos : closest;
+          });
+        } else {
+          // No lower positions available, take the lowest available
+          selectedPosition = stringCandidates[0];
+        }
+      }
+    }
+
+    path.push(selectedPosition);
+    currentFret = selectedPosition.fret;
+  }
+
+  if (path.length === 0) return [];
+
+  // 4. Expand path to include notes within fret range window
+  const expandedPath = [];
+  const addedPositions = new Set();
+
+  for (const pathNote of path) {
+    const key = `${pathNote.stringIndex}-${pathNote.fret}`;
+    if (!addedPositions.has(key)) {
+      expandedPath.push(pathNote);
+      addedPositions.add(key);
+    }
+
+    // Find all notes on same string within range of this path point
+    const sameStringNotes = stringPositions[pathNote.stringIndex];
+    for (const candidate of sameStringNotes) {
+      const candidateKey = `${candidate.stringIndex}-${candidate.fret}`;
+      const isInRange = Math.abs(candidate.fret - pathNote.fret) <= fretRangeWidth;
+
+      if (isInRange && !addedPositions.has(candidateKey)) {
+        expandedPath.push(candidate);
+        addedPositions.add(candidateKey);
+      }
+    }
+  }
+
+  return expandedPath;
+}
