@@ -5,6 +5,33 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.17] - 2026-01-03
+
+### Added
+- Learn mode: Neck traversal path feature for practice visualization (Issue #25)
+  - Added "Path Mode" toggle in Controls to enable/disable diagonal path visualization
+  - Path shows optimal route for playing scales/chords up and down the neck
+  - Diagonal path algorithm creates ascending or descending patterns across strings
+  - Direction toggle with "↗ Ascending" and "↙ Descending" buttons
+  - Ascending mode: starts at low frets, climbs ~2 frets per string toward body
+  - Descending mode: starts at high frets, descends ~2 frets per string toward nut
+  - Range slider (±2 to ±8 frets) controls path width for narrow or wide patterns
+  - Notes on path remain bright (green for scales, yellow for chords, red for root)
+  - Off-path scale/chord notes dimmed to 30% opacity for visual distinction
+  - Added calculateNeckTraversalPath() function in src/utils/musicTheory.js
+  - Implemented greedy nearest-neighbor algorithm with directional preference
+  - Path expands based on fret range window to include nearby alternate positions
+  - Works with all scales and chords in both Learn Mode scale and chord views
+  - Added pathModeEnabled, fretRangeWidth, and pathDirection state to src/App.jsx
+  - Updated src/components/Controls/Controls.jsx with path mode UI controls
+  - Updated src/components/Fretboard/Fretboard.jsx with path rendering logic
+  - Added .dimmed CSS class in src/components/Fretboard/Fretboard.css
+  - Added path control styling in src/components/Controls/Controls.css
+  - Path respects tab view (inverted strings) with proper string index mapping
+  - Path respects interval filtering - only includes filtered notes
+  - Compatible with all tunings (standard, bass, alternate tunings)
+  - Handles edge cases: sparse scales, chromatic scale, varying fret counts
+
 ## [0.0.16] - 2026-01-03
 
 ### Added

@@ -38,7 +38,13 @@ function Controls({
   filteredIntervals,
   setFilteredIntervals,
   fretCount,
-  setFretCount
+  setFretCount,
+  pathModeEnabled,
+  setPathModeEnabled,
+  fretRangeWidth,
+  setFretRangeWidth,
+  pathDirection,
+  setPathDirection
 }) {
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const dropdownRef = useRef(null);
@@ -200,6 +206,48 @@ function Controls({
             onChange={(e) => setFretCount(parseInt(e.target.value))}
             className="fret-slider"
           />
+        </div>
+
+        <div className="control-group path-control-group">
+          <label>
+            <input
+              type="checkbox"
+              checked={pathModeEnabled}
+              onChange={(e) => setPathModeEnabled(e.target.checked)}
+            />
+            Path Mode
+          </label>
+
+          {pathModeEnabled && (
+            <>
+              <div className="path-direction-toggle">
+                <button
+                  className={pathDirection === 'ascending' ? 'active' : ''}
+                  onClick={() => setPathDirection('ascending')}
+                >
+                  ↗ Ascending
+                </button>
+                <button
+                  className={pathDirection === 'descending' ? 'active' : ''}
+                  onClick={() => setPathDirection('descending')}
+                >
+                  ↙ Descending
+                </button>
+              </div>
+              <div className="path-range-control">
+                <label>Range: ±{fretRangeWidth} frets</label>
+                <input
+                  type="range"
+                  min="2"
+                  max="8"
+                  step="1"
+                  value={fretRangeWidth}
+                  onChange={(e) => setFretRangeWidth(parseInt(e.target.value))}
+                  className="path-range-slider"
+                />
+              </div>
+            </>
+          )}
         </div>
       </div>
 
