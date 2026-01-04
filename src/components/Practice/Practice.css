@@ -63,6 +63,57 @@
   text-align: left;
 }
 
+.learn-more-panel {
+  background: rgba(138, 120, 190, 0.1);
+  border-left: 3px solid #8a78be;
+  padding: 15px 20px;
+  margin: 0 auto 20px;
+  border-radius: 6px;
+  color: var(--text-primary);
+  max-width: 600px;
+  text-align: left;
+}
+
+.learn-more-panel h4 {
+  margin: 0 0 15px 0;
+  color: #a99cd4;
+  font-size: 1.1em;
+}
+
+.theory-section {
+  margin-bottom: 12px;
+}
+
+.theory-section:last-child {
+  margin-bottom: 0;
+}
+
+.theory-section strong {
+  color: #a99cd4;
+  font-size: 0.9em;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.theory-section p {
+  margin: 0;
+  font-size: 0.9em;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.theory-section ul {
+  margin: 4px 0 0 0;
+  padding-left: 20px;
+  font-size: 0.9em;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.theory-section li {
+  margin-bottom: 2px;
+}
+
 .score {
   display: flex;
   gap: 15px;

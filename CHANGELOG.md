@@ -5,6 +5,23 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.18] - 2026-01-04
+
+### Added
+- Practice mode: "Learn More" panel for Name That Chord quiz
+  - New collapsible panel showing music theory context for each chord type
+  - "Learn more" checkbox toggle in hint options (hidden by default)
+  - Panel displays four educational sections:
+    - **Common Uses**: Genres, musical contexts, and famous artists who use the chord
+    - **Tension & Resolution**: How the chord creates or resolves musical tension
+    - **Related Chords**: Other chord types that share notes or pair well
+    - **Typical Progressions**: Common chord progressions featuring this chord
+  - Added `theoryContext` property to all 16 chord definitions in src/data/chords.js
+  - Purple-tinted panel styling to distinguish from green strategy hints
+  - Comprehensive theory content covering triads, suspended, 7th, and 9th chords
+  - Educational content includes genre associations (jazz, rock, funk, R&B, etc.)
+  - Added CSS styles for `.learn-more-panel` and `.theory-section` in Practice.css
+
 ## [0.0.17] - 2026-01-03
 
 ### Added
