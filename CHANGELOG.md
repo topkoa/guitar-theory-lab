@@ -5,6 +5,20 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.19] - 2026-01-04
+
+### Added
+- Toggleable fretboard inlays feature
+  - Pearl-style dot inlays appear on the fretboard wood surface at standard positions (3, 5, 7, 9, 12, 15, 17, 19, 21)
+  - Double dots at octave positions (frets 12 and 24)
+  - Global "Show Inlays" toggle in header area, applies to all modes (Learn, Practice, Jam)
+  - Inlays ON by default to help beginners orient on the neck
+  - Added `showInlays` state to src/App.jsx with global toggle UI
+  - Added inlay overlay layer in src/components/Fretboard/Fretboard.jsx
+  - Added pearl gradient styling in src/components/Fretboard/Fretboard.css
+  - Added global settings styling in src/App.css
+  - Inlays render behind strings and note dots using z-index layering
+
 ## [0.0.18] - 2026-01-04
 
 ### Added

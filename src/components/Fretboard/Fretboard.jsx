@@ -18,7 +18,8 @@ function Fretboard({
   filteredIntervals = null,
   fretCount = 22,
   pathModeEnabled = false,
-  traversalPath = []
+  traversalPath = [],
+  showInlays = true
 }) {
   const fretboardData = useMemo(() => {
     const data = tuning.map((openNote, stringIndex) => {
@@ -160,6 +161,26 @@ function Fretboard({
             </div>
           </div>
         ))}
+        {showInlays && (
+          <div className="fretboard-inlays">
+            {Array.from({ length: fretCount + 1 }, (_, fret) => (
+              <div key={fret} className="inlay-position">
+                {FRET_MARKERS.includes(fret) && (
+                  DOUBLE_MARKERS.includes(fret) ? (
+                    <div className="inlay-dot double">
+                      <div className="inlay-dot-inner" />
+                      <div className="inlay-dot-inner" />
+                    </div>
+                  ) : (
+                    <div className="inlay-dot">
+                      <div className="inlay-dot-inner" />
+                    </div>
+                  )
+                )}
+              </div>
+            ))}
+          </div>
+        )}
         <div className="fret-markers">
           {Array.from({ length: fretCount + 1 }, (_, fret) => (
             <div key={fret} className="fret-marker">
