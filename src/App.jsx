@@ -26,6 +26,9 @@ function App() {
   const [tabView, setTabView] = useState(false);
   const [fretCount, setFretCount] = useState(22);
 
+  // Global display settings
+  const [showInlays, setShowInlays] = useState(true);
+
   // Neck traversal path state
   const [pathModeEnabled, setPathModeEnabled] = useState(false);
   const [fretRangeWidth, setFretRangeWidth] = useState(4);
@@ -131,6 +134,17 @@ function App() {
         </button>
       </nav>
 
+      <div className="global-settings">
+        <label className="setting-toggle">
+          <input
+            type="checkbox"
+            checked={showInlays}
+            onChange={(e) => setShowInlays(e.target.checked)}
+          />
+          Show Inlays
+        </label>
+      </div>
+
       <main className="main-content">
         {activeTab === 'learn' ? (
           <>
@@ -179,6 +193,7 @@ function App() {
               fretCount={fretCount}
               pathModeEnabled={pathModeEnabled}
               traversalPath={traversalPath}
+              showInlays={showInlays}
             />
           </>
         ) : activeTab === 'practice' ? (
@@ -228,6 +243,7 @@ function App() {
               onFretClick={handleFretClick}
               revealedFrets={revealedFrets}
               fretCount={fretCount}
+              showInlays={showInlays}
             />
           </>
         ) : activeTab === 'jam' ? (
@@ -270,6 +286,7 @@ function App() {
               mode={jamHighlight.mode}
               tabView={tabView}
               fretCount={fretCount}
+              showInlays={showInlays}
             />
           </>
         ) : null}
