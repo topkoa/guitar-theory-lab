@@ -5,6 +5,7 @@ import Reference from './components/Reference/Reference';
 import Practice from './components/Practice/Practice';
 import Jam from './components/Jam/Jam';
 import Footer from './components/Footer/Footer';
+import FretboardSettings from './components/GlobalSettingsPanel/GlobalSettingsPanel';
 import { TUNINGS, DEFAULT_TUNING } from './data/tunings';
 import { getScaleNotes, getChordNotes, calculateNeckTraversalPath } from './utils/musicTheory';
 import './App.css';
@@ -134,23 +135,10 @@ function App() {
         </button>
       </nav>
 
-      <div className="global-settings">
-        <label className="setting-toggle">
-          <input
-            type="checkbox"
-            checked={showInlays}
-            onChange={(e) => setShowInlays(e.target.checked)}
-          />
-          Show Inlays
-        </label>
-      </div>
-
       <main className="main-content">
         {activeTab === 'learn' ? (
           <>
             <Controls
-              tuning={tuningKey}
-              setTuning={setTuningKey}
               rootNote={rootNote}
               setRootNote={setRootNote}
               mode={mode}
@@ -159,14 +147,6 @@ function App() {
               setScaleType={setScaleType}
               chordType={chordType}
               setChordType={setChordType}
-              showIntervals={showIntervals}
-              setShowIntervals={setShowIntervals}
-              tabView={tabView}
-              setTabView={setTabView}
-              filteredIntervals={filteredIntervals}
-              setFilteredIntervals={setFilteredIntervals}
-              fretCount={fretCount}
-              setFretCount={setFretCount}
               pathModeEnabled={pathModeEnabled}
               setPathModeEnabled={setPathModeEnabled}
               fretRangeWidth={fretRangeWidth}
@@ -180,6 +160,22 @@ function App() {
               rootNote={rootNote}
               scaleType={scaleType}
               chordType={chordType}
+            />
+
+            <FretboardSettings
+              tuningKey={tuningKey}
+              setTuningKey={setTuningKey}
+              tabView={tabView}
+              setTabView={setTabView}
+              showInlays={showInlays}
+              setShowInlays={setShowInlays}
+              fretCount={fretCount}
+              setFretCount={setFretCount}
+              showIntervals={showIntervals}
+              setShowIntervals={setShowIntervals}
+              filteredIntervals={filteredIntervals}
+              setFilteredIntervals={setFilteredIntervals}
+              rootNote={rootNote}
             />
 
             <Fretboard
@@ -198,36 +194,23 @@ function App() {
           </>
         ) : activeTab === 'practice' ? (
           <>
-            <div className="controls" style={{ margin: '20px', padding: '15px' }}>
-              <div className="control-group">
-                <label>Tuning</label>
-                <select
-                  value={tuningKey}
-                  onChange={(e) => setTuningKey(e.target.value)}
-                >
-                  {Object.entries(TUNINGS).map(([key, t]) => (
-                    <option key={key} value={key}>{t.name}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="control-group toggle-group">
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={tabView}
-                    onChange={(e) => setTabView(e.target.checked)}
-                  />
-                  Invert Strings
-                </label>
-              </div>
-            </div>
-
             <Practice
               tuning={tuning}
               onReset={handlePracticeReset}
               onHighlightChange={handlePracticeHighlightChange}
               showIntervals={practiceShowIntervals}
               setShowIntervals={setPracticeShowIntervals}
+            />
+
+            <FretboardSettings
+              tuningKey={tuningKey}
+              setTuningKey={setTuningKey}
+              tabView={tabView}
+              setTabView={setTabView}
+              showInlays={showInlays}
+              setShowInlays={setShowInlays}
+              fretCount={fretCount}
+              setFretCount={setFretCount}
             />
 
             <Fretboard
@@ -248,34 +231,21 @@ function App() {
           </>
         ) : activeTab === 'jam' ? (
           <>
-            <div className="controls" style={{ margin: '20px', padding: '15px' }}>
-              <div className="control-group">
-                <label>Tuning</label>
-                <select
-                  value={tuningKey}
-                  onChange={(e) => setTuningKey(e.target.value)}
-                >
-                  {Object.entries(TUNINGS).map(([key, t]) => (
-                    <option key={key} value={key}>{t.name}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="control-group toggle-group">
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={tabView}
-                    onChange={(e) => setTabView(e.target.checked)}
-                  />
-                  Invert Strings
-                </label>
-              </div>
-            </div>
-
             <Jam
               tuning={tuning}
               tabView={tabView}
               onHighlightChange={handleJamHighlightChange}
+            />
+
+            <FretboardSettings
+              tuningKey={tuningKey}
+              setTuningKey={setTuningKey}
+              tabView={tabView}
+              setTabView={setTabView}
+              showInlays={showInlays}
+              setShowInlays={setShowInlays}
+              fretCount={fretCount}
+              setFretCount={setFretCount}
             />
 
             <Fretboard

@@ -5,6 +5,26 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.20] - 2026-01-05
+
+### Changed
+- Streamlined settings UI architecture
+  - Created new FretboardSettings component (src/components/GlobalSettingsPanel/)
+  - Consolidated tuning, fret count, invert, and inlays into inline bar that appears with fretboard in all modes
+  - Moved Intervals toggle and Filter dropdown from Controls to FretboardSettings (Learn mode only)
+  - Removed duplicate settings controls from Practice and Jam modes
+  - Simplified Controls.jsx to only mode/root/type selection and Path Mode
+- Simplified Jam mode settings
+  - Renamed GlobalSettings to JamSettings with 2 grouped sections (Rhythm, Sound) instead of 4 collapsible
+  - Added "Vol:" prefix to metronome and chord audio volume sliders for clarity
+  - Restored BPM slider in transport controls alongside number input
+  - Simplified SequenceStep per-step overrides to keep only time signature override
+
+### Removed
+- Deleted src/components/Jam/GlobalSettings.jsx and GlobalSettings.css (replaced by JamSettings)
+- Removed redundant tuning/invert controls that were duplicated across modes
+- Removed per-step accent pattern, metronome sound, and chord audio overrides from SequenceStep
+
 ## [0.0.19] - 2026-01-04
 
 ### Added
