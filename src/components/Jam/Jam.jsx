@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import SequenceStep from './SequenceStep';
 import TransportControls from './TransportControls';
-import GlobalSettings from './GlobalSettings';
+import JamSettings from './JamSettings';
 import PresetManager from './PresetManager';
 import { useMetronome } from './useMetronome';
 import { getScaleNotes, getChordNotes } from '../../utils/musicTheory';
@@ -318,8 +318,8 @@ function Jam({ tuning, tabView, onHighlightChange }) {
         />
       )}
 
-      {/* Global Settings */}
-      <GlobalSettings
+      {/* Jam Settings */}
+      <JamSettings
         settings={globalSettings}
         onSettingsChange={setGlobalSettings}
       />
@@ -366,7 +366,6 @@ function Jam({ tuning, tabView, onHighlightChange }) {
                 onChange={handleUpdateStep}
                 onDelete={handleDeleteStep}
                 onPlayChord={handlePlayChord}
-                globalSettings={globalSettings}
               />
             ))
           )}

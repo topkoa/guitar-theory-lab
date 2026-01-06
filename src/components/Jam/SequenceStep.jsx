@@ -2,16 +2,12 @@ import { useState } from 'react';
 import { NOTES, getNoteDisplayName } from '../../data/notes';
 import { getScaleOptions } from '../../data/scales';
 import { getChordOptions } from '../../data/chords';
-import { TIME_SIGNATURES, hasOverrides, resolveStepSettings } from '../../utils/jamSettings';
+import { TIME_SIGNATURES, hasOverrides } from '../../utils/jamSettings';
 
-function SequenceStep({ step, onChange, onDelete, isActive, index, onPlayChord, globalSettings }) {
+function SequenceStep({ step, onChange, onDelete, isActive, index, onPlayChord }) {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const scaleOptions = getScaleOptions();
   const chordOptions = getChordOptions();
-
-  // Check if chord audio is enabled for this step
-  const stepSettings = resolveStepSettings(step, globalSettings);
-  const isChordAudioEnabled = stepSettings.chordAudio.enabled;
 
   const handleChange = (field, value) => {
     onChange(step.id, { ...step, [field]: value });
@@ -128,13 +124,9 @@ function SequenceStep({ step, onChange, onDelete, isActive, index, onPlayChord, 
         </div>
       </div>
 
-      {/* Advanced Settings Section */}
+      {/* Time Signature Override */}
       {showAdvanced && (
         <div className="step-advanced">
-          <h5>Step Overrides</h5>
-          <p className="override-hint">Override global settings for this step only</p>
-
-          {/* Time Signature Override */}
           <div className="override-section">
             <label className="override-checkbox">
               <input
@@ -142,166 +134,23 @@ function SequenceStep({ step, onChange, onDelete, isActive, index, onPlayChord, 
                 checked={isOverrideActive('timeSignature')}
                 onChange={() => toggleOverride('timeSignature', { numerator: 4, denominator: 4 })}
               />
-              <span>Override Time Signature</span>
+              <span>Custom Time Signature</span>
             </label>
             {isOverrideActive('timeSignature') && (
-              <div className="override-controls">
-                <select
-                  value={`${step.overrides.timeSignature.numerator}/${step.overrides.timeSignature.denominator}`}
-                  onChange={(e) => {
-                    const [num, den] = e.target.value.split('/').map(Number);
-                    updateOverride('timeSignature', { numerator: num, denominator: den });
-                  }}
-                >
-                  {Object.entries(TIME_SIGNATURES).map(([label, { numerator, denominator }]) => (
-                    <option key={label} value={`${numerator}/${denominator}`}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-          </div>
-
-          {/* Accent Pattern Override */}
-          <div className="override-section">
-            <label className="override-checkbox">
-              <input
-                type="checkbox"
-                checked={isOverrideActive('accentPattern')}
-                onChange={() => toggleOverride('accentPattern', 'standard')}
-              />
-              <span>Override Accent Pattern</span>
-            </label>
-            {isOverrideActive('accentPattern') && (
-              <div className="override-controls">
-                <select
-                  value={step.overrides.accentPattern}
-                  onChange={(e) => updateOverride('accentPattern', e.target.value)}
-                >
-                  <option value="standard">Standard</option>
-                  <option value="waltz">Waltz</option>
-                  <option value="swing">Swing</option>
-                  <option value="allEqual">All Equal</option>
-                </select>
-              </div>
-            )}
-          </div>
-
-          {/* Metronome Sound Override */}
-          <div className="override-section">
-            <label className="override-checkbox">
-              <input
-                type="checkbox"
-                checked={isOverrideActive('metronomeSound')}
-                onChange={() => toggleOverride('metronomeSound', { type: 'beep', subdivision: 'quarter' })}
-              />
-              <span>Override Metronome Sound</span>
-            </label>
-            {isOverrideActive('metronomeSound') && (
-              <div className="override-controls">
-                <select
-                  value={step.overrides.metronomeSound.type}
-                  onChange={(e) => updateOverride('metronomeSound', {
-                    ...step.overrides.metronomeSound,
-                    type: e.target.value
-                  })}
-                >
-                  <option value="beep">Beep</option>
-                  <option value="click">Click</option>
-                  <option value="woodblock">Woodblock</option>
-                </select>
-                <select
-                  value={step.overrides.metronomeSound.subdivision}
-                  onChange={(e) => updateOverride('metronomeSound', {
-                    ...step.overrides.metronomeSound,
-                    subdivision: e.target.value
-                  })}
-                >
-                  <option value="quarter">Quarter</option>
-                  <option value="eighth">Eighth</option>
-                  <option value="triplet">Triplet</option>
-                </select>
-              </div>
-            )}
-          </div>
-
-          {/* Chord Audio Override */}
-          <div className="override-section">
-            <label className="override-checkbox">
-              <input
-                type="checkbox"
-                checked={isOverrideActive('chordAudio')}
-                onChange={() => toggleOverride('chordAudio', {
-                  enabled: true,
-                  volume: 0.25,
-                  duration: 0.8,
-                  waveform: 'sine'
-                })}
-              />
-              <span>Override Chord Audio</span>
-            </label>
-            {isOverrideActive('chordAudio') && (
-              <div className="override-controls">
-                <label className="inline-checkbox">
-                  <input
-                    type="checkbox"
-                    checked={step.overrides.chordAudio.enabled}
-                    onChange={(e) => updateOverride('chordAudio', {
-                      ...step.overrides.chordAudio,
-                      enabled: e.target.checked
-                    })}
-                  />
-                  <span>Enabled</span>
-                </label>
-
-                <div className="control-row">
-                  <label>Volume: {(step.overrides.chordAudio.volume * 100).toFixed(0)}%</label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.05"
-                    value={step.overrides.chordAudio.volume}
-                    onChange={(e) => updateOverride('chordAudio', {
-                      ...step.overrides.chordAudio,
-                      volume: parseFloat(e.target.value)
-                    })}
-                    disabled={!step.overrides.chordAudio.enabled}
-                  />
-                </div>
-
-                <div className="control-row">
-                  <label>Duration: {step.overrides.chordAudio.duration.toFixed(1)}s</label>
-                  <input
-                    type="range"
-                    min="0.2"
-                    max="3.0"
-                    step="0.1"
-                    value={step.overrides.chordAudio.duration}
-                    onChange={(e) => updateOverride('chordAudio', {
-                      ...step.overrides.chordAudio,
-                      duration: parseFloat(e.target.value)
-                    })}
-                    disabled={!step.overrides.chordAudio.enabled}
-                  />
-                </div>
-
-                <div className="control-row">
-                  <label>Waveform:</label>
-                  <select
-                    value={step.overrides.chordAudio.waveform}
-                    onChange={(e) => updateOverride('chordAudio', {
-                      ...step.overrides.chordAudio,
-                      waveform: e.target.value
-                    })}
-                    disabled={!step.overrides.chordAudio.enabled}
-                  >
-                    <option value="sine">Sine</option>
-                    <option value="triangle">Triangle</option>
-                  </select>
-                </div>
-              </div>
+              <select
+                value={`${step.overrides.timeSignature.numerator}/${step.overrides.timeSignature.denominator}`}
+                onChange={(e) => {
+                  const [num, den] = e.target.value.split('/').map(Number);
+                  updateOverride('timeSignature', { numerator: num, denominator: den });
+                }}
+                className="time-sig-select"
+              >
+                {Object.entries(TIME_SIGNATURES).map(([label, { numerator, denominator }]) => (
+                  <option key={label} value={`${numerator}/${denominator}`}>
+                    {label}
+                  </option>
+                ))}
+              </select>
             )}
           </div>
         </div>

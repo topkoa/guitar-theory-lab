@@ -53,31 +53,3 @@
   max-width: 1400px;
   margin: 0 auto;
 }
-
-.global-settings {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  padding: 10px 20px;
-  margin: 0 20px 15px;
-}
-
-.setting-toggle {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.9em;
-  color: var(--text-secondary);
-  cursor: pointer;
-}
-
-.setting-toggle:hover {
-  color: var(--text-primary);
-}
-
-.setting-toggle input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  accent-color: var(--accent);
-  cursor: pointer;
-}

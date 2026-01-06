@@ -1,0 +1,256 @@
+.jam-settings {
+  margin: 20px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.jam-settings-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 0.95em;
+  cursor: pointer;
+  text-align: left;
+}
+
+.jam-settings-toggle:hover {
+  background: var(--bg-tertiary);
+}
+
+.jam-settings-toggle .toggle-icon {
+  font-size: 0.8em;
+  color: var(--text-secondary);
+}
+
+.settings-badge {
+  background: var(--accent);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.75em;
+  margin-left: auto;
+}
+
+.jam-settings-content {
+  padding: 0 16px 16px;
+}
+
+.settings-group {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--bg-tertiary);
+}
+
+.settings-group:last-of-type {
+  margin-bottom: 16px;
+}
+
+.group-title {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.setting-row:last-child {
+  margin-bottom: 0;
+}
+
+.setting-row > label {
+  min-width: 100px;
+  font-size: 0.9em;
+  color: var(--text-secondary);
+}
+
+.setting-row select {
+  padding: 6px 10px;
+  background: var(--bg-primary);
+  border: 1px solid var(--bg-tertiary);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-size: 0.85em;
+}
+
+.setting-row select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.time-sig-presets {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.preset-btn {
+  padding: 6px 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--bg-tertiary);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  cursor: pointer;
+}
+
+.preset-btn:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.preset-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.accent-select {
+  flex: 1;
+  max-width: 220px;
+}
+
+.accent-toggles {
+  display: flex;
+  gap: 6px;
+}
+
+.accent-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: var(--bg-primary);
+  border: 1px solid var(--bg-tertiary);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  cursor: pointer;
+}
+
+.accent-btn:hover {
+  border-color: var(--accent);
+}
+
+.accent-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.swing-slider,
+.duration-slider {
+  flex: 1;
+  max-width: 150px;
+  height: 5px;
+  accent-color: var(--accent);
+}
+
+.inline-controls {
+  flex-wrap: wrap;
+}
+
+.inline-controls select {
+  min-width: 80px;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.volume-prefix {
+  font-size: 0.8em;
+  color: var(--text-secondary);
+}
+
+.volume-control input[type="range"] {
+  width: 70px;
+  height: 5px;
+  accent-color: var(--accent);
+}
+
+.volume-label {
+  font-size: 0.8em;
+  color: var(--text-secondary);
+  min-width: 35px;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.toggle-label:hover {
+  color: var(--text-primary);
+}
+
+.toggle-label.active {
+  color: var(--accent);
+}
+
+.toggle-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+}
+
+.chord-audio-options {
+  margin-left: 24px;
+  padding-left: 12px;
+  border-left: 2px solid var(--bg-tertiary);
+}
+
+.reset-btn {
+  width: 100%;
+  padding: 10px;
+  background: var(--bg-primary);
+  border: 1px solid var(--bg-tertiary);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  cursor: pointer;
+}
+
+.reset-btn:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+/* Mobile responsive */
+@media (max-width: 600px) {
+  .setting-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .setting-row > label {
+    min-width: auto;
+  }
+
+  .inline-controls {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .time-sig-presets {
+    width: 100%;
+  }
+}
