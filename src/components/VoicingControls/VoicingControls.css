@@ -1,0 +1,192 @@
+/* Voicing Controls */
+.voicing-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  margin-top: 8px;
+}
+
+.voicing-controls.compact {
+  padding: 4px 8px;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+/* View Mode Toggle (All Notes / Voicing) */
+.voicing-view-toggle {
+  display: flex;
+  gap: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--bg-primary);
+}
+
+.voicing-view-toggle button {
+  border-radius: 0;
+  border: none;
+  padding: 0.4em 0.8em;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.voicing-view-toggle button:hover:not(:disabled) {
+  background: var(--bg-secondary);
+}
+
+.voicing-view-toggle button.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.voicing-view-toggle button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.voicing-view-toggle button:first-child {
+  border-radius: 5px 0 0 5px;
+}
+
+.voicing-view-toggle button:last-child {
+  border-radius: 0 5px 5px 0;
+}
+
+.voicing-controls.compact .voicing-view-toggle button {
+  padding: 0.3em 0.6em;
+  font-size: 0.8em;
+}
+
+/* Position Selector */
+.voicing-position-selector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.voicing-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  border: 1px solid var(--bg-secondary);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.voicing-nav-btn:hover:not(:disabled) {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.voicing-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.nav-arrow {
+  font-size: 0.8em;
+  line-height: 1;
+}
+
+.voicing-controls.compact .voicing-nav-btn {
+  width: 24px;
+  height: 24px;
+}
+
+.voicing-controls.compact .nav-arrow {
+  font-size: 0.7em;
+}
+
+/* Voicing Dropdown */
+.voicing-dropdown {
+  min-width: 140px;
+  padding: 0.4em 0.6em;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--bg-secondary);
+  border-radius: 4px;
+  font-size: 0.85em;
+  cursor: pointer;
+}
+
+.voicing-dropdown:hover {
+  border-color: var(--accent);
+}
+
+.voicing-controls.compact .voicing-dropdown {
+  min-width: 100px;
+  font-size: 0.8em;
+  padding: 0.3em 0.5em;
+}
+
+/* Voicing Badge */
+.voicing-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 0.75em;
+  font-weight: 500;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.voicing-badge.open {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+}
+
+.voicing-badge.barre {
+  background: rgba(33, 150, 243, 0.2);
+  color: #2196f3;
+}
+
+.voicing-badge.partial_barre {
+  background: rgba(255, 152, 0, 0.2);
+  color: #ff9800;
+}
+
+.voicing-badge.caged {
+  background: rgba(156, 39, 176, 0.2);
+  color: #9c27b0;
+}
+
+.voicing-badge.generated {
+  background: rgba(158, 158, 158, 0.2);
+  color: #9e9e9e;
+}
+
+/* Voicing Count */
+.voicing-count {
+  font-size: 0.8em;
+  color: var(--text-secondary);
+  padding-left: 8px;
+  border-left: 1px solid var(--bg-primary);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .voicing-controls {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .voicing-dropdown {
+    min-width: 120px;
+  }
+
+  .voicing-badge {
+    display: none;
+  }
+}

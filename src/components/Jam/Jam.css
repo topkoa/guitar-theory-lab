@@ -591,3 +591,84 @@
 .inline-checkbox span {
   cursor: pointer;
 }
+
+/* Step Voicing Controls */
+.step-voicing-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--bg-tertiary);
+}
+
+.voicing-mode-toggle {
+  display: flex;
+  gap: 0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.voicing-mode-toggle button {
+  flex: 1;
+  padding: 3px 8px;
+  font-size: 0.7em;
+  border-radius: 0;
+  border: 1px solid var(--bg-tertiary);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.voicing-mode-toggle button:hover:not(:disabled) {
+  background: var(--bg-tertiary);
+}
+
+.voicing-mode-toggle button.active {
+  background: var(--note-chord);
+  border-color: var(--note-chord);
+  color: #fff;
+}
+
+.voicing-mode-toggle button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.voicing-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.voicing-nav button {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  font-size: 0.7em;
+  background: var(--bg-tertiary);
+  border: none;
+  border-radius: 3px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.voicing-nav button:hover:not(:disabled) {
+  background: var(--note-chord);
+  color: #fff;
+}
+
+.voicing-nav button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.voicing-index {
+  font-size: 0.7em;
+  color: var(--text-secondary);
+  min-width: 30px;
+  text-align: center;
+}

@@ -1,6 +1,7 @@
 import { NOTES, getNoteDisplayName } from '../../data/notes';
 import { getScaleOptions } from '../../data/scales';
 import { getChordOptions } from '../../data/chords';
+import VoicingControls from '../VoicingControls/VoicingControls';
 import './Controls.css';
 
 function Controls({
@@ -17,7 +18,12 @@ function Controls({
   fretRangeWidth,
   setFretRangeWidth,
   pathDirection,
-  setPathDirection
+  setPathDirection,
+  voicingMode,
+  setVoicingMode,
+  selectedVoicingIndex,
+  setSelectedVoicingIndex,
+  availableVoicings
 }) {
   const scaleOptions = getScaleOptions();
   const chordOptions = getChordOptions();
@@ -69,19 +75,29 @@ function Controls({
             </select>
           </div>
         ) : (
-          <div className="control-group">
-            <label>Type</label>
-            <select
-              value={chordType}
-              onChange={(e) => setChordType(e.target.value)}
-            >
-              {chordOptions.map(opt => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </div>
+          <>
+            <div className="control-group">
+              <label>Type</label>
+              <select
+                value={chordType}
+                onChange={(e) => setChordType(e.target.value)}
+              >
+                {chordOptions.map(opt => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <VoicingControls
+              voicingMode={voicingMode}
+              setVoicingMode={setVoicingMode}
+              selectedVoicingIndex={selectedVoicingIndex}
+              setSelectedVoicingIndex={setSelectedVoicingIndex}
+              availableVoicings={availableVoicings}
+            />
+          </>
         )}
 
         <div className="control-group path-control-group">
