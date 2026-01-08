@@ -19,7 +19,8 @@ function Fretboard({
   fretCount = 22,
   pathModeEnabled = false,
   traversalPath = [],
-  showInlays = true
+  showInlays = true,
+  voicingPositions = null
 }) {
   const fretboardData = useMemo(() => {
     const data = tuning.map((openNote, stringIndex) => {
@@ -43,7 +44,24 @@ function Fretboard({
       // If practiceShowHighlights is true, show highlighted notes (chord mode)
       if (practiceShowHighlights) {
         if (!highlightedNotes.length) return 'inactive';
-        // Only show root color if practiceShowRootHint is true
+
+        // Handle voicing positions in practice mode (shape quiz)
+        if (voicingPositions && voicingPositions.length > 0) {
+          const actualStringIndex = tabView ? (tuning.length - 1 - stringIdx) : stringIdx;
+          const voicingPos = voicingPositions.find(
+            p => p.stringIndex === actualStringIndex && p.fret === fret
+          );
+          const isInVoicing = voicingPos && !voicingPos.isMuted;
+
+          if (!isInVoicing && highlightedNotes.includes(note)) {
+            return 'dimmed';
+          }
+          if (!isInVoicing) return 'inactive';
+          if (note === rootNote && practiceShowRootHint) return 'root';
+          return 'chord';
+        }
+
+        // Standard chord highlight (no voicing)
         if (note === rootNote && practiceShowRootHint) return 'root';
         if (highlightedNotes.includes(note)) {
           return mode === 'chord' ? 'chord' : 'highlighted';
@@ -68,6 +86,30 @@ function Fretboard({
       if (!filteredIntervals[interval]) {
         return 'inactive';
       }
+    }
+
+    // Voicing mode logic - similar to path mode but for specific chord positions
+    if (voicingPositions && voicingPositions.length > 0) {
+      // Get the actual stringIndex from tuning (accounting for tabView)
+      const actualStringIndex = tabView ? (tuning.length - 1 - stringIdx) : stringIdx;
+
+      const voicingPos = voicingPositions.find(
+        p => p.stringIndex === actualStringIndex && p.fret === fret
+      );
+
+      const isInVoicing = voicingPos && !voicingPos.isMuted;
+
+      if (!isInVoicing && highlightedNotes.includes(note)) {
+        // Note is in chord but NOT in voicing - dim it
+        return 'dimmed';
+      }
+      if (!isInVoicing) {
+        // Note is not in chord at all
+        return 'inactive';
+      }
+      // Note IS in voicing - apply normal coloring below
+      if (note === rootNote) return 'root';
+      return 'chord';
     }
 
     // Path mode logic
@@ -141,12 +183,31 @@ function Fretboard({
     }
   };
 
+  // Get muted strings for voicing mode
+  const getMutedStrings = useMemo(() => {
+    if (!voicingPositions || voicingPositions.length === 0) return [];
+    return voicingPositions
+      .filter(p => p.isMuted)
+      .map(p => p.stringIndex);
+  }, [voicingPositions]);
+
+  // Check if a string is muted (accounting for tabView)
+  const isStringMuted = (stringIdx) => {
+    const actualStringIndex = tabView ? (tuning.length - 1 - stringIdx) : stringIdx;
+    return getMutedStrings.includes(actualStringIndex);
+  };
+
   return (
     <div className="fretboard-container">
       <div className="fretboard">
         {fretboardData.map((string, stringIdx) => (
           <div key={stringIdx} className="string-row">
-            <div className="string-label">{string.openNote}</div>
+            <div className="string-label">
+              {string.openNote}
+              {voicingPositions && isStringMuted(stringIdx) && (
+                <span className="muted-indicator">X</span>
+              )}
+            </div>
             <div className="frets-container">
               {string.frets.map((fretData) => (
                 <div key={fretData.fret} className="fret">

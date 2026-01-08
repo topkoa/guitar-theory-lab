@@ -5,6 +5,7 @@ import JamSettings from './JamSettings';
 import PresetManager from './PresetManager';
 import { useMetronome } from './useMetronome';
 import { getScaleNotes, getChordNotes } from '../../utils/musicTheory';
+import { getVoicingsForChord, voicingToFretPositions } from '../../utils/voicingUtils';
 import { SCALES } from '../../data/scales';
 import { CHORDS } from '../../data/chords';
 import { DEFAULT_GLOBAL_SETTINGS, resolveStepSettings } from '../../utils/jamSettings';
@@ -23,6 +24,8 @@ const createDefaultStep = () => ({
   chordType: 'minor',
   scaleType: 'pentatonicMinor',
   beats: 4,
+  voicingMode: 'all',        // 'all' | 'voicing'
+  selectedVoicingIndex: 0,   // Which voicing to show
   overrides: {
     timeSignature: null,
     accentPattern: null,
@@ -166,19 +169,30 @@ function Jam({ tuning, tabView, onHighlightChange }) {
   // Computed highlighted notes based on current step
   const highlightData = useMemo(() => {
     if (!currentStep) {
-      return { notes: [], rootNote: 'C', mode: 'scale' };
+      return { notes: [], rootNote: 'C', mode: 'scale', voicingPositions: null };
     }
 
     const notes = currentStep.type === 'scale'
       ? getScaleNotes(currentStep.rootNote, currentStep.scaleType)
       : getChordNotes(currentStep.rootNote, currentStep.chordType);
 
+    // Calculate voicing positions if in voicing mode for chord steps
+    let voicingPositions = null;
+    if (currentStep.type === 'chord' && currentStep.voicingMode === 'voicing') {
+      const voicings = getVoicingsForChord(currentStep.rootNote, currentStep.chordType, tuning);
+      const safeIndex = Math.min(currentStep.selectedVoicingIndex || 0, voicings.length - 1);
+      if (voicings[safeIndex]) {
+        voicingPositions = voicingToFretPositions(voicings[safeIndex], tuning);
+      }
+    }
+
     return {
       notes,
       rootNote: currentStep.rootNote,
-      mode: currentStep.type
+      mode: currentStep.type,
+      voicingPositions
     };
-  }, [currentStep]);
+  }, [currentStep, tuning]);
 
   // Notify parent of highlight changes
   useEffect(() => {
@@ -366,6 +380,7 @@ function Jam({ tuning, tabView, onHighlightChange }) {
                 onChange={handleUpdateStep}
                 onDelete={handleDeleteStep}
                 onPlayChord={handlePlayChord}
+                tuning={tuning}
               />
             ))
           )}

@@ -1,16 +1,28 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { NOTES, getNoteDisplayName } from '../../data/notes';
 import { getScaleOptions } from '../../data/scales';
 import { getChordOptions } from '../../data/chords';
 import { TIME_SIGNATURES, hasOverrides } from '../../utils/jamSettings';
+import { getVoicingsForChord } from '../../utils/voicingUtils';
 
-function SequenceStep({ step, onChange, onDelete, isActive, index, onPlayChord }) {
+function SequenceStep({ step, onChange, onDelete, isActive, index, onPlayChord, tuning }) {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const scaleOptions = getScaleOptions();
   const chordOptions = getChordOptions();
 
+  // Get available voicings for current chord
+  const availableVoicings = useMemo(() => {
+    if (step.type !== 'chord') return [];
+    return getVoicingsForChord(step.rootNote, step.chordType, tuning);
+  }, [step.type, step.rootNote, step.chordType, tuning]);
+
   const handleChange = (field, value) => {
-    onChange(step.id, { ...step, [field]: value });
+    // Reset voicing index when chord changes
+    if (field === 'rootNote' || field === 'chordType') {
+      onChange(step.id, { ...step, [field]: value, selectedVoicingIndex: 0 });
+    } else {
+      onChange(step.id, { ...step, [field]: value });
+    }
   };
 
   // Update overrides
@@ -90,15 +102,60 @@ function SequenceStep({ step, onChange, onDelete, isActive, index, onPlayChord }
         </div>
 
         {step.type === 'chord' ? (
-          <select
-            value={step.chordType}
-            onChange={(e) => handleChange('chordType', e.target.value)}
-            className="type-select"
-          >
-            {chordOptions.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
+          <>
+            <select
+              value={step.chordType}
+              onChange={(e) => handleChange('chordType', e.target.value)}
+              className="type-select"
+            >
+              {chordOptions.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+
+            {/* Voicing controls */}
+            <div className="step-voicing-controls">
+              <div className="voicing-mode-toggle">
+                <button
+                  className={step.voicingMode === 'all' ? 'active' : ''}
+                  onClick={() => handleChange('voicingMode', 'all')}
+                  title="Show all chord notes"
+                >
+                  All
+                </button>
+                <button
+                  className={step.voicingMode === 'voicing' ? 'active' : ''}
+                  onClick={() => handleChange('voicingMode', 'voicing')}
+                  disabled={availableVoicings.length === 0}
+                  title="Show specific voicing"
+                >
+                  Shape
+                </button>
+              </div>
+
+              {step.voicingMode === 'voicing' && availableVoicings.length > 0 && (
+                <div className="voicing-nav">
+                  <button
+                    onClick={() => handleChange('selectedVoicingIndex', Math.max(0, (step.selectedVoicingIndex || 0) - 1))}
+                    disabled={(step.selectedVoicingIndex || 0) === 0}
+                    title="Previous voicing"
+                  >
+                    ◀
+                  </button>
+                  <span className="voicing-index">
+                    {(step.selectedVoicingIndex || 0) + 1}/{availableVoicings.length}
+                  </span>
+                  <button
+                    onClick={() => handleChange('selectedVoicingIndex', Math.min(availableVoicings.length - 1, (step.selectedVoicingIndex || 0) + 1))}
+                    disabled={(step.selectedVoicingIndex || 0) >= availableVoicings.length - 1}
+                    title="Next voicing"
+                  >
+                    ▶
+                  </button>
+                </div>
+              )}
+            </div>
+          </>
         ) : (
           <select
             value={step.scaleType}

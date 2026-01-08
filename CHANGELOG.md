@@ -5,6 +5,41 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.21] - 2026-01-08
+
+### Added
+- Chord voicing/position cycling feature
+  - Toggle between "All Notes" and "Voicing" view when viewing chords
+  - Cycle through playable chord shapes with prev/next arrows and dropdown
+  - New files: src/data/voicings.js (chord voicing data), src/utils/voicingUtils.js (utilities)
+  - New component: src/components/VoicingControls/ for voicing selection UI
+- Predefined voicings for common chords
+  - Open chord shapes: C, G, D, A, E, F major; Am, Em, Dm minor; plus 7th chords
+  - Moveable barre shapes: E-shape and A-shape for major, minor, dom7, min7, maj7
+- Algorithmic voicing generation for chords without predefined shapes
+  - Generates playable positions based on fret span constraints
+  - Fallback for any chord type in any key
+- Learn mode voicing integration
+  - VoicingControls component appears when in chord mode
+  - Shows muted string indicators (X) next to string labels for voicing mode
+  - Dimmed notes show chord tones not in current voicing
+- Jam mode per-step voicing controls
+  - Each chord step has "All" / "Shape" toggle
+  - Prev/next navigation when in Shape mode
+  - Voicing positions passed to fretboard for accurate display
+- Practice mode "Name That Shape" quiz
+  - New quiz type that shows a specific voicing
+  - User identifies the chord (root + type) from the shape
+  - Uses same hint options as "Name That Chord" quiz
+
+### Changed
+- Updated src/App.jsx with voicing state management
+- Updated src/components/Controls/Controls.jsx to integrate VoicingControls
+- Updated src/components/Fretboard/Fretboard.jsx to render voicing positions
+- Updated src/components/Jam/Jam.jsx with voicing support per step
+- Updated src/components/Jam/SequenceStep.jsx with voicing controls UI
+- Updated src/components/Practice/Practice.jsx with shape quiz type
+
 ## [0.0.20] - 2026-01-05
 
 ### Changed

@@ -50,6 +50,19 @@
   color: var(--text-secondary);
   font-size: 0.9em;
   z-index: 2;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+/* Muted string indicator (X) for voicing mode */
+.muted-indicator {
+  color: #ff5252;
+  font-weight: bold;
+  font-size: 0.8em;
+  opacity: 0.9;
 }
 
 .frets-container {

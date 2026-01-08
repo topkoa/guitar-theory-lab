@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import Fretboard from './components/Fretboard/Fretboard';
 import Controls from './components/Controls/Controls';
 import Reference from './components/Reference/Reference';
@@ -8,6 +8,7 @@ import Footer from './components/Footer/Footer';
 import FretboardSettings from './components/GlobalSettingsPanel/GlobalSettingsPanel';
 import { TUNINGS, DEFAULT_TUNING } from './data/tunings';
 import { getScaleNotes, getChordNotes, calculateNeckTraversalPath } from './utils/musicTheory';
+import { getVoicingsForChord, voicingToFretPositions } from './utils/voicingUtils';
 import './App.css';
 
 function App() {
@@ -35,6 +36,10 @@ function App() {
   const [fretRangeWidth, setFretRangeWidth] = useState(4);
   const [pathDirection, setPathDirection] = useState('ascending'); // 'ascending' or 'descending'
 
+  // Voicing state for chord display
+  const [voicingMode, setVoicingMode] = useState('all'); // 'all' | 'voicing'
+  const [selectedVoicingIndex, setSelectedVoicingIndex] = useState(0);
+
   // Filter state for intervals/notes
   const [filteredIntervals, setFilteredIntervals] = useState({
     0: true,   // R (Root)
@@ -52,7 +57,7 @@ function App() {
   });
 
   // Jam mode state
-  const [jamHighlight, setJamHighlight] = useState({ notes: [], rootNote: 'A', mode: 'scale' });
+  const [jamHighlight, setJamHighlight] = useState({ notes: [], rootNote: 'A', mode: 'scale', voicingPositions: null });
   const handleJamHighlightChange = useCallback((data) => {
     setJamHighlight(data);
   }, []);
@@ -76,11 +81,15 @@ function App() {
     setRevealedFrets([]);
   }, []);
 
-  const handlePracticeHighlightChange = useCallback((notes, rootNote = 'C', showHighlights = false, showRootHint = false) => {
+  // Voicing positions for practice mode
+  const [practiceVoicingPositions, setPracticeVoicingPositions] = useState(null);
+
+  const handlePracticeHighlightChange = useCallback((notes, rootNote = 'C', showHighlights = false, showRootHint = false, voicingPositions = null) => {
     setPracticeHighlightedNotes(notes);
     setPracticeRootNote(rootNote);
     setPracticeShowHighlights(showHighlights);
     setPracticeShowRootHint(showRootHint);
+    setPracticeVoicingPositions(voicingPositions);
   }, []);
 
   // Computed highlighted notes
@@ -91,6 +100,26 @@ function App() {
       return getChordNotes(rootNote, chordType);
     }
   }, [rootNote, mode, scaleType, chordType]);
+
+  // Compute available voicings for current chord
+  const availableVoicings = useMemo(() => {
+    if (mode !== 'chord') return [];
+    return getVoicingsForChord(rootNote, chordType, tuning);
+  }, [mode, rootNote, chordType, tuning]);
+
+  // Reset voicing index when chord changes
+  useEffect(() => {
+    setSelectedVoicingIndex(0);
+  }, [rootNote, chordType]);
+
+  // Compute voicing positions for fretboard display
+  const voicingPositions = useMemo(() => {
+    if (mode !== 'chord' || voicingMode !== 'voicing' || !availableVoicings.length) {
+      return null;
+    }
+    const safeIndex = Math.min(selectedVoicingIndex, availableVoicings.length - 1);
+    return voicingToFretPositions(availableVoicings[safeIndex], tuning);
+  }, [mode, voicingMode, availableVoicings, selectedVoicingIndex, tuning]);
 
   // Compute traversal path when enabled
   const traversalPath = useMemo(() => {
@@ -153,6 +182,11 @@ function App() {
               setFretRangeWidth={setFretRangeWidth}
               pathDirection={pathDirection}
               setPathDirection={setPathDirection}
+              voicingMode={voicingMode}
+              setVoicingMode={setVoicingMode}
+              selectedVoicingIndex={selectedVoicingIndex}
+              setSelectedVoicingIndex={setSelectedVoicingIndex}
+              availableVoicings={availableVoicings}
             />
 
             <Reference
@@ -190,6 +224,7 @@ function App() {
               pathModeEnabled={pathModeEnabled}
               traversalPath={traversalPath}
               showInlays={showInlays}
+              voicingPositions={voicingPositions}
             />
           </>
         ) : activeTab === 'practice' ? (
@@ -227,6 +262,7 @@ function App() {
               revealedFrets={revealedFrets}
               fretCount={fretCount}
               showInlays={showInlays}
+              voicingPositions={practiceVoicingPositions}
             />
           </>
         ) : activeTab === 'jam' ? (
@@ -256,6 +292,7 @@ function App() {
               mode={jamHighlight.mode}
               tabView={tabView}
               fretCount={fretCount}
+              voicingPositions={jamHighlight.voicingPositions}
               showInlays={showInlays}
             />
           </>

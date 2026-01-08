@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import { NOTES, getNoteOnFret, FRET_COUNT } from '../../data/notes';
 import { CHORDS } from '../../data/chords';
 import { getChordNotes } from '../../utils/musicTheory';
+import { getVoicingsForChord, voicingToFretPositions } from '../../utils/voicingUtils';
 import './Practice.css';
 
 function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIntervals }) {
@@ -116,6 +117,77 @@ function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIn
     };
   }, []);
 
+  const generateShapeQuestion = useCallback(() => {
+    // Chord types that commonly have voicings
+    const chordTypesWithVoicings = ['major', 'minor', 'dom7', 'maj7', 'min7'];
+
+    // Pick a random chord that has voicings available
+    let rootNote, chordType, voicings;
+    let attempts = 0;
+    do {
+      rootNote = NOTES[Math.floor(Math.random() * NOTES.length)];
+      chordType = chordTypesWithVoicings[Math.floor(Math.random() * chordTypesWithVoicings.length)];
+      voicings = getVoicingsForChord(rootNote, chordType, tuning);
+      attempts++;
+    } while (voicings.length === 0 && attempts < 20);
+
+    if (voicings.length === 0) {
+      // Fallback to a known chord with voicings
+      rootNote = 'C';
+      chordType = 'major';
+      voicings = getVoicingsForChord(rootNote, chordType, tuning);
+    }
+
+    // Pick a random voicing
+    const voicingIndex = Math.floor(Math.random() * voicings.length);
+    const voicing = voicings[voicingIndex];
+    const voicingPositions = voicingToFretPositions(voicing, tuning);
+    const chordNotes = getChordNotes(rootNote, chordType);
+
+    // Generate wrong answer options (5 wrong answers)
+    const wrongAnswers = [];
+    while (wrongAnswers.length < 5) {
+      const wrongRoot = NOTES[Math.floor(Math.random() * NOTES.length)];
+      const wrongType = chordTypesWithVoicings[Math.floor(Math.random() * chordTypesWithVoicings.length)];
+      const answerKey = `${wrongRoot}-${wrongType}`;
+
+      // Don't include the correct answer
+      if (wrongRoot === rootNote && wrongType === chordType) continue;
+
+      // Avoid duplicates
+      if (wrongAnswers.some(a => a.key === answerKey)) continue;
+
+      wrongAnswers.push({
+        key: answerKey,
+        label: `${wrongRoot} ${CHORDS[wrongType].name}`,
+        root: wrongRoot,
+        type: wrongType
+      });
+    }
+
+    // Add correct answer and shuffle
+    const allOptions = [
+      {
+        key: `${rootNote}-${chordType}`,
+        label: `${rootNote} ${CHORDS[chordType].name}`,
+        root: rootNote,
+        type: chordType
+      },
+      ...wrongAnswers
+    ].sort(() => Math.random() - 0.5);
+
+    return {
+      type: 'shape',
+      rootNote,
+      chordType,
+      chordNotes,
+      voicing,
+      voicingPositions,
+      correctAnswer: `${rootNote}-${chordType}`,
+      options: allOptions
+    };
+  }, [tuning]);
+
   const getChordStrategyHint = (chordType) => {
     const hints = {
       'major': 'Look for a bright, happy sound. Count 4 half-steps from root to the 3rd, then 3 more to the 5th.',
@@ -149,20 +221,24 @@ function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIn
       setQuestion(generateFretQuestion());
     } else if (quizType === 'chord') {
       setQuestion(generateChordQuestion());
+    } else if (quizType === 'shape') {
+      setQuestion(generateShapeQuestion());
     }
-  }, [quizType, generateNoteQuestion, generateFretQuestion, generateChordQuestion, onReset]);
+  }, [quizType, generateNoteQuestion, generateFretQuestion, generateChordQuestion, generateShapeQuestion, onReset]);
 
   useEffect(() => {
     generateQuestion();
   }, [quizType, tuning]);
 
-  // Update highlighted notes for chord mode
+  // Update highlighted notes for chord and shape modes
   useEffect(() => {
     if (onHighlightChange) {
       if (quizType === 'chord' && question?.chordNotes && question?.rootNote) {
-        onHighlightChange(question.chordNotes, question.rootNote, true, showRootHint);
+        onHighlightChange(question.chordNotes, question.rootNote, true, showRootHint, null);
+      } else if (quizType === 'shape' && question?.chordNotes && question?.rootNote) {
+        onHighlightChange(question.chordNotes, question.rootNote, true, showRootHint, question.voicingPositions);
       } else {
-        onHighlightChange([], 'C', false, false);
+        onHighlightChange([], 'C', false, false, null);
       }
     }
   }, [quizType, question, onHighlightChange, showRootHint]);
@@ -177,7 +253,7 @@ function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIn
       correct = answer === question.correctAnswer;
     } else if (question.type === 'fret') {
       correct = question.correctAnswers.includes(answer);
-    } else if (question.type === 'chord') {
+    } else if (question.type === 'chord' || question.type === 'shape') {
       correct = answer === question.correctAnswer;
     }
 
@@ -191,7 +267,7 @@ function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIn
   const getButtonClass = (option) => {
     if (selectedAnswer === null) return '';
 
-    if (question.type === 'note' || question.type === 'chord') {
+    if (question.type === 'note' || question.type === 'chord' || question.type === 'shape') {
       if (option === question.correctAnswer) return 'correct';
       if (option === selectedAnswer && option !== question.correctAnswer) return 'incorrect';
     } else if (question.type === 'fret') {
@@ -216,11 +292,13 @@ function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIn
       <p className="hint-text">
         {quizType === 'chord'
           ? '🎸 Identify the chord displayed on the fretboard'
+          : quizType === 'shape'
+          ? '🎸 Identify the chord shape displayed on the fretboard'
           : '💡 Click any fret on the fretboard below to reveal its note as a hint'
         }
       </p>
 
-      {quizType === 'chord' && (
+      {(quizType === 'chord' || quizType === 'shape') && (
         <div className="hint-toggle-container">
           <label className="hint-toggle">
             <input
@@ -276,6 +354,12 @@ function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIn
         >
           Name That Chord
         </button>
+        <button
+          className={quizType === 'shape' ? 'active' : ''}
+          onClick={() => setQuizType('shape')}
+        >
+          Name That Shape
+        </button>
       </div>
 
       <div className="quiz-content">
@@ -317,7 +401,7 @@ function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIn
               ))}
             </div>
           </>
-        ) : (
+        ) : question.type === 'chord' ? (
           <>
             <p className="question">
               What chord is displayed on the fretboard?
@@ -350,6 +434,29 @@ function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIn
                     ))}
                   </ul>
                 </div>
+              </div>
+            )}
+            <div className="answer-options">
+              {question.options.map(option => (
+                <button
+                  key={option.key}
+                  className={`answer-btn ${getButtonClass(option.key)}`}
+                  onClick={() => handleAnswer(option.key)}
+                  disabled={selectedAnswer !== null}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="question">
+              What chord shape is displayed on the fretboard?
+            </p>
+            {showStrategyHint && question.chordType && (
+              <div className="strategy-hint">
+                💡 {getChordStrategyHint(question.chordType)}
               </div>
             )}
             <div className="answer-options">
