@@ -65,6 +65,16 @@ function Jam({ tuning, tabView, onHighlightChange }) {
   const isInitialMount = useRef(true);
   const activeOscillatorsRef = useRef([]); // Track active oscillators for stopping
 
+  // Reset voicing indices when tuning changes
+  useEffect(() => {
+    setSequence(prevSequence =>
+      prevSequence.map(step => ({
+        ...step,
+        selectedVoicingIndex: 0
+      }))
+    );
+  }, [tuning]);
+
   // Get current step
   const currentStep = sequence[currentStepIndex] || null;
 

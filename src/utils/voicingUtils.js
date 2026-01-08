@@ -107,10 +107,12 @@ export function transposeVoicing(moveableVoicing, targetRoot, tuning = STANDARD_
 export function getVoicingsForChord(rootNote, chordType, tuning = STANDARD_TUNING) {
   const voicings = [];
 
-  // Check for open voicings first
-  const openVoicingsForType = OPEN_VOICINGS[chordType];
-  if (openVoicingsForType && openVoicingsForType[rootNote]) {
-    voicings.push(...openVoicingsForType[rootNote]);
+  // Check for open voicings first (ONLY in standard tuning)
+  if (isStandardTuning(tuning)) {
+    const openVoicingsForType = OPEN_VOICINGS[chordType];
+    if (openVoicingsForType && openVoicingsForType[rootNote]) {
+      voicings.push(...openVoicingsForType[rootNote]);
+    }
   }
 
   // Get moveable voicings and transpose them

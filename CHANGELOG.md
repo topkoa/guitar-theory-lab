@@ -5,6 +5,22 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.22] - 2026-01-08
+
+### Fixed
+- Chord voicing highlights now update correctly when tuning changes
+  - Open voicings (C Open, G Open, etc.) are now only shown in standard tuning
+  - Updated src/utils/voicingUtils.js getVoicingsForChord() to filter open voicings by tuning
+  - Added tuning check using isStandardTuning() before including open voicings
+  - Open voicings are hardcoded for standard tuning and don't work in alternate tunings
+- Voicing selection now resets to first voicing when tuning changes
+  - Updated src/App.jsx to reset selectedVoicingIndex on tuning change (Learn mode)
+  - Added tuningKey to useEffect dependency array (line 113)
+- Jam mode voicing indices reset when tuning changes
+  - Updated src/components/Jam/Jam.jsx to reset all step voicing indices
+  - Added useEffect to map sequence and reset selectedVoicingIndex to 0 (lines 68-76)
+  - Prevents invalid voicing indices when available voicings change between tunings
+
 ## [0.0.21] - 2026-01-08
 
 ### Added

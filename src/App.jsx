@@ -107,10 +107,10 @@ function App() {
     return getVoicingsForChord(rootNote, chordType, tuning);
   }, [mode, rootNote, chordType, tuning]);
 
-  // Reset voicing index when chord changes
+  // Reset voicing index when chord or tuning changes
   useEffect(() => {
     setSelectedVoicingIndex(0);
-  }, [rootNote, chordType]);
+  }, [rootNote, chordType, tuningKey]);
 
   // Compute voicing positions for fretboard display
   const voicingPositions = useMemo(() => {
