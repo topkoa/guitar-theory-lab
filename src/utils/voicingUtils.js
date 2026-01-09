@@ -1,6 +1,15 @@
 // Utility functions for chord voicings
 import { NOTES, getNoteIndex, getNoteOnFret } from '../data/notes';
-import { OPEN_VOICINGS, MOVEABLE_VOICINGS, STANDARD_TUNING } from '../data/voicings';
+import {
+  OPEN_VOICINGS,
+  MOVEABLE_VOICINGS,
+  TRIAD_VOICINGS,
+  SHELL_VOICINGS,
+  DROP2_VOICINGS,
+  SPREAD_VOICINGS,
+  PARTIAL_VOICINGS,
+  STANDARD_TUNING
+} from '../data/voicings';
 import { getChordNotes } from './musicTheory';
 
 /**
@@ -126,6 +135,57 @@ export function getVoicingsForChord(rootNote, chordType, tuning = STANDARD_TUNIN
     }
   }
 
+  // Add triad voicings (for major, minor, dim, aug)
+  const triadType = mapChordTypeToTriad(chordType);
+  if (triadType && TRIAD_VOICINGS[triadType]) {
+    for (const triad of TRIAD_VOICINGS[triadType]) {
+      const transposed = transposeVoicing(triad, rootNote, tuning);
+      if (transposed) {
+        voicings.push(transposed);
+      }
+    }
+  }
+
+  // Add shell voicings (for 7th chords)
+  if (SHELL_VOICINGS[chordType]) {
+    for (const shell of SHELL_VOICINGS[chordType]) {
+      const transposed = transposeVoicing(shell, rootNote, tuning);
+      if (transposed) {
+        voicings.push(transposed);
+      }
+    }
+  }
+
+  // Add drop 2 voicings (for 7th chords)
+  if (DROP2_VOICINGS[chordType]) {
+    for (const drop2 of DROP2_VOICINGS[chordType]) {
+      const transposed = transposeVoicing(drop2, rootNote, tuning);
+      if (transposed) {
+        voicings.push(transposed);
+      }
+    }
+  }
+
+  // Add spread voicings
+  if (SPREAD_VOICINGS[chordType]) {
+    for (const spread of SPREAD_VOICINGS[chordType]) {
+      const transposed = transposeVoicing(spread, rootNote, tuning);
+      if (transposed) {
+        voicings.push(transposed);
+      }
+    }
+  }
+
+  // Add partial voicings
+  if (PARTIAL_VOICINGS[chordType]) {
+    for (const partial of PARTIAL_VOICINGS[chordType]) {
+      const transposed = transposeVoicing(partial, rootNote, tuning);
+      if (transposed) {
+        voicings.push(transposed);
+      }
+    }
+  }
+
   // If no predefined voicings, generate algorithmically
   if (voicings.length === 0) {
     const generated = generateVoicings(rootNote, chordType, tuning);
@@ -146,6 +206,35 @@ export function getVoicingsForChord(rootNote, chordType, tuning = STANDARD_TUNIN
   });
 
   return voicings;
+}
+
+/**
+ * Map chord types to their basic triad type
+ * @param {string} chordType - Full chord type
+ * @returns {string|null} Basic triad type (major, minor, dim, aug) or null
+ */
+function mapChordTypeToTriad(chordType) {
+  // Major family
+  if (['major', 'maj7', 'maj9', 'add9', 'sus2', 'sus4', '6', 'maj6'].includes(chordType)) {
+    return 'major';
+  }
+  // Minor family
+  if (['minor', 'min7', 'min9', 'min6', 'min11'].includes(chordType)) {
+    return 'minor';
+  }
+  // Diminished family
+  if (['dim', 'dim7', 'min7b5'].includes(chordType)) {
+    return 'dim';
+  }
+  // Augmented family
+  if (['aug', 'aug7'].includes(chordType)) {
+    return 'aug';
+  }
+  // Dominant chords use major triads
+  if (['dom7', 'dom9', 'dom11', '7', '9', '11', '13'].includes(chordType)) {
+    return 'major';
+  }
+  return null;
 }
 
 /**

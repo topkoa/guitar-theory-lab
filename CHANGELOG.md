@@ -5,6 +5,34 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.24] - 2026-01-09
+
+### Added
+- Comprehensive high-position and partial chord voicings (100+ new voicings)
+  - **Triad voicings** across the neck:
+    - Top 3 strings (G-B-e): Root, 1st, and 2nd inversions for major, minor, dim, aug
+    - Middle 3 strings (D-G-B): Root, 1st, and 2nd inversions
+    - Low-Mid 3 strings (A-D-G): Root, 1st, and 2nd inversions
+  - **Shell voicings** (jazz 3-note voicings):
+    - Root-3rd-7th and Root-7th-3rd patterns for dom7, maj7, min7, min7b5, dim7
+    - Both E-string and A-string root versions
+  - **Drop 2 voicings** (standard jazz guitar voicings):
+    - Top 4 strings with root on 4th, 3rd, 2nd, and 1st strings
+    - Middle 4 strings (A-D-G-B) variants
+    - Available for maj7, dom7, min7, min7b5, dim7
+  - **Spread voicings** (wide voicings for fuller sound):
+    - E-string and A-string root versions
+    - Available for major, minor, dom7, maj7, min7
+  - **Partial voicings** (3-4 note shapes):
+    - High 4 strings (easy barre alternatives)
+    - Mid 4 strings (good for comping)
+    - Freddie Green style 3-note voicings
+    - Rootless voicings for jazz
+- Triads now available for all chord families (major, minor, dim, aug mapped from extended chord types)
+- Updated src/data/voicings.js with 5 new voicing categories
+- Updated src/utils/voicingUtils.js to integrate all new voicing types
+- New mapChordTypeToTriad() helper function for chord family mapping
+
 ## [0.0.23] - 2026-01-09
 
 ### Added
