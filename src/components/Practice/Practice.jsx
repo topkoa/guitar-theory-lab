@@ -1,9 +1,47 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
-import { NOTES, getNoteOnFret, FRET_COUNT } from '../../data/notes';
+import { useState, useCallback, useEffect } from 'react';
+import { NOTES, getNoteOnFret } from '../../data/notes';
 import { CHORDS } from '../../data/chords';
 import { getChordNotes } from '../../utils/musicTheory';
 import { getVoicingsForChord, voicingToFretPositions } from '../../utils/voicingUtils';
 import './Practice.css';
+
+// Max fret for practice quizzes (reasonable range for memorization)
+const PRACTICE_MAX_FRET = 12;
+
+// Generate wrong chord answer options
+function generateWrongChordAnswers(correctRoot, correctType, chordTypes, count = 5) {
+  const wrongAnswers = [];
+  while (wrongAnswers.length < count) {
+    const wrongRoot = NOTES[Math.floor(Math.random() * NOTES.length)];
+    const wrongType = chordTypes[Math.floor(Math.random() * chordTypes.length)];
+    if (wrongRoot === correctRoot && wrongType === correctType) continue;
+    const answerKey = `${wrongRoot}-${wrongType}`;
+    if (wrongAnswers.some(a => a.key === answerKey)) continue;
+    wrongAnswers.push({
+      key: answerKey,
+      label: `${wrongRoot} ${CHORDS[wrongType].name}`,
+      root: wrongRoot,
+      type: wrongType
+    });
+  }
+  return wrongAnswers;
+}
+
+// Get feedback message for quiz results
+function getFeedbackMessage(isCorrect, question) {
+  if (isCorrect) return 'Correct!';
+
+  switch (question.type) {
+    case 'note':
+      return `Incorrect. The answer is ${question.correctAnswer}`;
+    case 'fret': {
+      const plural = question.correctAnswers.length > 1 ? 's' : '';
+      return `Incorrect. ${question.targetNote} is on fret${plural} ${question.correctAnswers.join(', ')}`;
+    }
+    default:
+      return `Incorrect. The answer is ${question.options.find(o => o.key === question.correctAnswer)?.label}`;
+  }
+}
 
 function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIntervals }) {
   const [quizType, setQuizType] = useState('note'); // 'note' or 'fret'
@@ -24,7 +62,7 @@ function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIn
 
   const generateNoteQuestion = useCallback(() => {
     const stringIdx = Math.floor(Math.random() * tuning.length);
-    const fret = Math.floor(Math.random() * 13); // 0-12 for reasonable range
+    const fret = Math.floor(Math.random() * (PRACTICE_MAX_FRET + 1));
     const correctNote = getNoteOnFret(tuning[stringIdx], fret);
 
     return {
@@ -38,11 +76,11 @@ function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIn
 
   const generateFretQuestion = useCallback(() => {
     const stringIdx = Math.floor(Math.random() * tuning.length);
-    const targetNote = NOTES[Math.floor(Math.random() * 12)];
+    const targetNote = NOTES[Math.floor(Math.random() * NOTES.length)];
 
-    // Find all frets where this note appears on this string (0-12)
+    // Find all frets where this note appears on this string
     const correctFrets = [];
-    for (let fret = 0; fret <= 12; fret++) {
+    for (let fret = 0; fret <= PRACTICE_MAX_FRET; fret++) {
       if (getNoteOnFret(tuning[stringIdx], fret) === targetNote) {
         correctFrets.push(fret);
       }
@@ -51,7 +89,7 @@ function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIn
     // Generate options including correct answer(s) and some wrong ones
     const options = new Set(correctFrets);
     while (options.size < 4) {
-      const randomFret = Math.floor(Math.random() * 13);
+      const randomFret = Math.floor(Math.random() * (PRACTICE_MAX_FRET + 1));
       options.add(randomFret);
     }
 
@@ -65,38 +103,12 @@ function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIn
   }, [tuning]);
 
   const generateChordQuestion = useCallback(() => {
-    // Get all available chord types
     const chordTypes = Object.keys(CHORDS);
-
-    // Pick random root note and chord type
     const rootNote = NOTES[Math.floor(Math.random() * NOTES.length)];
     const correctChordType = chordTypes[Math.floor(Math.random() * chordTypes.length)];
-
-    // Get the notes for this chord
     const chordNotes = getChordNotes(rootNote, correctChordType);
 
-    // Generate wrong answer options (5 total wrong answers)
-    const wrongAnswers = [];
-    while (wrongAnswers.length < 5) {
-      const wrongRoot = NOTES[Math.floor(Math.random() * NOTES.length)];
-      const wrongType = chordTypes[Math.floor(Math.random() * chordTypes.length)];
-      const answerKey = `${wrongRoot}-${wrongType}`;
-
-      // Don't include the correct answer
-      if (wrongRoot === rootNote && wrongType === correctChordType) continue;
-
-      // Avoid duplicates
-      if (wrongAnswers.some(a => a.key === answerKey)) continue;
-
-      wrongAnswers.push({
-        key: answerKey,
-        label: `${wrongRoot} ${CHORDS[wrongType].name}`,
-        root: wrongRoot,
-        type: wrongType
-      });
-    }
-
-    // Add correct answer and shuffle
+    const wrongAnswers = generateWrongChordAnswers(rootNote, correctChordType, chordTypes);
     const allOptions = [
       {
         key: `${rootNote}-${correctChordType}`,
@@ -118,7 +130,6 @@ function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIn
   }, []);
 
   const generateShapeQuestion = useCallback(() => {
-    // Chord types that commonly have voicings
     const chordTypesWithVoicings = ['major', 'minor', 'dom7', 'maj7', 'min7'];
 
     // Pick a random chord that has voicings available
@@ -132,40 +143,17 @@ function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIn
     } while (voicings.length === 0 && attempts < 20);
 
     if (voicings.length === 0) {
-      // Fallback to a known chord with voicings
       rootNote = 'C';
       chordType = 'major';
       voicings = getVoicingsForChord(rootNote, chordType, tuning);
     }
 
-    // Pick a random voicing
     const voicingIndex = Math.floor(Math.random() * voicings.length);
     const voicing = voicings[voicingIndex];
     const voicingPositions = voicingToFretPositions(voicing, tuning);
     const chordNotes = getChordNotes(rootNote, chordType);
 
-    // Generate wrong answer options (5 wrong answers)
-    const wrongAnswers = [];
-    while (wrongAnswers.length < 5) {
-      const wrongRoot = NOTES[Math.floor(Math.random() * NOTES.length)];
-      const wrongType = chordTypesWithVoicings[Math.floor(Math.random() * chordTypesWithVoicings.length)];
-      const answerKey = `${wrongRoot}-${wrongType}`;
-
-      // Don't include the correct answer
-      if (wrongRoot === rootNote && wrongType === chordType) continue;
-
-      // Avoid duplicates
-      if (wrongAnswers.some(a => a.key === answerKey)) continue;
-
-      wrongAnswers.push({
-        key: answerKey,
-        label: `${wrongRoot} ${CHORDS[wrongType].name}`,
-        root: wrongRoot,
-        type: wrongType
-      });
-    }
-
-    // Add correct answer and shuffle
+    const wrongAnswers = generateWrongChordAnswers(rootNote, chordType, chordTypesWithVoicings);
     const allOptions = [
       {
         key: `${rootNote}-${chordType}`,
@@ -477,12 +465,7 @@ function Practice({ tuning, onReset, onHighlightChange, showIntervals, setShowIn
         {selectedAnswer !== null && (
           <>
             <div className={`feedback ${isCorrect ? 'correct' : 'incorrect'}`}>
-              {isCorrect ? 'Correct!' : question.type === 'note'
-                ? `Incorrect. The answer is ${question.correctAnswer}`
-                : question.type === 'fret'
-                ? `Incorrect. ${question.targetNote} is on fret${question.correctAnswers.length > 1 ? 's' : ''} ${question.correctAnswers.join(', ')}`
-                : `Incorrect. The answer is ${question.options.find(o => o.key === question.correctAnswer)?.label}`
-              }
+              {getFeedbackMessage(isCorrect, question)}
             </div>
             <button className="next-btn" onClick={generateQuestion}>
               Next Question

@@ -13,10 +13,8 @@ import { presetStorage } from '../../utils/presetStorage';
 import { createChordSound, playChordNow, stopActiveOscillators } from '../../utils/chordSounds';
 import './Jam.css';
 
-// Generate unique ID
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
-// Default step template
 const createDefaultStep = () => ({
   id: generateId(),
   rootNote: 'A',

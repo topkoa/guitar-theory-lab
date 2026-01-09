@@ -5,6 +5,18 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.25] - 2026-01-09
+
+### Changed
+- Refactored duplicated interval name mappings in Fretboard.jsx to use shared INTERVAL_NAMES from scales.js
+- Extracted generateWrongChordAnswers() helper in Practice.jsx to eliminate duplicate code
+- Replaced nested ternary feedback logic with getFeedbackMessage() switch statement in Practice.jsx
+- Extracted findVoicingPosition() helper in Fretboard.jsx to reduce code duplication
+- Added PRACTICE_MAX_FRET constant to replace magic numbers in Practice.jsx
+- Memoized getScaleOptions() and getChordOptions() calls in Controls.jsx and SequenceStep.jsx
+- Removed unused FRET_COUNT import from Practice.jsx
+- Removed redundant comments in Jam.jsx
+
 ## [0.0.24] - 2026-01-09
 
 ### Added
