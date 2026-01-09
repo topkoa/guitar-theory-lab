@@ -5,6 +5,18 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.23] - 2026-01-09
+
+### Added
+- Expanded chord voicing library with 50+ new voicings
+  - CAGED system shapes: Added G-shape, D-shape, and C-shape for major, minor, dom7, min7, maj7
+  - Power chords: Open voicings (E5, A5, D5, G5, C5) and moveable shapes (E5, A5, D5 with/without octave)
+  - Extended chords: add9 (C, G, D, A, E), dom9 (E, A, G), maj9 (C, G, F), min9 (A, E, D)
+  - Moveable extended shapes: add9, dom9, maj9, min9 with E-shape and A-shape barre voicings
+  - Jazz voicing: dom9 funk shape (4-string voicing)
+- All new voicings include difficulty ratings and category tags
+- Updated src/data/voicings.js with comprehensive voicing definitions
+
 ## [0.0.22] - 2026-01-08
 
 ### Fixed
