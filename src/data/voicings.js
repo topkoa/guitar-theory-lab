@@ -1368,5 +1368,1387 @@ export const MOVEABLE_VOICINGS = {
   ]
 };
 
+// ============================================================================
+// TRIAD VOICINGS - Compact 3-note voicings for different string sets
+// Great for comping, arpeggios, and learning chord tones across the neck
+// ============================================================================
+
+export const TRIAD_VOICINGS = {
+  major: [
+    // Top 3 strings (G-B-e) - Root position and inversions
+    {
+      id: 'major_triad_top3_root',
+      name: 'Major Triad (High) - Root',
+      rootString: 3,           // Root on G string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: null },
+        { string: 3, fret: 0 },     // Root
+        { string: 4, fret: 0 },     // 3rd
+        { string: 5, fret: 0 }      // 5th
+      ],
+      category: 'triad',
+      difficulty: 'beginner'
+    },
+    {
+      id: 'major_triad_top3_1st',
+      name: 'Major Triad (High) - 1st Inv',
+      rootString: 4,           // Root on B string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: null },
+        { string: 3, fret: -1 },    // 5th
+        { string: 4, fret: 0 },     // Root
+        { string: 5, fret: 0 }      // 3rd
+      ],
+      category: 'triad',
+      difficulty: 'beginner'
+    },
+    {
+      id: 'major_triad_top3_2nd',
+      name: 'Major Triad (High) - 2nd Inv',
+      rootString: 5,           // Root on high e string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: null },
+        { string: 3, fret: -1 },    // 3rd
+        { string: 4, fret: -1 },    // 5th
+        { string: 5, fret: 0 }      // Root
+      ],
+      category: 'triad',
+      difficulty: 'beginner'
+    },
+    // Middle 3 strings (D-G-B) - Root position and inversions
+    {
+      id: 'major_triad_mid3_root',
+      name: 'Major Triad (Mid) - Root',
+      rootString: 2,           // Root on D string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // Root
+        { string: 3, fret: 0 },     // 3rd
+        { string: 4, fret: 0 },     // 5th
+        { string: 5, fret: null }
+      ],
+      category: 'triad',
+      difficulty: 'beginner'
+    },
+    {
+      id: 'major_triad_mid3_1st',
+      name: 'Major Triad (Mid) - 1st Inv',
+      rootString: 3,           // Root on G string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: -2 },    // 5th
+        { string: 3, fret: 0 },     // Root
+        { string: 4, fret: 0 },     // 3rd
+        { string: 5, fret: null }
+      ],
+      category: 'triad',
+      difficulty: 'beginner'
+    },
+    {
+      id: 'major_triad_mid3_2nd',
+      name: 'Major Triad (Mid) - 2nd Inv',
+      rootString: 4,           // Root on B string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: -2 },    // 3rd
+        { string: 3, fret: -2 },    // 5th
+        { string: 4, fret: 0 },     // Root
+        { string: 5, fret: null }
+      ],
+      category: 'triad',
+      difficulty: 'beginner'
+    },
+    // Low-Mid strings (A-D-G) - Root position and inversions
+    {
+      id: 'major_triad_low3_root',
+      name: 'Major Triad (Low-Mid) - Root',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: 0 },     // 3rd
+        { string: 3, fret: 0 },     // 5th
+        { string: 4, fret: null },
+        { string: 5, fret: null }
+      ],
+      category: 'triad',
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'major_triad_low3_1st',
+      name: 'Major Triad (Low-Mid) - 1st Inv',
+      rootString: 2,           // Root on D string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: -2 },    // 5th
+        { string: 2, fret: 0 },     // Root
+        { string: 3, fret: 0 },     // 3rd
+        { string: 4, fret: null },
+        { string: 5, fret: null }
+      ],
+      category: 'triad',
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'major_triad_low3_2nd',
+      name: 'Major Triad (Low-Mid) - 2nd Inv',
+      rootString: 3,           // Root on G string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: -3 },    // 3rd
+        { string: 2, fret: -2 },    // 5th
+        { string: 3, fret: 0 },     // Root
+        { string: 4, fret: null },
+        { string: 5, fret: null }
+      ],
+      category: 'triad',
+      difficulty: 'intermediate'
+    }
+  ],
+
+  minor: [
+    // Top 3 strings (G-B-e) - Root position and inversions
+    {
+      id: 'minor_triad_top3_root',
+      name: 'Minor Triad (High) - Root',
+      rootString: 3,           // Root on G string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: null },
+        { string: 3, fret: 0 },     // Root
+        { string: 4, fret: -1 },    // b3rd
+        { string: 5, fret: 0 }      // 5th
+      ],
+      category: 'triad',
+      difficulty: 'beginner'
+    },
+    {
+      id: 'minor_triad_top3_1st',
+      name: 'Minor Triad (High) - 1st Inv',
+      rootString: 4,           // Root on B string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: null },
+        { string: 3, fret: 0 },     // 5th
+        { string: 4, fret: 0 },     // Root
+        { string: 5, fret: 0 }      // b3rd
+      ],
+      category: 'triad',
+      difficulty: 'beginner'
+    },
+    {
+      id: 'minor_triad_top3_2nd',
+      name: 'Minor Triad (High) - 2nd Inv',
+      rootString: 5,           // Root on high e string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: null },
+        { string: 3, fret: -2 },    // b3rd
+        { string: 4, fret: -1 },    // 5th
+        { string: 5, fret: 0 }      // Root
+      ],
+      category: 'triad',
+      difficulty: 'beginner'
+    },
+    // Middle 3 strings (D-G-B)
+    {
+      id: 'minor_triad_mid3_root',
+      name: 'Minor Triad (Mid) - Root',
+      rootString: 2,           // Root on D string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // Root
+        { string: 3, fret: -1 },    // b3rd
+        { string: 4, fret: 0 },     // 5th
+        { string: 5, fret: null }
+      ],
+      category: 'triad',
+      difficulty: 'beginner'
+    },
+    {
+      id: 'minor_triad_mid3_1st',
+      name: 'Minor Triad (Mid) - 1st Inv',
+      rootString: 3,           // Root on G string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: -2 },    // 5th
+        { string: 3, fret: 0 },     // Root
+        { string: 4, fret: -1 },    // b3rd
+        { string: 5, fret: null }
+      ],
+      category: 'triad',
+      difficulty: 'beginner'
+    },
+    {
+      id: 'minor_triad_mid3_2nd',
+      name: 'Minor Triad (Mid) - 2nd Inv',
+      rootString: 4,           // Root on B string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: -1 },    // b3rd
+        { string: 3, fret: -2 },    // 5th
+        { string: 4, fret: 0 },     // Root
+        { string: 5, fret: null }
+      ],
+      category: 'triad',
+      difficulty: 'beginner'
+    },
+    // Low-Mid strings (A-D-G)
+    {
+      id: 'minor_triad_low3_root',
+      name: 'Minor Triad (Low-Mid) - Root',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: -1 },    // b3rd
+        { string: 3, fret: 0 },     // 5th
+        { string: 4, fret: null },
+        { string: 5, fret: null }
+      ],
+      category: 'triad',
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'minor_triad_low3_1st',
+      name: 'Minor Triad (Low-Mid) - 1st Inv',
+      rootString: 2,           // Root on D string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: -2 },    // 5th
+        { string: 2, fret: 0 },     // Root
+        { string: 3, fret: -1 },    // b3rd
+        { string: 4, fret: null },
+        { string: 5, fret: null }
+      ],
+      category: 'triad',
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'minor_triad_low3_2nd',
+      name: 'Minor Triad (Low-Mid) - 2nd Inv',
+      rootString: 3,           // Root on G string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: -4 },    // b3rd
+        { string: 2, fret: -2 },    // 5th
+        { string: 3, fret: 0 },     // Root
+        { string: 4, fret: null },
+        { string: 5, fret: null }
+      ],
+      category: 'triad',
+      difficulty: 'intermediate'
+    }
+  ],
+
+  dim: [
+    // Top 3 strings (G-B-e)
+    {
+      id: 'dim_triad_top3_root',
+      name: 'Dim Triad (High) - Root',
+      rootString: 3,           // Root on G string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: null },
+        { string: 3, fret: 0 },     // Root
+        { string: 4, fret: -1 },    // b3rd
+        { string: 5, fret: -1 }     // b5th
+      ],
+      category: 'triad',
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'dim_triad_top3_1st',
+      name: 'Dim Triad (High) - 1st Inv',
+      rootString: 4,           // Root on B string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: null },
+        { string: 3, fret: 0 },     // b5th
+        { string: 4, fret: 0 },     // Root
+        { string: 5, fret: -1 }     // b3rd
+      ],
+      category: 'triad',
+      difficulty: 'intermediate'
+    },
+    // Middle 3 strings (D-G-B)
+    {
+      id: 'dim_triad_mid3_root',
+      name: 'Dim Triad (Mid) - Root',
+      rootString: 2,           // Root on D string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // Root
+        { string: 3, fret: -1 },    // b3rd
+        { string: 4, fret: -1 },    // b5th
+        { string: 5, fret: null }
+      ],
+      category: 'triad',
+      difficulty: 'intermediate'
+    }
+  ],
+
+  aug: [
+    // Top 3 strings (G-B-e)
+    {
+      id: 'aug_triad_top3_root',
+      name: 'Aug Triad (High) - Root',
+      rootString: 3,           // Root on G string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: null },
+        { string: 3, fret: 0 },     // Root
+        { string: 4, fret: 0 },     // 3rd
+        { string: 5, fret: 1 }      // #5th
+      ],
+      category: 'triad',
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'aug_triad_top3_1st',
+      name: 'Aug Triad (High) - 1st Inv',
+      rootString: 4,           // Root on B string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: null },
+        { string: 3, fret: 0 },     // #5th
+        { string: 4, fret: 0 },     // Root
+        { string: 5, fret: 0 }      // 3rd
+      ],
+      category: 'triad',
+      difficulty: 'intermediate'
+    },
+    // Middle 3 strings (D-G-B)
+    {
+      id: 'aug_triad_mid3_root',
+      name: 'Aug Triad (Mid) - Root',
+      rootString: 2,           // Root on D string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // Root
+        { string: 3, fret: 0 },     // 3rd
+        { string: 4, fret: 1 },     // #5th
+        { string: 5, fret: null }
+      ],
+      category: 'triad',
+      difficulty: 'intermediate'
+    }
+  ]
+};
+
+// ============================================================================
+// SHELL VOICINGS - Jazz comping voicings with Root, 3rd, and 7th
+// Essential for jazz guitar - minimum notes for chord quality
+// ============================================================================
+
+export const SHELL_VOICINGS = {
+  dom7: [
+    // Root on 6th string (low E)
+    {
+      id: 'dom7_shell_e_r37',
+      name: 'Dom7 Shell (E) R-3-7',
+      rootString: 0,           // Root on low E string
+      basePositions: [
+        { string: 0, fret: 0 },     // Root
+        { string: 1, fret: null },
+        { string: 2, fret: 1 },     // 3rd
+        { string: 3, fret: 0 },     // b7th
+        { string: 4, fret: null },
+        { string: 5, fret: null }
+      ],
+      category: 'shell',
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'dom7_shell_e_r73',
+      name: 'Dom7 Shell (E) R-7-3',
+      rootString: 0,           // Root on low E string
+      basePositions: [
+        { string: 0, fret: 0 },     // Root
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // b7th
+        { string: 3, fret: 1 },     // 3rd
+        { string: 4, fret: null },
+        { string: 5, fret: null }
+      ],
+      category: 'shell',
+      difficulty: 'intermediate'
+    },
+    // Root on 5th string (A)
+    {
+      id: 'dom7_shell_a_r37',
+      name: 'Dom7 Shell (A) R-3-7',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: null },
+        { string: 3, fret: 1 },     // 3rd
+        { string: 4, fret: 0 },     // b7th
+        { string: 5, fret: null }
+      ],
+      category: 'shell',
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'dom7_shell_a_r73',
+      name: 'Dom7 Shell (A) R-7-3',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: null },
+        { string: 3, fret: 0 },     // b7th
+        { string: 4, fret: 1 },     // 3rd
+        { string: 5, fret: null }
+      ],
+      category: 'shell',
+      difficulty: 'intermediate'
+    }
+  ],
+
+  maj7: [
+    // Root on 6th string (low E)
+    {
+      id: 'maj7_shell_e_r37',
+      name: 'Maj7 Shell (E) R-3-7',
+      rootString: 0,           // Root on low E string
+      basePositions: [
+        { string: 0, fret: 0 },     // Root
+        { string: 1, fret: null },
+        { string: 2, fret: 1 },     // 3rd
+        { string: 3, fret: 1 },     // 7th
+        { string: 4, fret: null },
+        { string: 5, fret: null }
+      ],
+      category: 'shell',
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'maj7_shell_e_r73',
+      name: 'Maj7 Shell (E) R-7-3',
+      rootString: 0,           // Root on low E string
+      basePositions: [
+        { string: 0, fret: 0 },     // Root
+        { string: 1, fret: null },
+        { string: 2, fret: 1 },     // 7th
+        { string: 3, fret: 1 },     // 3rd
+        { string: 4, fret: null },
+        { string: 5, fret: null }
+      ],
+      category: 'shell',
+      difficulty: 'intermediate'
+    },
+    // Root on 5th string (A)
+    {
+      id: 'maj7_shell_a_r37',
+      name: 'Maj7 Shell (A) R-3-7',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: null },
+        { string: 3, fret: 1 },     // 3rd
+        { string: 4, fret: 1 },     // 7th
+        { string: 5, fret: null }
+      ],
+      category: 'shell',
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'maj7_shell_a_r73',
+      name: 'Maj7 Shell (A) R-7-3',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: null },
+        { string: 3, fret: 1 },     // 7th
+        { string: 4, fret: 2 },     // 3rd
+        { string: 5, fret: null }
+      ],
+      category: 'shell',
+      difficulty: 'intermediate'
+    }
+  ],
+
+  min7: [
+    // Root on 6th string (low E)
+    {
+      id: 'min7_shell_e_r37',
+      name: 'Min7 Shell (E) R-b3-7',
+      rootString: 0,           // Root on low E string
+      basePositions: [
+        { string: 0, fret: 0 },     // Root
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // b3rd
+        { string: 3, fret: 0 },     // b7th
+        { string: 4, fret: null },
+        { string: 5, fret: null }
+      ],
+      category: 'shell',
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'min7_shell_e_r73',
+      name: 'Min7 Shell (E) R-7-b3',
+      rootString: 0,           // Root on low E string
+      basePositions: [
+        { string: 0, fret: 0 },     // Root
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // b7th
+        { string: 3, fret: 0 },     // b3rd
+        { string: 4, fret: null },
+        { string: 5, fret: null }
+      ],
+      category: 'shell',
+      difficulty: 'intermediate'
+    },
+    // Root on 5th string (A)
+    {
+      id: 'min7_shell_a_r37',
+      name: 'Min7 Shell (A) R-b3-7',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: null },
+        { string: 3, fret: 0 },     // b3rd
+        { string: 4, fret: 0 },     // b7th
+        { string: 5, fret: null }
+      ],
+      category: 'shell',
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'min7_shell_a_r73',
+      name: 'Min7 Shell (A) R-7-b3',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: null },
+        { string: 3, fret: 0 },     // b7th
+        { string: 4, fret: 1 },     // b3rd
+        { string: 5, fret: null }
+      ],
+      category: 'shell',
+      difficulty: 'intermediate'
+    }
+  ],
+
+  min7b5: [
+    // Root on 6th string (low E)
+    {
+      id: 'min7b5_shell_e_r37',
+      name: 'Min7b5 Shell (E) R-b3-7',
+      rootString: 0,           // Root on low E string
+      basePositions: [
+        { string: 0, fret: 0 },     // Root
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // b3rd
+        { string: 3, fret: 0 },     // b7th
+        { string: 4, fret: null },
+        { string: 5, fret: null }
+      ],
+      category: 'shell',
+      difficulty: 'intermediate'
+    },
+    // Root on 5th string (A)
+    {
+      id: 'min7b5_shell_a_r37',
+      name: 'Min7b5 Shell (A) R-b3-7',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: null },
+        { string: 3, fret: 0 },     // b3rd
+        { string: 4, fret: 0 },     // b7th
+        { string: 5, fret: null }
+      ],
+      category: 'shell',
+      difficulty: 'intermediate'
+    }
+  ],
+
+  dim7: [
+    // Root on 6th string (low E)
+    {
+      id: 'dim7_shell_e_r37',
+      name: 'Dim7 Shell (E) R-b3-bb7',
+      rootString: 0,           // Root on low E string
+      basePositions: [
+        { string: 0, fret: 0 },     // Root
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // b3rd
+        { string: 3, fret: -1 },    // bb7th (dim 7th)
+        { string: 4, fret: null },
+        { string: 5, fret: null }
+      ],
+      category: 'shell',
+      difficulty: 'intermediate'
+    },
+    // Root on 5th string (A)
+    {
+      id: 'dim7_shell_a_r37',
+      name: 'Dim7 Shell (A) R-b3-bb7',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: null },
+        { string: 3, fret: 0 },     // b3rd
+        { string: 4, fret: -1 },    // bb7th
+        { string: 5, fret: null }
+      ],
+      category: 'shell',
+      difficulty: 'intermediate'
+    }
+  ]
+};
+
+// ============================================================================
+// DROP 2 VOICINGS - Jazz voicings with the 2nd highest note dropped an octave
+// Standard jazz guitar voicings for smooth voice leading
+// ============================================================================
+
+export const DROP2_VOICINGS = {
+  maj7: [
+    // Top 4 strings - Root on different strings
+    {
+      id: 'maj7_drop2_top4_r4',
+      name: 'Maj7 Drop 2 (Root on 4th)',
+      rootString: 2,           // Root on D string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // Root
+        { string: 3, fret: 1 },     // 3rd
+        { string: 4, fret: 1 },     // 7th
+        { string: 5, fret: 0 }      // 5th
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    },
+    {
+      id: 'maj7_drop2_top4_r3',
+      name: 'Maj7 Drop 2 (Root on 3rd)',
+      rootString: 3,           // Root on G string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: -1 },    // 7th
+        { string: 3, fret: 0 },     // Root
+        { string: 4, fret: 0 },     // 3rd
+        { string: 5, fret: 0 }      // 5th
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    },
+    {
+      id: 'maj7_drop2_top4_r2',
+      name: 'Maj7 Drop 2 (Root on 2nd)',
+      rootString: 4,           // Root on B string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: -1 },    // 5th
+        { string: 3, fret: -1 },    // 7th
+        { string: 4, fret: 0 },     // Root
+        { string: 5, fret: 0 }      // 3rd
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    },
+    {
+      id: 'maj7_drop2_top4_r1',
+      name: 'Maj7 Drop 2 (Root on 1st)',
+      rootString: 5,           // Root on high e string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: -1 },    // 3rd
+        { string: 3, fret: -1 },    // 5th
+        { string: 4, fret: -1 },    // 7th
+        { string: 5, fret: 0 }      // Root
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    },
+    // Middle 4 strings (A-D-G-B)
+    {
+      id: 'maj7_drop2_mid4_r5',
+      name: 'Maj7 Drop 2 Mid (Root on 5th)',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: 1 },     // 3rd
+        { string: 3, fret: 1 },     // 7th
+        { string: 4, fret: 0 },     // 5th
+        { string: 5, fret: null }
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    }
+  ],
+
+  dom7: [
+    // Top 4 strings
+    {
+      id: 'dom7_drop2_top4_r4',
+      name: 'Dom7 Drop 2 (Root on 4th)',
+      rootString: 2,           // Root on D string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // Root
+        { string: 3, fret: 1 },     // 3rd
+        { string: 4, fret: 0 },     // b7th
+        { string: 5, fret: 0 }      // 5th
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    },
+    {
+      id: 'dom7_drop2_top4_r3',
+      name: 'Dom7 Drop 2 (Root on 3rd)',
+      rootString: 3,           // Root on G string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: -2 },    // b7th
+        { string: 3, fret: 0 },     // Root
+        { string: 4, fret: 0 },     // 3rd
+        { string: 5, fret: 0 }      // 5th
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    },
+    {
+      id: 'dom7_drop2_top4_r2',
+      name: 'Dom7 Drop 2 (Root on 2nd)',
+      rootString: 4,           // Root on B string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: -1 },    // 5th
+        { string: 3, fret: -2 },    // b7th
+        { string: 4, fret: 0 },     // Root
+        { string: 5, fret: 0 }      // 3rd
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    },
+    {
+      id: 'dom7_drop2_top4_r1',
+      name: 'Dom7 Drop 2 (Root on 1st)',
+      rootString: 5,           // Root on high e string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: -1 },    // 3rd
+        { string: 3, fret: -1 },    // 5th
+        { string: 4, fret: -2 },    // b7th
+        { string: 5, fret: 0 }      // Root
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    },
+    // Middle 4 strings
+    {
+      id: 'dom7_drop2_mid4_r5',
+      name: 'Dom7 Drop 2 Mid (Root on 5th)',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: 1 },     // 3rd
+        { string: 3, fret: 0 },     // b7th
+        { string: 4, fret: 0 },     // 5th
+        { string: 5, fret: null }
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    }
+  ],
+
+  min7: [
+    // Top 4 strings
+    {
+      id: 'min7_drop2_top4_r4',
+      name: 'Min7 Drop 2 (Root on 4th)',
+      rootString: 2,           // Root on D string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // Root
+        { string: 3, fret: 0 },     // b3rd
+        { string: 4, fret: 0 },     // b7th
+        { string: 5, fret: 0 }      // 5th
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    },
+    {
+      id: 'min7_drop2_top4_r3',
+      name: 'Min7 Drop 2 (Root on 3rd)',
+      rootString: 3,           // Root on G string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: -2 },    // b7th
+        { string: 3, fret: 0 },     // Root
+        { string: 4, fret: -1 },    // b3rd
+        { string: 5, fret: 0 }      // 5th
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    },
+    {
+      id: 'min7_drop2_top4_r2',
+      name: 'Min7 Drop 2 (Root on 2nd)',
+      rootString: 4,           // Root on B string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: -1 },    // 5th
+        { string: 3, fret: -2 },    // b7th
+        { string: 4, fret: 0 },     // Root
+        { string: 5, fret: -1 }     // b3rd
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    },
+    {
+      id: 'min7_drop2_top4_r1',
+      name: 'Min7 Drop 2 (Root on 1st)',
+      rootString: 5,           // Root on high e string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: -2 },    // b3rd
+        { string: 3, fret: -1 },    // 5th
+        { string: 4, fret: -2 },    // b7th
+        { string: 5, fret: 0 }      // Root
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    },
+    // Middle 4 strings
+    {
+      id: 'min7_drop2_mid4_r5',
+      name: 'Min7 Drop 2 Mid (Root on 5th)',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: 0 },     // b3rd
+        { string: 3, fret: 0 },     // b7th
+        { string: 4, fret: 0 },     // 5th
+        { string: 5, fret: null }
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    }
+  ],
+
+  min7b5: [
+    // Top 4 strings
+    {
+      id: 'min7b5_drop2_top4_r4',
+      name: 'Min7b5 Drop 2 (Root on 4th)',
+      rootString: 2,           // Root on D string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // Root
+        { string: 3, fret: 0 },     // b3rd
+        { string: 4, fret: 0 },     // b7th
+        { string: 5, fret: -1 }     // b5th
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    },
+    {
+      id: 'min7b5_drop2_top4_r3',
+      name: 'Min7b5 Drop 2 (Root on 3rd)',
+      rootString: 3,           // Root on G string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: -2 },    // b7th
+        { string: 3, fret: 0 },     // Root
+        { string: 4, fret: -1 },    // b3rd
+        { string: 5, fret: -1 }     // b5th
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    }
+  ],
+
+  dim7: [
+    // Top 4 strings
+    {
+      id: 'dim7_drop2_top4_r4',
+      name: 'Dim7 Drop 2 (Root on 4th)',
+      rootString: 2,           // Root on D string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // Root
+        { string: 3, fret: 0 },     // b3rd
+        { string: 4, fret: -1 },    // bb7th
+        { string: 5, fret: -1 }     // b5th
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    },
+    {
+      id: 'dim7_drop2_top4_r3',
+      name: 'Dim7 Drop 2 (Root on 3rd)',
+      rootString: 3,           // Root on G string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: -3 },    // bb7th
+        { string: 3, fret: 0 },     // Root
+        { string: 4, fret: -1 },    // b3rd
+        { string: 5, fret: -1 }     // b5th
+      ],
+      category: 'drop2',
+      difficulty: 'advanced'
+    }
+  ]
+};
+
+// ============================================================================
+// SPREAD VOICINGS - Wider voicings across the neck for fuller sound
+// Good for solo guitar and arrangement work
+// ============================================================================
+
+export const SPREAD_VOICINGS = {
+  major: [
+    {
+      id: 'major_spread_e_wide',
+      name: 'Major Spread (E string root)',
+      rootString: 0,           // Root on low E string
+      basePositions: [
+        { string: 0, fret: 0 },     // Root
+        { string: 1, fret: null },
+        { string: 2, fret: 2 },     // 5th
+        { string: 3, fret: null },
+        { string: 4, fret: 1 },     // 3rd
+        { string: 5, fret: 0 }      // Root octave
+      ],
+      category: 'spread',
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'major_spread_a_wide',
+      name: 'Major Spread (A string root)',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: null },
+        { string: 3, fret: 2 },     // 5th
+        { string: 4, fret: 2 },     // Root octave
+        { string: 5, fret: 1 }      // 3rd
+      ],
+      category: 'spread',
+      difficulty: 'intermediate'
+    }
+  ],
+
+  minor: [
+    {
+      id: 'minor_spread_e_wide',
+      name: 'Minor Spread (E string root)',
+      rootString: 0,           // Root on low E string
+      basePositions: [
+        { string: 0, fret: 0 },     // Root
+        { string: 1, fret: null },
+        { string: 2, fret: 2 },     // 5th
+        { string: 3, fret: null },
+        { string: 4, fret: 0 },     // b3rd
+        { string: 5, fret: 0 }      // Root octave
+      ],
+      category: 'spread',
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'minor_spread_a_wide',
+      name: 'Minor Spread (A string root)',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: null },
+        { string: 3, fret: 2 },     // 5th
+        { string: 4, fret: 2 },     // Root octave
+        { string: 5, fret: 0 }      // b3rd
+      ],
+      category: 'spread',
+      difficulty: 'intermediate'
+    }
+  ],
+
+  dom7: [
+    {
+      id: 'dom7_spread_e_wide',
+      name: 'Dom7 Spread (E string root)',
+      rootString: 0,           // Root on low E string
+      basePositions: [
+        { string: 0, fret: 0 },     // Root
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // b7th
+        { string: 3, fret: null },
+        { string: 4, fret: 1 },     // 3rd
+        { string: 5, fret: 0 }      // 5th
+      ],
+      category: 'spread',
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'dom7_spread_a_wide',
+      name: 'Dom7 Spread (A string root)',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: null },
+        { string: 3, fret: 0 },     // b7th
+        { string: 4, fret: 2 },     // Root octave
+        { string: 5, fret: 1 }      // 3rd
+      ],
+      category: 'spread',
+      difficulty: 'intermediate'
+    }
+  ],
+
+  maj7: [
+    {
+      id: 'maj7_spread_e_wide',
+      name: 'Maj7 Spread (E string root)',
+      rootString: 0,           // Root on low E string
+      basePositions: [
+        { string: 0, fret: 0 },     // Root
+        { string: 1, fret: null },
+        { string: 2, fret: 1 },     // 7th
+        { string: 3, fret: null },
+        { string: 4, fret: 1 },     // 3rd
+        { string: 5, fret: 0 }      // 5th
+      ],
+      category: 'spread',
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'maj7_spread_a_wide',
+      name: 'Maj7 Spread (A string root)',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: null },
+        { string: 3, fret: 1 },     // 7th
+        { string: 4, fret: 2 },     // Root octave
+        { string: 5, fret: 1 }      // 3rd
+      ],
+      category: 'spread',
+      difficulty: 'intermediate'
+    }
+  ],
+
+  min7: [
+    {
+      id: 'min7_spread_e_wide',
+      name: 'Min7 Spread (E string root)',
+      rootString: 0,           // Root on low E string
+      basePositions: [
+        { string: 0, fret: 0 },     // Root
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // b7th
+        { string: 3, fret: null },
+        { string: 4, fret: 0 },     // b3rd
+        { string: 5, fret: 0 }      // 5th
+      ],
+      category: 'spread',
+      difficulty: 'intermediate'
+    },
+    {
+      id: 'min7_spread_a_wide',
+      name: 'Min7 Spread (A string root)',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: null },
+        { string: 3, fret: 0 },     // b7th
+        { string: 4, fret: 2 },     // Root octave
+        { string: 5, fret: 0 }      // b3rd
+      ],
+      category: 'spread',
+      difficulty: 'intermediate'
+    }
+  ]
+};
+
+// ============================================================================
+// PARTIAL VOICINGS - Common partial chord shapes (3-4 notes)
+// Useful for rhythm guitar, partial barres, and easier alternatives
+// ============================================================================
+
+export const PARTIAL_VOICINGS = {
+  major: [
+    // High 4 strings only - easy barre alternatives
+    {
+      id: 'major_partial_high4_e',
+      name: 'Major High 4 (E-shape)',
+      rootString: 0,           // Conceptual root on E
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 2 },     // Root octave
+        { string: 3, fret: 1 },     // 3rd
+        { string: 4, fret: 0 },     // 5th
+        { string: 5, fret: 0 }      // Root
+      ],
+      barreInfo: { fretOffset: 0, fromString: 4, toString: 5 },
+      category: 'partial',
+      difficulty: 'beginner'
+    },
+    {
+      id: 'major_partial_high4_a',
+      name: 'Major High 4 (A-shape)',
+      rootString: 1,           // Root on A
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 2 },     // 3rd
+        { string: 3, fret: 2 },     // Root
+        { string: 4, fret: 2 },     // 5th
+        { string: 5, fret: 0 }      // Root octave
+      ],
+      barreInfo: { fretOffset: 2, fromString: 2, toString: 4 },
+      category: 'partial',
+      difficulty: 'intermediate'
+    },
+    // Interior strings (A-D-G-B) - good for mid-range comping
+    {
+      id: 'major_partial_mid4',
+      name: 'Major Mid 4 Strings',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: 2 },     // 5th
+        { string: 3, fret: 2 },     // Root
+        { string: 4, fret: 2 },     // 3rd
+        { string: 5, fret: null }
+      ],
+      barreInfo: { fretOffset: 2, fromString: 2, toString: 4 },
+      category: 'partial',
+      difficulty: 'intermediate'
+    }
+  ],
+
+  minor: [
+    // High 4 strings only
+    {
+      id: 'minor_partial_high4_e',
+      name: 'Minor High 4 (Em-shape)',
+      rootString: 0,           // Conceptual root on E
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 2 },     // Root octave
+        { string: 3, fret: 0 },     // b3rd
+        { string: 4, fret: 0 },     // 5th
+        { string: 5, fret: 0 }      // Root
+      ],
+      barreInfo: { fretOffset: 0, fromString: 3, toString: 5 },
+      category: 'partial',
+      difficulty: 'beginner'
+    },
+    {
+      id: 'minor_partial_high4_a',
+      name: 'Minor High 4 (Am-shape)',
+      rootString: 1,           // Root on A
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 2 },     // b3rd
+        { string: 3, fret: 2 },     // Root
+        { string: 4, fret: 1 },     // 5th
+        { string: 5, fret: 0 }      // Root octave
+      ],
+      category: 'partial',
+      difficulty: 'intermediate'
+    },
+    // Mid 4 strings
+    {
+      id: 'minor_partial_mid4',
+      name: 'Minor Mid 4 Strings',
+      rootString: 1,           // Root on A string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: 0 },     // Root
+        { string: 2, fret: 2 },     // 5th
+        { string: 3, fret: 2 },     // Root
+        { string: 4, fret: 1 },     // b3rd
+        { string: 5, fret: null }
+      ],
+      category: 'partial',
+      difficulty: 'intermediate'
+    }
+  ],
+
+  dom7: [
+    // High 4 strings
+    {
+      id: 'dom7_partial_high4_e',
+      name: 'Dom7 High 4 (E7-shape)',
+      rootString: 0,
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // b7th
+        { string: 3, fret: 1 },     // 3rd
+        { string: 4, fret: 0 },     // 5th
+        { string: 5, fret: 0 }      // Root
+      ],
+      barreInfo: { fretOffset: 0, fromString: 4, toString: 5 },
+      category: 'partial',
+      difficulty: 'beginner'
+    },
+    {
+      id: 'dom7_partial_high4_a',
+      name: 'Dom7 High 4 (A7-shape)',
+      rootString: 1,
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 2 },     // 3rd
+        { string: 3, fret: 0 },     // b7th
+        { string: 4, fret: 2 },     // 5th
+        { string: 5, fret: 0 }      // Root
+      ],
+      category: 'partial',
+      difficulty: 'intermediate'
+    },
+    // Freddie Green style - 3 notes, roots/3rds/7ths
+    {
+      id: 'dom7_partial_freddie',
+      name: 'Dom7 Freddie Green',
+      rootString: 0,           // Root on low E
+      basePositions: [
+        { string: 0, fret: 0 },     // Root
+        { string: 1, fret: null },
+        { string: 2, fret: 1 },     // 3rd
+        { string: 3, fret: 0 },     // b7th
+        { string: 4, fret: null },
+        { string: 5, fret: null }
+      ],
+      category: 'partial',
+      difficulty: 'intermediate'
+    }
+  ],
+
+  maj7: [
+    // High 4 strings
+    {
+      id: 'maj7_partial_high4',
+      name: 'Maj7 High 4 Strings',
+      rootString: 0,
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 1 },     // 7th
+        { string: 3, fret: 1 },     // 3rd
+        { string: 4, fret: 0 },     // 5th
+        { string: 5, fret: 0 }      // Root
+      ],
+      barreInfo: { fretOffset: 0, fromString: 4, toString: 5 },
+      category: 'partial',
+      difficulty: 'intermediate'
+    },
+    // Rootless voicing - common in jazz
+    {
+      id: 'maj7_partial_rootless',
+      name: 'Maj7 Rootless (3-5-7)',
+      rootString: 2,           // 3rd on D string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // 3rd
+        { string: 3, fret: 0 },     // 5th
+        { string: 4, fret: 0 },     // 7th
+        { string: 5, fret: null }
+      ],
+      category: 'partial',
+      difficulty: 'advanced'
+    }
+  ],
+
+  min7: [
+    // High 4 strings
+    {
+      id: 'min7_partial_high4',
+      name: 'Min7 High 4 Strings',
+      rootString: 0,
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // b7th
+        { string: 3, fret: 0 },     // b3rd
+        { string: 4, fret: 0 },     // 5th
+        { string: 5, fret: 0 }      // Root
+      ],
+      barreInfo: { fretOffset: 0, fromString: 2, toString: 5 },
+      category: 'partial',
+      difficulty: 'intermediate'
+    },
+    // Rootless voicing
+    {
+      id: 'min7_partial_rootless',
+      name: 'Min7 Rootless (b3-5-7)',
+      rootString: 2,           // b3rd on D string
+      basePositions: [
+        { string: 0, fret: null },
+        { string: 1, fret: null },
+        { string: 2, fret: 0 },     // b3rd
+        { string: 3, fret: 1 },     // 5th
+        { string: 4, fret: 0 },     // b7th
+        { string: 5, fret: null }
+      ],
+      category: 'partial',
+      difficulty: 'advanced'
+    }
+  ]
+};
+
 // Standard tuning for reference
 export const STANDARD_TUNING = ['E', 'A', 'D', 'G', 'B', 'E'];
