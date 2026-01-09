@@ -1,7 +1,17 @@
 import { useMemo } from 'react';
 import { FRET_MARKERS, DOUBLE_MARKERS, getNoteOnFret } from '../../data/notes';
+import { INTERVAL_NAMES } from '../../data/scales';
 import { getIntervalFromRoot } from '../../utils/musicTheory';
 import './Fretboard.css';
+
+// Helper to check if a position is in the voicing
+function findVoicingPosition(stringIdx, fret, tabView, tuning, voicingPositions) {
+  const actualStringIndex = tabView ? (tuning.length - 1 - stringIdx) : stringIdx;
+  const voicingPos = voicingPositions.find(
+    p => p.stringIndex === actualStringIndex && p.fret === fret
+  );
+  return { voicingPos, isInVoicing: voicingPos && !voicingPos.isMuted };
+}
 
 function Fretboard({
   tuning,
@@ -47,11 +57,7 @@ function Fretboard({
 
         // Handle voicing positions in practice mode (shape quiz)
         if (voicingPositions && voicingPositions.length > 0) {
-          const actualStringIndex = tabView ? (tuning.length - 1 - stringIdx) : stringIdx;
-          const voicingPos = voicingPositions.find(
-            p => p.stringIndex === actualStringIndex && p.fret === fret
-          );
-          const isInVoicing = voicingPos && !voicingPos.isMuted;
+          const { isInVoicing } = findVoicingPosition(stringIdx, fret, tabView, tuning, voicingPositions);
 
           if (!isInVoicing && highlightedNotes.includes(note)) {
             return 'dimmed';
@@ -90,14 +96,7 @@ function Fretboard({
 
     // Voicing mode logic - similar to path mode but for specific chord positions
     if (voicingPositions && voicingPositions.length > 0) {
-      // Get the actual stringIndex from tuning (accounting for tabView)
-      const actualStringIndex = tabView ? (tuning.length - 1 - stringIdx) : stringIdx;
-
-      const voicingPos = voicingPositions.find(
-        p => p.stringIndex === actualStringIndex && p.fret === fret
-      );
-
-      const isInVoicing = voicingPos && !voicingPos.isMuted;
+      const { isInVoicing } = findVoicingPosition(stringIdx, fret, tabView, tuning, voicingPositions);
 
       if (!isInVoicing && highlightedNotes.includes(note)) {
         // Note is in chord but NOT in voicing - dim it
@@ -147,11 +146,7 @@ function Fretboard({
           // Check if intervals should be shown
           if (showIntervals) {
             const interval = getIntervalFromRoot(note, rootNote);
-            const intervalNames = {
-              0: 'R', 1: 'b2', 2: '2', 3: 'b3', 4: '3', 5: '4',
-              6: 'b5', 7: '5', 8: 'b6', 9: '6', 10: 'b7', 11: '7'
-            };
-            return intervalNames[interval] || note;
+            return INTERVAL_NAMES[interval] || note;
           }
           return note;
         }
@@ -170,11 +165,7 @@ function Fretboard({
       return note;
     }
     const interval = getIntervalFromRoot(note, rootNote);
-    const intervalNames = {
-      0: 'R', 1: 'b2', 2: '2', 3: 'b3', 4: '3', 5: '4',
-      6: 'b5', 7: '5', 8: 'b6', 9: '6', 10: 'b7', 11: '7'
-    };
-    return intervalNames[interval] || note;
+    return INTERVAL_NAMES[interval] || note;
   };
 
   const handleFretClick = (stringIdx, fret, note) => {

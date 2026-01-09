@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { NOTES, getNoteDisplayName } from '../../data/notes';
 import { getScaleOptions } from '../../data/scales';
 import { getChordOptions } from '../../data/chords';
@@ -25,8 +26,8 @@ function Controls({
   setSelectedVoicingIndex,
   availableVoicings
 }) {
-  const scaleOptions = getScaleOptions();
-  const chordOptions = getChordOptions();
+  const scaleOptions = useMemo(() => getScaleOptions(), []);
+  const chordOptions = useMemo(() => getChordOptions(), []);
 
   return (
     <div className="controls">

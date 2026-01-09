@@ -7,8 +7,8 @@ import { getVoicingsForChord } from '../../utils/voicingUtils';
 
 function SequenceStep({ step, onChange, onDelete, isActive, index, onPlayChord, tuning }) {
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const scaleOptions = getScaleOptions();
-  const chordOptions = getChordOptions();
+  const scaleOptions = useMemo(() => getScaleOptions(), []);
+  const chordOptions = useMemo(() => getChordOptions(), []);
 
   // Get available voicings for current chord
   const availableVoicings = useMemo(() => {
