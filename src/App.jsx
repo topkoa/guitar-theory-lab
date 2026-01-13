@@ -3,6 +3,7 @@ import Fretboard from './components/Fretboard/Fretboard';
 import Controls from './components/Controls/Controls';
 import Reference from './components/Reference/Reference';
 import Practice from './components/Practice/Practice';
+import EarTraining from './components/EarTraining/EarTraining';
 import Jam from './components/Jam/Jam';
 import Footer from './components/Footer/Footer';
 import FretboardSettings from './components/GlobalSettingsPanel/GlobalSettingsPanel';
@@ -60,6 +61,19 @@ function App() {
   const [jamHighlight, setJamHighlight] = useState({ notes: [], rootNote: 'A', mode: 'scale', voicingPositions: null });
   const handleJamHighlightChange = useCallback((data) => {
     setJamHighlight(data);
+  }, []);
+
+  // Ear training mode state
+  const [earHighlightedNotes, setEarHighlightedNotes] = useState([]);
+  const [earRootNote, setEarRootNote] = useState('C');
+  const [earShowHighlights, setEarShowHighlights] = useState(false);
+  const [earShowRootHint, setEarShowRootHint] = useState(false);
+
+  const handleEarTrainingHighlightChange = useCallback((notes, rootNote = 'C', showHighlights = false, showRootHint = false) => {
+    setEarHighlightedNotes(notes);
+    setEarRootNote(rootNote);
+    setEarShowHighlights(showHighlights);
+    setEarShowRootHint(showRootHint);
   }, []);
 
   // Practice mode state
@@ -155,6 +169,12 @@ function App() {
           onClick={() => setActiveTab('practice')}
         >
           Practice
+        </button>
+        <button
+          className={activeTab === 'ear' ? 'active' : ''}
+          onClick={() => setActiveTab('ear')}
+        >
+          Ear
         </button>
         <button
           className={activeTab === 'jam' ? 'active' : ''}
@@ -263,6 +283,38 @@ function App() {
               fretCount={fretCount}
               showInlays={showInlays}
               voicingPositions={practiceVoicingPositions}
+            />
+          </>
+        ) : activeTab === 'ear' ? (
+          <>
+            <EarTraining
+              tuning={tuning}
+              onHighlightChange={handleEarTrainingHighlightChange}
+            />
+
+            <FretboardSettings
+              tuningKey={tuningKey}
+              setTuningKey={setTuningKey}
+              tabView={tabView}
+              setTabView={setTabView}
+              showInlays={showInlays}
+              setShowInlays={setShowInlays}
+              fretCount={fretCount}
+              setFretCount={setFretCount}
+            />
+
+            <Fretboard
+              tuning={tuning}
+              highlightedNotes={earHighlightedNotes}
+              rootNote={earRootNote}
+              showIntervals={false}
+              mode="chord"
+              tabView={tabView}
+              practiceMode={true}
+              practiceShowHighlights={earShowHighlights}
+              practiceShowRootHint={earShowRootHint}
+              fretCount={fretCount}
+              showInlays={showInlays}
             />
           </>
         ) : activeTab === 'jam' ? (

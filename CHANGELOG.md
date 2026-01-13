@@ -5,6 +5,39 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.26] - 2026-01-12
+
+### Added
+- **Ear Training mode** - New learning mode to train musical ear recognition
+  - **Interval Recognition**: Play two notes and identify the interval (m2, M2, m3, M3, P4, TT, P5, m6, M6, m7, M7, P8)
+  - **Chord Quality Recognition**: Hear a chord and identify its quality (Major, Minor, Dom7, Maj7, Min7, etc.)
+  - **Root Note Identification**: Hear a chord and identify its root/bass note
+  - Three difficulty levels: Easy, Medium, Hard
+    - Easy: Perfect intervals (P4, P5, P8) and basic chords (Major, Minor)
+    - Medium: Adds 3rds, 6ths, 7ths and 7th chord types
+    - Hard: All intervals including tritone, m2, M2, M7 and suspended/altered chords
+  - Song reference hints for learning intervals (e.g., "Perfect 5th = Star Wars opening")
+  - Block and arpeggiated playback modes for chord exercises
+  - Score tracking (correct/incorrect)
+  - Fretboard visualization shows answer after guessing
+- New files:
+  - `src/components/EarTraining/EarTraining.jsx` - Main ear training component
+  - `src/components/EarTraining/EarTraining.css` - Styling
+  - `src/data/intervals.js` - Interval definitions with song references
+  - `src/utils/noteAudio.js` - Web Audio API utilities for note/interval playback
+- "Ear" tab added to main navigation alongside Learn, Practice, Jam
+- 11 GitHub issues created for future feature backlog:
+  - CAGED System visualization
+  - Chord Progression Theory (Roman numerals, Nashville numbers)
+  - Circle of Fifths and key relationships
+  - Strumming and Rhythm Patterns
+  - Progress Tracking with localStorage
+  - Arpeggios
+  - Triad Inversions
+  - Fretboard Position System
+  - Technique Markers
+  - Common Chord Progressions presets
+
 ## [0.0.25] - 2026-01-09
 
 ### Changed
