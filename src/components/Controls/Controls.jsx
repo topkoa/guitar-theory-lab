@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { NOTES, getNoteDisplayName } from '../../data/notes';
 import { getScaleOptions } from '../../data/scales';
 import { getChordOptions } from '../../data/chords';
+import { getPositionOptions } from '../../utils/musicTheory';
 import VoicingControls from '../VoicingControls/VoicingControls';
 import './Controls.css';
 
@@ -20,6 +21,10 @@ function Controls({
   setFretRangeWidth,
   pathDirection,
   setPathDirection,
+  positionMode,
+  setPositionMode,
+  selectedPosition,
+  setSelectedPosition,
   voicingMode,
   setVoicingMode,
   selectedVoicingIndex,
@@ -28,6 +33,7 @@ function Controls({
 }) {
   const scaleOptions = useMemo(() => getScaleOptions(), []);
   const chordOptions = useMemo(() => getChordOptions(), []);
+  const positionOptions = useMemo(() => getPositionOptions(), []);
 
   return (
     <div className="controls">
@@ -140,6 +146,32 @@ function Controls({
                 />
               </div>
             </>
+          )}
+        </div>
+
+        <div className="control-group position-control-group">
+          <label>
+            <input
+              type="checkbox"
+              checked={positionMode}
+              onChange={(e) => setPositionMode(e.target.checked)}
+            />
+            Position Mode
+          </label>
+
+          {positionMode && (
+            <div className="position-selector">
+              <select
+                value={selectedPosition}
+                onChange={(e) => setSelectedPosition(parseInt(e.target.value))}
+              >
+                {positionOptions.map(opt => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           )}
         </div>
       </div>

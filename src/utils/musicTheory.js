@@ -197,3 +197,40 @@ export function calculateNeckTraversalPath(
 
   return expandedPath;
 }
+
+// Get position name (Roman numeral) for fretboard positions
+export function getPositionName(startFret) {
+  if (startFret === 0) return 'Open';
+
+  const romanNumerals = {
+    1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V',
+    6: 'VI', 7: 'VII', 8: 'VIII', 9: 'IX', 10: 'X',
+    11: 'XI', 12: 'XII', 13: 'XIII', 14: 'XIV', 15: 'XV'
+  };
+  return romanNumerals[startFret] || String(startFret);
+}
+
+// Get all available position options for the dropdown
+export function getPositionOptions() {
+  const positions = [];
+
+  // Open position (frets 0-3)
+  positions.push({
+    value: 0,
+    label: 'Open (frets 0-3)',
+    startFret: 0,
+    endFret: 3
+  });
+
+  // Positions I through XII
+  for (let fret = 1; fret <= 12; fret++) {
+    positions.push({
+      value: fret,
+      label: `${getPositionName(fret)} (frets ${fret}-${fret + 3})`,
+      startFret: fret,
+      endFret: fret + 3
+    });
+  }
+
+  return positions;
+}

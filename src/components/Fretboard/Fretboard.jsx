@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { FRET_MARKERS, DOUBLE_MARKERS, getNoteOnFret } from '../../data/notes';
 import { INTERVAL_NAMES } from '../../data/scales';
-import { getIntervalFromRoot } from '../../utils/musicTheory';
+import { getIntervalFromRoot, getPositionName } from '../../utils/musicTheory';
 import './Fretboard.css';
 
 // Helper to check if a position is in the voicing
@@ -29,6 +29,8 @@ function Fretboard({
   fretCount = 22,
   pathModeEnabled = false,
   traversalPath = [],
+  positionMode = false,
+  positionStartFret = 1,
   showInlays = true,
   voicingPositions = null
 }) {
@@ -129,6 +131,18 @@ function Fretboard({
         return 'inactive';
       }
       // Note IS in path - apply normal coloring below
+    }
+
+    // Position mode logic - filter notes outside the 4-fret position window
+    if (positionMode && highlightedNotes.includes(note)) {
+      const positionEndFret = positionStartFret + 3;
+      const isInPosition = fret >= positionStartFret && fret <= positionEndFret;
+
+      if (!isInPosition) {
+        // Note is in scale/chord but outside the position window - dim it
+        return 'dimmed';
+      }
+      // Note IS in position window - apply normal coloring below
     }
 
     if (note === rootNote) return 'root';
@@ -250,6 +264,25 @@ function Fretboard({
             </div>
           ))}
         </div>
+        {positionMode && (
+          <div className="position-indicator-overlay">
+            {Array.from({ length: fretCount + 1 }, (_, fret) => {
+              const positionEndFret = positionStartFret + 3;
+              const isInPosition = fret >= positionStartFret && fret <= positionEndFret;
+              const isPositionStart = fret === positionStartFret;
+              return (
+                <div
+                  key={fret}
+                  className={`position-fret ${isInPosition ? 'in-position' : ''} ${isPositionStart ? 'position-start' : ''}`}
+                >
+                  {isPositionStart && (
+                    <span className="position-label">{getPositionName(positionStartFret)}</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

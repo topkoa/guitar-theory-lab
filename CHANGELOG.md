@@ -5,6 +5,28 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.27] - 2026-01-12
+
+### Added
+- **Fretboard Position System** (GitHub Issue #46) - Classical guitar position visualization
+  - Position Mode toggle in Learn mode controls (mutually exclusive with Path Mode)
+  - 13 positions available: Open (frets 0-3) through XII (frets 12-15)
+  - Visual position indicator overlay with Roman numeral labels (I, V, IX, XII, etc.)
+  - Notes within the 4-fret position window are fully highlighted
+  - Notes outside the position window are dimmed but visible for context
+  - Purple accent border highlights the active position range on the fretboard
+- New helper functions in `src/utils/musicTheory.js`:
+  - `getPositionName()` - Converts fret number to Roman numeral position name
+  - `getPositionOptions()` - Returns all available position options for dropdown
+
+### Changed
+- Position Mode and Path Mode are now mutually exclusive - enabling one disables the other
+- Updated `src/components/Controls/Controls.jsx` with Position Mode UI section
+- Updated `src/components/Controls/Controls.css` with position selector styling
+- Updated `src/components/Fretboard/Fretboard.jsx` with position filtering logic and overlay
+- Updated `src/components/Fretboard/Fretboard.css` with position indicator styling
+- Updated `src/App.jsx` with position state management and mutual exclusivity handlers
+
 ## [0.0.26] - 2026-01-12
 
 ### Added
