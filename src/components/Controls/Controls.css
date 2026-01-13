@@ -381,3 +381,37 @@
   transform: scale(1.15);
   box-shadow: 0 0 6px var(--accent);
 }
+
+/* Position Mode Controls */
+.position-control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.position-selector {
+  margin-left: 20px;
+}
+
+.position-selector select {
+  min-width: 160px;
+  padding: 6px 10px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--bg-tertiary);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: all 0.2s;
+}
+
+.position-selector select:hover {
+  border-color: var(--accent);
+}
+
+.position-selector select:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(138, 120, 190, 0.3);
+}

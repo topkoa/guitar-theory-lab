@@ -37,6 +37,21 @@ function App() {
   const [fretRangeWidth, setFretRangeWidth] = useState(4);
   const [pathDirection, setPathDirection] = useState('ascending'); // 'ascending' or 'descending'
 
+  // Position mode state
+  const [positionMode, setPositionMode] = useState(false);
+  const [selectedPosition, setSelectedPosition] = useState(5); // 5 = V position (frets 5-8)
+
+  // Handle mutual exclusivity between path mode and position mode
+  const handleSetPathModeEnabled = useCallback((enabled) => {
+    setPathModeEnabled(enabled);
+    if (enabled) setPositionMode(false);
+  }, []);
+
+  const handleSetPositionMode = useCallback((enabled) => {
+    setPositionMode(enabled);
+    if (enabled) setPathModeEnabled(false);
+  }, []);
+
   // Voicing state for chord display
   const [voicingMode, setVoicingMode] = useState('all'); // 'all' | 'voicing'
   const [selectedVoicingIndex, setSelectedVoicingIndex] = useState(0);
@@ -197,11 +212,15 @@ function App() {
               chordType={chordType}
               setChordType={setChordType}
               pathModeEnabled={pathModeEnabled}
-              setPathModeEnabled={setPathModeEnabled}
+              setPathModeEnabled={handleSetPathModeEnabled}
               fretRangeWidth={fretRangeWidth}
               setFretRangeWidth={setFretRangeWidth}
               pathDirection={pathDirection}
               setPathDirection={setPathDirection}
+              positionMode={positionMode}
+              setPositionMode={handleSetPositionMode}
+              selectedPosition={selectedPosition}
+              setSelectedPosition={setSelectedPosition}
               voicingMode={voicingMode}
               setVoicingMode={setVoicingMode}
               selectedVoicingIndex={selectedVoicingIndex}
@@ -243,6 +262,8 @@ function App() {
               fretCount={fretCount}
               pathModeEnabled={pathModeEnabled}
               traversalPath={traversalPath}
+              positionMode={positionMode}
+              positionStartFret={selectedPosition}
               showInlays={showInlays}
               voicingPositions={voicingPositions}
             />
