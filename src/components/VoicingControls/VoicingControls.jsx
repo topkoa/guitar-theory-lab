@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './VoicingControls.css';
 
 function VoicingControls({
@@ -6,8 +7,13 @@ function VoicingControls({
   selectedVoicingIndex,
   setSelectedVoicingIndex,
   availableVoicings,
-  compact = false
+  compact = false,
+  onPlayVoicing = null,
+  playbackMode = 'strum',
+  setPlaybackMode = null
 }) {
+  const [isPlaying, setIsPlaying] = useState(false);
+
   const hasVoicings = availableVoicings && availableVoicings.length > 0;
   const canGoPrev = selectedVoicingIndex > 0;
   const canGoNext = selectedVoicingIndex < availableVoicings.length - 1;
@@ -21,6 +27,22 @@ function VoicingControls({
   const handleNext = () => {
     if (canGoNext) {
       setSelectedVoicingIndex(selectedVoicingIndex + 1);
+    }
+  };
+
+  const handlePlay = () => {
+    if (onPlayVoicing && !isPlaying) {
+      setIsPlaying(true);
+      onPlayVoicing();
+      // Reset playing state after playback duration
+      const duration = playbackMode === 'strum' ? 800 : 900;
+      setTimeout(() => setIsPlaying(false), duration);
+    }
+  };
+
+  const handlePlaybackModeToggle = () => {
+    if (setPlaybackMode) {
+      setPlaybackMode(playbackMode === 'strum' ? 'simultaneous' : 'strum');
     }
   };
 
@@ -80,6 +102,18 @@ function VoicingControls({
             <span className="nav-arrow">&#9654;</span>
           </button>
 
+          {/* Play button */}
+          {onPlayVoicing && (
+            <button
+              className={`voicing-play-btn ${isPlaying ? 'playing' : ''}`}
+              onClick={handlePlay}
+              disabled={isPlaying}
+              title={`Play voicing (${playbackMode === 'strum' ? 'Strum' : 'Chord'})`}
+            >
+              <span className="play-icon">&#9654;</span>
+            </button>
+          )}
+
           {/* Voicing info badge */}
           {currentVoicing && !compact && (
             <span className={`voicing-badge ${currentVoicing.category}`}>
@@ -93,11 +127,33 @@ function VoicingControls({
         </div>
       )}
 
-      {/* Show count when voicings available */}
+      {/* Playback mode toggle and count - only show when in voicing mode */}
       {voicingMode === 'voicing' && hasVoicings && !compact && (
-        <span className="voicing-count">
-          {selectedVoicingIndex + 1} of {availableVoicings.length}
-        </span>
+        <div className="voicing-footer">
+          {/* Playback mode toggle */}
+          {onPlayVoicing && setPlaybackMode && (
+            <div className="playback-mode-toggle">
+              <button
+                className={playbackMode === 'strum' ? 'active' : ''}
+                onClick={() => setPlaybackMode('strum')}
+                title="Play notes one at a time like strumming"
+              >
+                Strum
+              </button>
+              <button
+                className={playbackMode === 'simultaneous' ? 'active' : ''}
+                onClick={() => setPlaybackMode('simultaneous')}
+                title="Play all notes at once"
+              >
+                Chord
+              </button>
+            </div>
+          )}
+
+          <span className="voicing-count">
+            {selectedVoicingIndex + 1} of {availableVoicings.length}
+          </span>
+        </div>
       )}
     </div>
   );

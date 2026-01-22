@@ -167,12 +167,108 @@
   color: #9e9e9e;
 }
 
+/* Play Button */
+.voicing-play-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 28px;
+  padding: 0;
+  margin-left: 4px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.voicing-play-btn:hover:not(:disabled) {
+  background: var(--accent-hover, #3d8b40);
+  transform: scale(1.05);
+}
+
+.voicing-play-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.voicing-play-btn.playing {
+  animation: pulse 0.6s ease-in-out;
+}
+
+.play-icon {
+  font-size: 0.9em;
+  line-height: 1;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.voicing-controls.compact .voicing-play-btn {
+  width: 28px;
+  height: 24px;
+}
+
+.voicing-controls.compact .play-icon {
+  font-size: 0.8em;
+}
+
+/* Voicing Footer (count + playback toggle) */
+.voicing-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+/* Playback Mode Toggle */
+.playback-mode-toggle {
+  display: flex;
+  gap: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--bg-primary);
+}
+
+.playback-mode-toggle button {
+  border-radius: 0;
+  border: none;
+  padding: 0.25em 0.5em;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  font-size: 0.75em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.playback-mode-toggle button:hover:not(:disabled) {
+  background: var(--bg-secondary);
+}
+
+.playback-mode-toggle button.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.playback-mode-toggle button:first-child {
+  border-radius: 3px 0 0 3px;
+}
+
+.playback-mode-toggle button:last-child {
+  border-radius: 0 3px 3px 0;
+}
+
 /* Voicing Count */
 .voicing-count {
   font-size: 0.8em;
   color: var(--text-secondary);
-  padding-left: 8px;
-  border-left: 1px solid var(--bg-primary);
+  white-space: nowrap;
 }
 
 /* Responsive */

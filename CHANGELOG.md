@@ -5,6 +5,41 @@ All notable changes to Guitar Theory Lab will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.28] - 2026-01-21
+
+### Added
+- **Chord Voicing Playback** - Hear how chord voicings sound in Learn mode
+  - Play button appears next to voicing selector when in Voicing view
+  - Two playback modes with toggle:
+    - **Strum**: Notes play sequentially from low to high string (~40ms gaps), like strumming a guitar
+    - **Chord**: All notes play simultaneously
+  - Uses Web Audio API with triangle waveform for guitar-like tone
+  - Correctly calculates pitch based on string and fret position
+  - Muted strings are automatically skipped during playback
+  - Audio context initializes on first play (browser autoplay policy compliant)
+- New file `src/utils/voicingAudio.js` with:
+  - `playVoicingStrum()` - Sequential note playback
+  - `playVoicingSimultaneous()` - Simultaneous note playback
+  - `getVoicingNotes()` - Extracts playable notes from voicing data
+  - `noteToFrequency()` - Converts note/octave to Hz using equal temperament
+  - `getOctaveForPosition()` - Calculates correct octave for string/fret position
+
+### Changed
+- Updated `src/components/VoicingControls/VoicingControls.jsx`:
+  - Added play button with playing state animation
+  - Added Strum/Chord playback mode toggle
+  - New props: `onPlayVoicing`, `playbackMode`, `setPlaybackMode`
+- Updated `src/components/VoicingControls/VoicingControls.css`:
+  - Play button styling with hover/active/disabled states
+  - Pulse animation during playback
+  - Playback mode toggle styling
+  - Voicing footer layout for toggle and count
+- Updated `src/components/Controls/Controls.jsx` to pass audio props to VoicingControls
+- Updated `src/App.jsx`:
+  - Added `playbackMode` state management
+  - Added `audioContextRef` for lazy audio context initialization
+  - Added `handlePlayVoicing` callback for audio playback
+
 ## [0.0.27] - 2026-01-12
 
 ### Added
