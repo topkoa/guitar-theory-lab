@@ -29,7 +29,10 @@ function Controls({
   setVoicingMode,
   selectedVoicingIndex,
   setSelectedVoicingIndex,
-  availableVoicings
+  availableVoicings,
+  onPlayVoicing,
+  playbackMode,
+  setPlaybackMode
 }) {
   const scaleOptions = useMemo(() => getScaleOptions(), []);
   const chordOptions = useMemo(() => getChordOptions(), []);
@@ -103,6 +106,9 @@ function Controls({
               selectedVoicingIndex={selectedVoicingIndex}
               setSelectedVoicingIndex={setSelectedVoicingIndex}
               availableVoicings={availableVoicings}
+              onPlayVoicing={onPlayVoicing}
+              playbackMode={playbackMode}
+              setPlaybackMode={setPlaybackMode}
             />
           </>
         )}

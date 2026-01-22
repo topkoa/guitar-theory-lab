@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import Fretboard from './components/Fretboard/Fretboard';
 import Controls from './components/Controls/Controls';
 import Reference from './components/Reference/Reference';
@@ -10,6 +10,7 @@ import FretboardSettings from './components/GlobalSettingsPanel/GlobalSettingsPa
 import { TUNINGS, DEFAULT_TUNING } from './data/tunings';
 import { getScaleNotes, getChordNotes, calculateNeckTraversalPath } from './utils/musicTheory';
 import { getVoicingsForChord, voicingToFretPositions } from './utils/voicingUtils';
+import { playVoicingStrum, playVoicingSimultaneous, getAudioContext } from './utils/voicingAudio';
 import './App.css';
 
 function App() {
@@ -55,6 +56,10 @@ function App() {
   // Voicing state for chord display
   const [voicingMode, setVoicingMode] = useState('all'); // 'all' | 'voicing'
   const [selectedVoicingIndex, setSelectedVoicingIndex] = useState(0);
+
+  // Voicing audio playback state
+  const [playbackMode, setPlaybackMode] = useState('strum'); // 'strum' | 'simultaneous'
+  const audioContextRef = useRef(null);
 
   // Filter state for intervals/notes
   const [filteredIntervals, setFilteredIntervals] = useState({
@@ -135,6 +140,26 @@ function App() {
     if (mode !== 'chord') return [];
     return getVoicingsForChord(rootNote, chordType, tuning);
   }, [mode, rootNote, chordType, tuning]);
+
+  // Handle playing the current voicing
+  const handlePlayVoicing = useCallback(() => {
+    if (!availableVoicings.length) return;
+
+    // Lazy initialize audio context on first play (user interaction required)
+    if (!audioContextRef.current) {
+      audioContextRef.current = getAudioContext();
+    }
+
+    const ctx = audioContextRef.current;
+    const safeIndex = Math.min(selectedVoicingIndex, availableVoicings.length - 1);
+    const currentVoicing = availableVoicings[safeIndex];
+
+    if (playbackMode === 'strum') {
+      playVoicingStrum(ctx, currentVoicing, tuning);
+    } else {
+      playVoicingSimultaneous(ctx, currentVoicing, tuning);
+    }
+  }, [availableVoicings, selectedVoicingIndex, playbackMode, tuning]);
 
   // Reset voicing index when chord or tuning changes
   useEffect(() => {
@@ -226,6 +251,9 @@ function App() {
               selectedVoicingIndex={selectedVoicingIndex}
               setSelectedVoicingIndex={setSelectedVoicingIndex}
               availableVoicings={availableVoicings}
+              onPlayVoicing={handlePlayVoicing}
+              playbackMode={playbackMode}
+              setPlaybackMode={setPlaybackMode}
             />
 
             <Reference
